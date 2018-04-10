@@ -1,0 +1,44 @@
+
+<div class="editor-row">
+	<div class="section gf-form-group">
+		<h5 class="section-heading">Topology draw options</h5>
+		<div class="gf-form">
+			<gf-form-switch id="topology__toolbar__btn__label__link" class="gf-form" label="Toggle ports"
+							label-class="width-15" checked="ctrl.panel.checkedLabelLink" on-change="ctrl.togglePort()"></gf-form-switch>
+		</div>
+		<div class="gf-form">
+			<gf-form-switch id="topology__toolbar__btn__label__speed" class="gf-form" label="Toggle speed"
+							label-class="width-15" checked="ctrl.panel.checkedLabelSpeed" on-change="ctrl.toggleSpeed()"></gf-form-switch>
+		</div>
+
+		<hr>
+
+		<div class="gf-form" >
+			<gf-form-switch id="topology__toolbar__btn__label__speed" class="gf-form" label="Toggle switch DPID"
+							model="ctrl.panel.checkedLabelNodeDpid"
+							label-class="width-15" checked="ctrl.panel.checkedLabelNodeDpid" on-change="ctrl.toggleNodeDpid()"></gf-form-switch>
+		</div><div class="gf-form" >
+			<gf-form-switch id="topology__toolbar__btn__label__name" class="gf-form" label="Toggle switch name"
+							label-class="width-15" checked="ctrl.panel.checkedLabelNodeName" on-change="ctrl.toggleNodeName()"></gf-form-switch>
+		</div>
+		<div class="gf-form" >
+			<gf-form-switch id="topology__toolbar__btn__label__speed" class="gf-form" label="Toggle switch OF version"
+							label-class="width-15" checked="ctrl.panel.checkedLabelNodeOFVersion" on-change="ctrl.toggleNodeOFVersion()"></gf-form-switch>
+		</div>
+		<div class="gf-form" >
+			<gf-form-switch id="topology__toolbar__btn__label__speed" class="gf-form" label="Toggle switch Vendor"
+							label-class="width-15" checked="ctrl.panel.checkedLabelNodeVendor" on-change="ctrl.toggleNodeVendor()"></gf-form-switch>
+		</div>
+		<div class="gf-form" >
+			<gf-form-switch id="topology__toolbar__btn__label__speed" class="gf-form" label="Toggle switch Hardware"
+							label-class="width-15" checked="ctrl.panel.checkedLabelNodeHardware" on-change="ctrl.toggleNodeHardware()"></gf-form-switch>
+		</div>
+		<div class="gf-form" >
+			<gf-form-switch id="topology__toolbar__btn__label__speed" class="gf-form" label="Toggle switch Software"
+							label-class="width-15" checked="ctrl.panel.checkedLabelNodeSoftware" on-change="ctrl.toggleNodeSofware()"></gf-form-switch>
+		</div>
+
+
+	</div>
+
+</div>

@@ -1,0 +1,148 @@
+<div>
+    <div id="canvas_info">
+        <div id="canvas_info_body">
+            <div id="domain_panel_info" style="display:none;" class="">
+              <div class="panel-heading">
+                  <h4 class="panel-title">
+                    <a data-toggle="collapse" href="#domain_panel_info_collapse">Domain</a>
+                  </h4>
+              </div>
+              <div id="domain_panel_info_collapse" class="panel-collapse collapse">
+                  <div class="panel-body">
+                    <div>
+                      <ul>
+                        <li id="domain_panel_info_name"><span>Name: </span><span id="domain_panel_info_name_value"></span></li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+            </div>
+            <div id="switch_panel_info" style="display:none;" class="">
+              <div class="panel-heading">
+                  <h4 class="panel-title">
+                    <a data-toggle="collapse" href="#switch_panel_info_collapse">Switch</a>
+                  </h4>
+              </div>
+              <div id="switch_panel_info_collapse" class="panel-collapse collapse">
+                  <div class="panel-body">
+                    <div>
+                      <ul>
+                        <li id="switch_panel_info_domain"><span>Domain: </span><span id="switch_panel_info_domain_value"></span></li>
+                        <li id="switch_panel_info_name"><span>Name: </span><span id="switch_panel_info_name_value"></span></li>
+                        <li id="switch_panel_info_dpid"><span>DPID: </span><span id="switch_panel_info_dpid_value"></span></li>
+                        <li id="switch_panel_info_flows"><span>N. Flows: </span><span id="switch_panel_info_flows_value"></span></li>
+    
+                        <li id="switch_panel_info_tcp_port"><span>TCP Port: </span><span id="switch_panel_info_tcp_port_value"></span></li>
+                        <li id="switch_panel_info_openflow_version"><span>OF Version: </span><span id="switch_panel_info_openflow_version_value"></span></li>
+                        <li id="switch_panel_info_switch_vendor"><span>Vendor: </span><span id="switch_panel_info_switch_vendor_value"></span></li>
+                        <li id="switch_panel_info_ip_address"><span>IP Address: </span><span id="switch_panel_info_ip_address_value"></span></li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+            </div>
+            <div id="port_panel_info" style="display:none;" class="">
+              <div class="panel-heading">
+                  <h4 class="panel-title">
+                    <a data-toggle="collapse" href="#port_panel_info_collapse">Port</a>
+                  </h4>
+              </div>
+              <div id="port_panel_info_collapse" class="panel-collapse collapse">
+                  <div class="panel-body">
+                    <div>
+                      <ul>
+                        <li id="port_panel_info_name"><span>Name: </span><span id="port_panel_info_name_value"></span></li>
+                        <li id="port_panel_info_number"><span>Number: </span><span id="port_panel_info_number_value"></span></li>
+                        <!--<li id="port_panel_info_flows"><span>N. Flows: </span><span id="port_panel_info_flows_value"></span></li>-->
+                          <li id="port_panel_info_speed"><span>Speed: </span><span id="port_panel_info_speed_value"></span></li>
+                          <!--<li id="port_panel_info_uptime"><span>Uptime: </span><span id="port_panel_info_uptime_value"></span></li>-->
+                          <li id="port_panel_info_status"><span>Status: </span><span id="port_panel_info_status_value"></span></li>
+                      </ul>
+                    </div>
+                  </div>
+              </div>
+            </div>
+            <!--<div id="switch_to_panel_info" style="" class="">-->
+              <!--<div class="panel-heading">-->
+                  <!--<h4 class="panel-title">-->
+                    <!--<a data-toggle="collapse" href="#switch_to_panel_info_collapse">Switch Connected</a>-->
+                  <!--</h4>-->
+              <!--</div>-->
+              <!--<div id="switch_to_panel_info_collapse" class="panel-collapse collapse">-->
+                  <!--<div class="panel-body">-->
+                    <!--<div>-->
+                      <!--<ul>-->
+                        <!--<li id="switch_to_panel_info_name"><span>Name:</span><span id="switch_to_panel_info_name_value"></span></li>-->
+                        <!--<li id="switch_to_panel_info_dpid"><span>DPID: </span><span id="switch_to_panel_info_dpid_value"></span></li>-->
+                        <!--<li id="switch_to_panel_info_flows"><span>N. Flows: </span><span id="switch_to_panel_info_flows_value"></span></li>-->
+                      <!--</ul>-->
+                    <!--</div>-->
+                  <!--</div>-->
+              <!--</div>-->
+            <!--</div>-->
+            <div id="switch_flows_panel" style="display:none;" class="">
+              <div class="panel-heading">
+                  <h4 class="panel-title">
+                    <a data-toggle="collapse" href="#switch_flows_panel_collapse">Switch flows</a>
+                  </h4>
+              </div>
+              <div id="switch_flows_panel_collapse" class="panel-collapse collapse">
+                  <div class="panel-body">
+                    <!--<div>-->
+                      <!--<ul>-->
+                        <!--<li id="switch_flows_panel_idle_timeout"><span>Idle timeout: </span><span id="switch_flows_panel_idle_timeout_value"></span></li>-->
+                        <!--<li id="switch_flows_panel_cookie"><span>Cookie: </span><span id="switch_flows_panel_cookie_value"></span></li>-->
+                        <!--<li id="switch_flows_panel_priority"><span>Priority: </span><span id="switch_flows_panel_priority_value"></span></li>-->
+                        <!--<li id="switch_flows_panel_hard_timeout"><span>Hard timeout: </span><span id="switch_flows_panel_hard_timeout_value"></span></li>-->
+                        <!--<li id="switch_flows_panel_byte_count"><span>Byte count: </span><span id="switch_flows_panel_byte_count_value"></span></li>-->
+    
+                        <!--<li id="switch_flows_panel_duration_nsec"><span>Duration (ns): </span><span id="switch_flows_panel_duration_nsec_value"></span></li>-->
+                        <!--<li id="switch_flows_panel_packet_count"><span>Packet count: </span><span id="switch_flows_panel_packet_count_value"></span></li>-->
+    
+                        <!--<li id="switch_flows_panel_duration_sec"><span>Duration (s): </span><span id="switch_flows_panel_duration_sec_value"></span></li>-->
+                        <!--<li id="switch_flows_panel_table_id"><span>Table ID: </span><span id="switch_flows_panel_table_id_value"></span></li>-->
+                        <!--<li id="switch_flows_panel_match"><span>Match: </span><span id="switch_flows_panel_match_value"></span></li>-->
+                      <!--</ul>-->
+                    <!--</div>-->
+                  </div>
+                </div>
+            </div>
+            <div id="trace_cp_panel_info" style="display:none;" class="">
+              <div class="panel-heading">
+                  <h4 class="panel-title">
+                    <a data-toggle="collapse" href="#trace_cp_panel_info_collapse" title="Control plane trace result">CP Trace Result</a>
+                    <div class="loading-icon-div">
+                        <span class="panel-time-info"><i class="fa fa-clock-o"></i> </span>
+                        <span class="panel-loading"><i class="fa fa-spinner fa-spin"></i></span>
+                    </div>
+                  </h4>
+              </div>
+              <div id="trace_cp_panel_info_collapse" class="panel-collapse collapse">
+                <div class="panel-body" >
+                  <div id="trace-cp-result-content">
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div id="trace_panel_info" style="display:none;" class="">
+              <div class="panel-heading">
+                  <h4 class="panel-title">
+                    <a data-toggle="collapse" href="#trace_panel_info_collapse" title="Data plane trace result">DP Trace Result</a>
+                    <div class="loading-icon-div">
+                        <span class="panel-time-info"><i class="fa fa-clock-o"></i> </span>
+                        <span class="panel-loading"><i class="fa fa-spinner fa-spin"></i></span>
+                    </div>
+                  </h4>
+              </div>
+              <div id="trace_panel_info_collapse" class="panel-collapse collapse">
+                  <div class="panel-body" >
+    
+                    <div id="trace-result-content" class="gf-form-group">
+                    </div>
+                  </div>
+              </div>
+            </div>
+    
+        </div>
+    </div>
+</div>

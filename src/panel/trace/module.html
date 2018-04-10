@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<div id="sdn_trace_panel">
+    <div class="gf-form" style="float:right;">
+        <div class="gf-form-button-row">
+           <button id="sdn_trace_form_btn_new" class="btn btn-inverse" >New trace</button>
+            <button id="sdn_trace_form_btn_close" class="btn btn-inverse" style="display:none">Close</button>
+        </div>
+    </div>
+    <div id="sdn_trace_form_include_form" ng-include="'public/plugins/grafana-amlight-app-sdnlg/panel/trace/forms.html'"></div>
+    <div id="sdn_trace_form_include_info" ng-include="'public/plugins/grafana-amlight-app-sdnlg/panel/trace/info.html'"></div>
+</div>

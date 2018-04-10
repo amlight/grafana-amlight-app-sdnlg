@@ -1,0 +1,3 @@
+# Install all npm dependencies
+npm install
+

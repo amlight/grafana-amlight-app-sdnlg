@@ -1,0 +1,218 @@
+import {MetricsPanelCtrl} from 'app/plugins/sdk';
+import * as _ from 'lodash';
+
+import * as d3 from '../external/d3';
+
+import '../css/panel/clock-panel.css!';
+
+
+
+
+const panelDefaults = {
+  bgColor: null,
+};
+
+export class ClockCtrl extends MetricsPanelCtrl {
+  constructor($scope, $injector) {
+    super($scope, $injector);
+    this.initialized = false;
+    this.panelContainer = null;
+    this.svg = null;
+    this.scoperef = $scope;
+
+    console.log("D3GraphPanelCtrl constructor!");
+
+    this.events.on('init-edit-mode', this.onInitEditMode.bind(this));
+    this.events.on('panel-teardown', this.onPanelTeardown.bind(this));
+
+    this.events.on('render', this.onRender.bind(this));
+    console.log("D3GraphPanelCtrl constructor done!");
+
+//    _.defaultsDeep(this.panel, panelDefaults);
+
+    //this.events.on('panel-initialized', this.render.bind(this));
+  }
+
+  onInitEditMode() {
+    this.addEditorTab('Options', 'public/plugins/grafana-example-app/panel/editor.html', 2);
+  }
+
+  onPanelTeardown() {
+    this.$timeout.cancel(this.nextTickPromise);
+  }
+
+  /**
+   * [setContainer description]
+   * @param {[type]} container [description]
+   */
+  setContainer(container) {
+    this.panelContainer = container;
+  }
+
+  getPanelWidth() {
+    // locate this panel with jQuery
+    var tmpPanelWidthCSS = $("div.panel").css("width");
+    tmpPanelWidthCSS = String(tmpPanelWidthCSS);
+
+    var tmpPanelWidthPx = tmpPanelWidthCSS.replace("px","");
+    var tmpPanelWidth = parseInt(tmpPanelWidthPx);
+    // get our "span" setting
+    var percentWidth = ((this.panel.span / 1.2) * 10) / 100;
+    // calculate actual width
+    var actualWidth = tmpPanelWidth * percentWidth;
+    return actualWidth;
+  }
+
+  getPanelHeight() {
+    // panel can have a fixed height via options
+    var tmpPanelHeight = this.$scope.ctrl.panel.height;
+    // if that is blank, try to get it from our row
+    if (typeof tmpPanelHeight === 'undefined') {
+      // get from the row instead
+      tmpPanelHeight = this.row.height;
+      // default to 250px if that was undefined also
+      if (typeof tmpPanelHeight === 'undefined') {
+        tmpPanelHeight = "250px";
+      }
+    }
+    tmpPanelHeight = String(tmpPanelHeight);
+    // convert to numeric value
+    tmpPanelHeight = tmpPanelHeight.replace("px","");
+    var actualHeight = parseInt(tmpPanelHeight);
+    // grafana minimum height for a panel is 250px
+    if (actualHeight < 250) {
+      actualHeight = 250;
+    }
+    return actualHeight;
+  }
+
+
+
+
+  onRender() {
+    console.log("Render D3");
+
+    // use jQuery to get the height on our container
+    this.panelWidth = this.getPanelWidth();
+    this.panelHeight = this.getPanelHeight();
+
+    var margin = {top: 10, right: 0, bottom: 30, left: 0};
+    var width = this.panelWidth;
+    var height = this.panelHeight;
+
+    // clear out the old div
+    var svgElement = $("#svg-parent");
+    svgElement.replaceWith("");
+    var svg = d3.select(this.panelContainer[0])
+        .append("div")
+        .attr("id", "svg-parent")
+        .classed("svg-container", true) //container class to make it responsive
+        .append("svg")
+        .attr("width", width + "px")
+        .attr("height", (height + 24) + "px")
+        .attr("id", "mystuff")
+        .classed("svg-content-responsive", true)
+        .append("g")
+        .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+
+
+    var simulation = d3.forceSimulation()
+        .force("link", d3.forceLink().id(function(d) { return d.id; }))
+        .force("charge", d3.forceManyBody())
+        .force("center", d3.forceCenter(width / 2, height / 2));
+
+    var dragstarted = function(d) {
+      console.log(d3.event_d3());
+
+      if (!d3.event_d3().active) simulation.alphaTarget(0.3).restart();
+      d.fx = d.x;
+      d.fy = d.y;
+    };
+
+    var dragged = function(d) {
+      d.fx = d3.event_d3().x;
+      d.fy = d3.event_d3().y;
+    };
+
+    var dragended = function (d) {
+      if (!d3.event_d3().active) simulation.alphaTarget(0);
+      d.fx = null;
+      d.fy = null;
+    };
+
+
+    this.svg = svg;
+    console.log("leaving renderD3");
+
+
+    var color = d3.scaleOrdinal(d3.schemeCategory20);
+
+    var panels = grafanaBootData.settings.panels;
+    var thisPanel = panels[this.pluginId];
+    var thisPanelPath = thisPanel.baseUrl + '/';
+
+
+
+    d3.json(thisPanelPath + "/external/miserables.json", function(error, graph) {
+      if (error) throw error;
+
+      var node = svg.append("g")
+          .attr("class", "nodes")
+        .selectAll("circle")
+        .data(graph.nodes)
+        .enter().append("circle")
+          .attr("r", 5)
+          .attr("fill", function(d) { return color(d.group); })
+          .call(d3.drag()
+              .on("start", dragstarted)
+              .on("drag", dragged)
+              .on("end", dragended));
+
+      var link = svg.append("g")
+          .attr("class", "links")
+        .selectAll("line")
+        .data(graph.links)
+        .enter().append("line")
+          .attr("stroke-width", function(d) { return Math.sqrt(d.value); });
+
+      node.append("title")
+          .text(function(d) { return d.id; });
+
+      simulation
+          .nodes(graph.nodes)
+          .on("tick", ticked);
+
+      simulation.force("link")
+          .links(graph.links);
+
+
+      function ticked() {
+        link
+            .attr("x1", function(d) { return d.source.x; })
+            .attr("y1", function(d) { return d.source.y; })
+            .attr("x2", function(d) { return d.target.x; })
+            .attr("y2", function(d) { return d.target.y; });
+
+        node
+            .attr("cx", function(d) { return d.x; })
+            .attr("cy", function(d) { return d.y; });
+      }
+    });
+
+  }
+
+  link(scope, elem, attrs, ctrl) {
+    console.log("d3graph inside link");
+    ctrl.setContainer(elem.find('.panel-content'));
+    // force a render
+    this.onRender();
+  }
+
+
+
+};
+
+
+ClockCtrl.templateUrl = 'public/plugins/grafana-example-app/panel/module.html';
+
