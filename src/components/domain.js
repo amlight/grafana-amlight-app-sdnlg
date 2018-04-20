@@ -200,6 +200,7 @@ var Port = function(node_id, port_id, number, label) {
     this.id = node_id + "_" + port_id;
     this.number = number;
     this.label = label;
+    this.name = label;
     this.speed = '';
     this.uptime = '';
     this.status = '';
@@ -214,7 +215,8 @@ var Port = function(node_id, port_id, number, label) {
             from_sw: '',
             to_sw: '',
             stroke_width: 1,
-            type: Port.TYPE
+            type: Port.TYPE,
+            obj: this
         };
         nodeObj.background_color = sdncolor.NODE_COLOR[nodeObj.type];
 

@@ -17,10 +17,6 @@
       {"name": "Project site", "url": "https://github.com/amlight"},
       {"name": "MIT License", "url": "https://github.com/amlight"}
     ],
-    "screenshots": [
-      {"name": "Showcase", "path": "panel/img/screenshot-showcase.png"},
-      {"name": "Options", "path": "panel/img/screenshot-clock-options.png"}
-    ],
     "version": "0.0.9",
     "updated": "2018-03-18"
   },

@@ -1,6 +1,12 @@
 Icons from
+topology
 https://thenounproject.com/term/network-topology/1569721/
+nodes
 https://thenounproject.com/search/?q=nodes&i=1509979
+tables
+https://thenounproject.com/search/?q=table&i=1061423
+https://thenounproject.com/search/?q=table&i=662371
+https://thenounproject.com/search/?q=table&i=512574
 
 
 ## What makes a good README?

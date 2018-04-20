@@ -1,6 +1,7 @@
 import * as d3 from '../external/d3';
-import {sdntopology, sdncolor, forcegraph, d3lib} from "./main";
+import {sdntopology, sdncolor, getSDNFlowTable, forcegraph, d3lib} from "./main";
 import {Switch, Link, Port, Domain, Host} from "./domain"
+import {formatBytes} from "./util"
 
 
 /** @constant */
@@ -67,7 +68,8 @@ var ForceGraphContextMenu = function() {
                 title: 'Flows',
                 action: function(elm, d, i) {
                     var callback = function() {
-                        sdnflowtable.setDataAndOpen(d.data.dpid, d.data.flow_stat, d.data.flow_pivot);
+                        console.log('Flows callback ');
+                        getSDNFlowTable().setDataAndOpen(d.data.dpid, d.data.flow_stat, d.data.flow_pivot);
                     }
                     sdntopology.callSdntraceGetSwitchFlows(null, d.data.dpid, callback);
                 }
@@ -662,7 +664,7 @@ var ForceGraph = function(p_args, p_data) {
                                     return "";
                                 });
 
-          let addSwitchAttr = function(selection, attr, className, display) {
+          let addNodeTspanAttr = function(selection, attr, className, display) {
                   selection
                     .append("tspan")
                     .attr("x", 0)
@@ -672,23 +674,28 @@ var ForceGraph = function(p_args, p_data) {
                     .text(attr);
           }
 
+
           if(d.obj && typeof d.obj.dpid !== "undefined") {
-            addSwitchAttr(textTag, d.obj.dpid, 'text_switch_dpid', "block");
+            addNodeTspanAttr(textTag, d.obj.dpid, 'text_switch_dpid', "");
           }
           if(d.obj && typeof d.obj.name !== "undefined") {
-            addSwitchAttr(textTag, d.obj.name, 'text_switch_name', "none");
+            if (d.type === Port.TYPE) {
+                addNodeTspanAttr(textTag, d.obj.label, 'text_port_name', "none");
+            } else {
+                addNodeTspanAttr(textTag, d.obj.name, 'text_switch_name', "none");
+            }
           }
           if(d.obj && typeof d.obj.openflow_version !== "undefined") {
-            addSwitchAttr(textTag, d.obj.openflow_version, 'text_switch_ofversion', "none");
+            addNodeTspanAttr(textTag, d.obj.openflow_version, 'text_switch_ofversion', "none");
           }
           if(d.obj && typeof d.obj.switch_vendor !== "undefined") {
-            addSwitchAttr(textTag, d.obj.switch_vendor, 'text_switch_vendor', "none");
+            addNodeTspanAttr(textTag, d.obj.switch_vendor, 'text_switch_vendor', "none");
           }
           if(d.obj && typeof d.obj.hardware !== "undefined") {
-            addSwitchAttr(textTag, d.obj.hardware, 'text_switch_hardware', "none");
+            addNodeTspanAttr(textTag, d.obj.hardware, 'text_switch_hardware', "none");
           }
           if(d.obj && typeof d.obj.software !== "undefined") {
-            addSwitchAttr(textTag, d.obj.software, 'text_switch_software', "none");
+            addNodeTspanAttr(textTag, d.obj.software, 'text_switch_software', "none");
           }
 
           d3.select(this)
@@ -715,7 +722,7 @@ var ForceGraph = function(p_args, p_data) {
                         .append("tspan")
                             .attr("dx", 0)
                             .attr("dy", 0)
-                            .text(function(d) { return d.speed; })
+                            .text(function(d) { return formatBytes(d.speed); })
                     .merge(link_label);
 
         // setting data

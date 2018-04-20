@@ -4,7 +4,7 @@ import 'lodash';
 import _ from 'lodash';
 
 import * as d3 from '../../external/d3';
-import {forcegraph, setForcegraph,  sdntopology, d3lib} from '../../components/main';
+import {forcegraph, setForcegraph,  sdntopology, d3lib, main} from '../../components/main';
 import {SDNTopology} from '../../components/topologykytos';
 import {ForceGraph, D3JS} from "../../components/d3topology";
 
@@ -12,7 +12,9 @@ import '../../css/panel/sdnlg-panel.css!';
 
 const panelDefaults = {
   bgColor: null,
-  checkedLabelNodeDpid: true
+  checkedLabelNodeDpid: true,
+  checkedLabelLink: false,
+  checkedLabelSpeed: false
 };
 
 
@@ -21,7 +23,6 @@ export class TopologyCtrl extends MetricsPanelCtrl {
     super($scope, $injector);
     _.defaults(this.panel, panelDefaults);
 
-    this.initialized = false;
     this.panelContainer = null;
     this.svg = null;
     this.scoperef = $scope;
@@ -32,20 +33,19 @@ export class TopologyCtrl extends MetricsPanelCtrl {
     this.checkedLabelSpeed;
 
     // Editor form. checkbox to toggle node labels
-    this.checkedLabelNodeDpid = true;
+    this.checkedLabelNodeDpid;
     this.checkedLabelNodeName;
     this.checkedLabelNodeOFVersion;
     this.checkedLabelNodeVendor;
     this.checkedLabelNodeHardware;
     this.checkedLabelNodeSoftware;
 
-
     this._forcegraph = null;
-
 
     this.events.on('init-edit-mode', this.onInitEditMode.bind(this));
     this.events.on('panel-teardown', this.onPanelTeardown.bind(this));
     this.events.on('render', this.onRender.bind(this));
+    this.events.on('panel-initialized', this.onInitialized.bind(this));
   }
 
   onInitEditMode() {
@@ -118,11 +118,16 @@ export class TopologyCtrl extends MetricsPanelCtrl {
       $('.source-label').show();
       d3.selectAll(".node_port").style("display", "");
       d3.selectAll(".text_port").style("display", "");
+
+      $(".text_port_name").show();
+
     } else {
       $('.target-label').hide();
       $('.source-label').hide();
       d3.selectAll(".node_port").style("display", "none");
       d3.selectAll(".text_port").style("display", "none");
+
+      $(".text_port_name").hide();
     }
   }
 
@@ -163,10 +168,36 @@ export class TopologyCtrl extends MetricsPanelCtrl {
     this.toggleLabels(this.$scope.ctrl.panel.checkedLabelNodeSoftware, '.text_switch_software');
   }
 
+  // Initialize controller visualization
+  // **Be sure to load all the topology before calling this method.
+  initializeController(_self) {
+    let callback = function() {
+        _self.togglePort();
+        _self.toggleSpeed();
+        _self.toggleNodeDpid();
+        _self.toggleNodeName();
+        _self.toggleNodeOFVersion();
+        _self.toggleNodeVendor();
+        _self.toggleNodeHardware();
+        _self.toggleNodeSofware();
+    };
+
+    sdntopology.callSdntraceGetTopology(callback);
+  }
+
+  onInitialized() {
+    var _self = this
+    let callback = function() {
+        _self.initializeController(_self);
+    };
+
+    main.initializeApp(callback);
+  }
 
 
   link(scope, elem, attrs, ctrl) {
     ctrl.setContainer(elem.find('.panel-content'));
+
     // force a render
     this.onRender();
 
@@ -174,29 +205,26 @@ export class TopologyCtrl extends MetricsPanelCtrl {
     this.panelWidth = this.getPanelWidth();
     this.panelHeight = this.getPanelHeight();
 
-    var margin = {top: 10, right: 0, bottom: 30, left: 0};
-    var width = this.panelWidth;
-    var height = this.panelHeight;
+    let margin = {top: 10, right: 0, bottom: 30, left: 0};
+    let width = this.panelWidth;
+    let height = this.panelHeight;
 
     if (this._forcegraph === null) {
 
-        var selector = this.panelContainer[0];
+        let selector = this.panelContainer[0];
 
-        var forceArgs = {
+        let forceArgs = {
             selector: selector,
             width: width,
             height: height
         };
-        var data = {
+        let data = {
             nodes: [],
             links: []
         };
 
         setForcegraph(new ForceGraph(forceArgs, data));
     }
-
-    sdntopology.callSdntraceGetTopology();
-
   }
 };
 

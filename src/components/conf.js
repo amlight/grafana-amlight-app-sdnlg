@@ -1,26 +1,38 @@
-var SDNLG_CONF = {
-    header_logo_img_src: '/static/img/amlight.png',
-    version: 0.2,
-    dict: {
+const SDNLG_CONF = function() {
+    var _self = this;
+    this.rest_server = "http://localhost:1234";
 
-    },
-    about_roadmap: "<h4>Roadmap</h4>"+
-                   "<li>New Features...</li>",
+    this.header_logo_img_src = '/static/img/amlight.png';
+    this.version = 0.2;
+    this.dict = {};
+
+    /** To be used with Kytos and grafana */
+    this.setKytosServer = function(server) {
+        _self.rest_server = server;
+    }
+    this.getKytosServer = function() {
+        return _self.rest_server;
+    }
+
+    this.api_stats = function(){ return _self.rest_server + "/api/kytos/of_stats/v1/" };
+    this.api_topology = function(){ return _self.rest_server + "/api/kytos/topology/v3" };
+
+    this.api_trace = function(){ return _self.rest_server + "/api/amlight/sdntrace/trace" };
+    this.api_trace_cp = function(){ return _self.rest_server + "/api/amlight/sdntrace_cp/trace" };
+
 
     // kytos server
-    rest_server: "http://127.0.0.1:8181",
-    trace_server: "http://127.0.0.1:8181",
+//    this.api_stats = getKytosServer() + "/api/kytos/of_stats/v1/";
+//    this.api_topology = getKytosServer() + "/api/kytos/topology/v3";
+//
+//    this.api_trace = getKytosServer() + "/api/amlight/sdntrace/trace";
+//    this.api_trace_cp = getKytosServer() + "/api/amlight/sdntrace_cp/trace";
 
-    sniffer_dashboard: "http://190.103.186.42:3000/dashboard/snapshot/pXxCEE6Drk96CFg25vCMgSQI63h08LN3"
 }
 
-SDNLG_CONF.api_stats = SDNLG_CONF.rest_server + "/api/kytos/of_stats/v1/";
-SDNLG_CONF.api_topology = SDNLG_CONF.rest_server + "/api/kytos/topology/v3";
-
-SDNLG_CONF.api_trace = SDNLG_CONF.trace_server + "/api/amlight/sdntrace/trace";
-SDNLG_CONF.api_trace_cp = SDNLG_CONF.trace_server + "/api/amlight/sdntrace_cp/trace";
+const _SDNLG_CONF = new SDNLG_CONF();
 
 
 export {
-  SDNLG_CONF as SDNLG_CONF
+  _SDNLG_CONF as SDNLG_CONF
 };
