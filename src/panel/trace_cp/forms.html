@@ -1,0 +1,206 @@
+
+<div id="sdn_tracecp_form" style="clear:both; display:block;">
+    <div id="sdn_tracecp_form__switch-filter-row" class="row">
+        <!-- Switches list -->
+        <input type="hidden" name="sdn_trace_form__switch-hidden" id="sdn_tracecp_form__switch-hidden" value="{{ctrl.selectedSwitch.dpid}}">
+        <div class="col-md-2"><label>Switch:</label></div>
+        <div id="sdn_tracecp_form__switch-content" class="col-md-10">
+            <select class="form-control" ng-options="option.id for option in ctrl.getSwitches() track by option.id"
+            ng-model="ctrl.selectedSwitch"></select>
+        </div>
+    </div>
+    <div id="sdn_tracecp_form__ports-filter-row" class="row">
+        <!-- Ports list -->
+        <input type="hidden" name="sdn_trace_form__switch-port-hidden" id="sdn_tracecp_form__switch-port-hidden" value="{{ctrl.selectedSwitchPort.number}}">
+        <div class="col-md-2"><label>Ports:</label></div>
+        <div id="sdn_tracecp_form__switch-ports-content" class="col-md-10">
+            <select class="form-control" ng-options="option.label for option in ctrl.getSwitchPorts(ctrl.selectedSwitch.dpid) track by option.number"
+            ng-model="ctrl.selectedSwitchPort"></select>
+        </div>
+    </div>
+    <hr />
+    <div id="sdn_tracecp_form__row-forms" class="row">
+        <div class="col-md-12 form-horizontal">
+            <!-- Nav tabs -->
+            <ul class="nav nav-tabs" role="tablist"><li role="presentation" class="active"><a href="#trace-layer-2" aria-controls="trace-layer-2" role="tab" data-toggle="tab">Trace Layer 2</a></li>
+                <li role="presentation"><a href="#trace-layer-3" aria-controls="trace-layer-3" role="tab" data-toggle="tab">Trace Layer 3</a></li>
+                <li role="presentation"><a href="#trace-layer-full" aria-controls="trace-layer-full" role="tab" data-toggle="tab">Trace Full</a></li>
+            </ul>
+            <!-- Tab panes -->
+            <div class="tab-content">
+                <!-- Tab panes - Form layer 2 trace -->
+                <div role="tabpanel" class="tab-pane active">
+                    <div class="">
+                        <div class="panel-body gf-form-group">
+                            <form method="post" class="form-horizontal">
+                                <div class="gf-form">
+                                    <div class="col-md-offset-3 col-md-12 required-field-msg">
+                                        * Indicates a required field
+                                    </div>
+                                </div>
+                                <div class="gf-form">
+                                    <label for="cp_l2_dl_src" class="col-md-3 control-label gf-form-label width-10">Source MAC</label>
+                                    <div class="max-width-12">
+                                        <input class="form-control gf-form-input" type="text" id="cp_l2_dl_src" name="l2_dl_src" placeholder="Source MAC">
+                                    </div>
+                                </div>
+                                <div class="gf-form">
+                                    <label for="cp_l2_dl_dst" class="col-md-3 control-label gf-form-label width-10">Destination MAC</label>
+                                    <div class="max-width-12">
+                                        <input class="form-control gf-form-input" type="text" id="cp_l2_dl_dst" name="l2_dl_dst" placeholder="Destination MAC">
+                                    </div>
+                                </div>
+                                <div class="gf-form">
+                                    <label for="cp_l2_dl_vlan" class="col-md-3 control-label gf-form-label width-10">VLAN *</label>
+                                    <div class="max-width-12">
+                                        <input class="form-control gf-form-input" type="text" id="cp_l2_dl_vlan" name="l2_dl_vlan" placeholder="VLAN">
+                                    </div>
+                                </div>
+                                <div class="gf-form">
+                                    <label for="cp_l2_dl_type" class="col-md-3 control-label gf-form-label width-10">Ethertype</label>
+                                    <div class="max-width-12">
+                                        <input class="form-control gf-form-input" type="text" id="cp_l2_dl_type" name="l2_dl_type" placeholder="Ethertype">
+                                    </div>
+                                </div>
+                                <div class="gf-form">
+                                    <div class="gf-form-button-row">
+                                        <button class="btn btn-inverse" ng-click="ctrl.onClickLayer2()">Trace Layer 2</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <!-- Tab panes - Form layer 3 trace -->
+                <div role="tabpanel" class="tab-pane">
+                    <div class="">
+                        <div class="panel-body gf-form-group">
+                            <form method="post" class="form-horizontal">
+                                <div class="gf-form">
+                                    <div class="col-md-offset-3 col-md-12 required-field-msg">
+                                        * Indicates a required field
+                                    </div>
+                                </div>
+                                <div class="gf-form">
+                                    <label for="cp_l3_dl_vlan" class="col-md-3 control-label gf-form-label width-10">VLAN *</label>
+                                    <div class="max-width-12">
+                                        <input class="form-control gf-form-input" type="text" id="cp_l3_dl_vlan" name="l3_dl_vlan" placeholder="VLAN">
+                                    </div>
+                                </div>
+                                <div class="gf-form">
+                                    <label for="cp_l3_nw_src" class="col-md-3 control-label gf-form-label width-10">Source IP</label>
+                                    <div class="max-width-12">
+                                        <input class="form-control ip_address gf-form-input" type="text" id="cp_l3_nw_src" name="l3_nw_src" placeholder="Source IP">
+                                    </div>
+                                </div>
+                                <div class="gf-form">
+                                    <label for="cp_l3_nw_dst" class="col-md-3 control-label gf-form-label width-10">Destination IP</label>
+                                    <div class="max-width-12">
+                                        <input class="form-control ip_address gf-form-input" type="text" id="cp_l3_nw_dst" name="l3_nw_dst" placeholder="Destination IP">
+                                    </div>
+                                </div>
+                                <div class="gf-form">
+                                    <label for="cp_l3_nw_tos" class="col-md-3 control-label gf-form-label width-10">TOS</label>
+                                    <div class="max-width-12">
+                                        <input class="form-control gf-form-input" type="text" id="cp_l3_nw_tos" name="l3_nw_tos" placeholder="TOS">
+                                    </div>
+                                </div>
+                                <div class="gf-form">
+                                    <label for="cp_l3_tp_src" class="col-md-3 control-label gf-form-label width-10">Source TCP</label>
+                                    <div class="max-width-12">
+                                        <input class="form-control gf-form-input" type="text" id="cp_l3_tp_src" name="l3_tp_src" placeholder="Source TCP">
+                                    </div>
+                                </div>
+                                <div class="gf-form">
+                                    <label for="cp_l3_tp_dst" class="col-md-3 control-label gf-form-label width-10">Destination TCP</label>
+                                    <div class="max-width-12">
+                                        <input class="form-control gf-form-input" type="text" id="cp_l3_tp_dst" name="l3_tp_dst" placeholder="Destination TCP">
+                                    </div>
+                                </div>
+
+                                <div class="gf-form">
+                                    <div class="gf-form-button-row">
+                                        <button class="btn btn-inverse" ng-click="ctrl.onClickLayer3()">Trace Layer 3</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <!-- Tab panes - Form full trace -->
+                <div role="tabpanel" class="tab-pane">
+                    <div class="">
+                        <div class="panel-body gf-form-group">
+                            <form id="maskFormLayerFull" method="post" class="form-horizontal">
+                                <div class="gf-form">
+                                    <div class="col-md-offset-3 col-md-9 required-field-msg">
+                                        * Indicates a required field
+                                    </div>
+                                </div>
+                                <div class="gf-form">
+                                    <label for="cp_lf_dl_src" class="control-label gf-form-label width-10">Source MAC</label>
+                                    <div class="max-width-12">
+                                        <input class="form-control gf-form-input" type="text" id="cp_lf_dl_src" name="lf_dl_src" placeholder="Source MAC">
+                                    </div>
+                                </div>
+                                <div class="gf-form">
+                                    <label for="cp_lf_dl_dst" class="control-label gf-form-label width-10">Destination MAC</label>
+                                    <div class="max-width-12">
+                                        <input class="form-control gf-form-input" type="text" id="cp_lf_dl_dst" name="lf_dl_dst" placeholder="Destination MAC">
+                                    </div>
+                                </div>
+                                <div class="gf-form">
+                                    <label for="cp_lf_dl_vlan" class="col-md-3 control-label gf-form-label width-10">VLAN *</label>
+                                    <div class="max-width-12">
+                                        <input class="form-control gf-form-input" type="text" id="cp_lf_dl_vlan" name="lf_dl_vlan" placeholder="VLAN">
+                                    </div>
+                                </div>
+                                <div class="gf-form">
+                                    <label for="cp_lf_dl_type" class="control-label gf-form-label width-10">Ethertype</label>
+                                    <div class="max-width-12">
+                                        <input class="form-control gf-form-input" type="text" id="cp_lf_dl_type" name="lf_dl_type" placeholder="Ethertype">
+                                    </div>
+                                </div>
+                                <div class="gf-form">
+                                    <label for="cp_lf_nw_src" class="control-label ip_address gf-form-label width-10">Source IP</label>
+                                    <div class="max-width-12">
+                                        <input class="form-control gf-form-input" type="text" id="cp_lf_nw_src" name="lf_nw_src" placeholder="Source IP">
+                                    </div>
+                                </div>
+                                <div class="gf-form">
+                                    <label for="cp_lf_nw_dst" class="control-label ip_address gf-form-label width-10">Destination IP</label>
+                                    <div class="max-width-12">
+                                        <input class="form-control gf-form-input" type="text" id="cp_lf_nw_dst" name="lf_nw_dst" placeholder="Destination IP">
+                                    </div>
+                                </div>
+                                <div class="gf-form">
+                                    <label for="cp_lf_nw_tos" class="control-label gf-form-label width-10">TOS</label>
+                                    <div class="max-width-12">
+                                        <input class="form-control gf-form-input" type="text" id="cp_lf_nw_tos" name="lf_nw_tos" placeholder="TOS">
+                                    </div>
+                                </div>
+                                <div class="gf-form">
+                                    <label for="cp_lf_tp_src" class="control-label gf-form-label width-10">Source TCP</label>
+                                    <div class="max-width-12">
+                                        <input class="form-control gf-form-input" type="text" id="cp_lf_tp_src" name="lf_tp_src" placeholder="Source TCP">
+                                    </div>
+                                </div>
+                                <div class="gf-form">
+                                    <label for="cp_lf_tp_dst" class="control-label gf-form-label width-10">Destination TCP</label>
+                                    <div class="max-width-12">
+                                        <input class="form-control gf-form-input" type="text" id="cp_lf_tp_dst" name="lf_tp_dst" placeholder="Destination TCP">
+                                    </div>
+                                </div>
+                                <div class="gf-form">
+                                    <div class="gf-form-button-row">
+                                        <button class="btn btn-inverse" ng-click="ctrl.onClickLayerFull()" id="layerfull_btn">Trace Full</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

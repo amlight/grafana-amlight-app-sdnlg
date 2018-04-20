@@ -1,0 +1,38 @@
+
+/*Theme the Tabulator element*/
+#flow_stats_table{
+    background-color: #242222;
+    border: 1px solid #141414;
+    border-radius: 10px;
+
+}
+
+/*Theme the header*/
+#flow_stats_table .tabulator-header{
+    background-color:#333;
+    color: #33b5e5;
+    border-color: #141414;
+}
+
+/*Allow column header names to wrap lines*/
+#flow_stats_table .tabulator-header .tabulator-col,
+#flow_stats_table .tabulator-header .tabulator-col-row-handle {
+    white-space: normal;
+}
+
+/*Color the table rows*/
+#flow_stats_table .tabulator-tableHolder .tabulator-table .tabulator-row{
+    color:#fff;
+    background-color: #242222;
+    border-color: #141414;
+}
+
+/*Color even rows*/
+#flow_stats_table .tabulator-tableHolder .tabulator-table .tabulator-row:nth-child(even) {
+    background-color: #242222;
+}
+#flow_stats_table .tabulator-tableHolder .tabulator-table .tabulator-group{
+    background-color:#333;
+    color: #33b5e5;
+    border-color: #141414;
+}

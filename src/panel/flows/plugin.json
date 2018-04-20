@@ -1,0 +1,28 @@
+{
+  "type": "panel",
+  "name": "SDN LG Flow Statistics Panel",
+  "id": "amlight-sdnlg-flows-panel",
+  "info": {
+    "description": "Flow panel for SDN LG",
+    "author": {
+      "name": "Amlight",
+      "url": "https://amlight.net"
+    },
+    "keywords": ["amlight", "panel", "SDN", "topology", "flow"],
+    "logos": {
+      "small": "../grafana-amlight-app-sdnlg/img/panel/table.svg",
+      "large": "../grafana-amlight-app-sdnlg/img/panel/table.svg"
+    },
+    "links": [
+      {"name": "Project site", "url": "https://github.com/amlight"},
+      {"name": "MIT License", "url": "https://github.com/amlight"}
+    ],
+    "version": "0.0.9",
+    "updated": "2018-03-18"
+  },
+
+  "dependencies": {
+    "grafanaVersion": "3.x.x",
+    "plugins": [ ]
+  }
+}
