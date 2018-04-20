@@ -70,10 +70,8 @@ var SDNTraceForm = function() {
         console.log('hideIconTimer');
         $('#sdn_trace_panel .loading-icon-div').hide();
     };
-
-
-
 }
+
 
 
 var SDNTraceUtil = function() {
@@ -172,6 +170,7 @@ var SDNTraceUtil = function() {
 };
 
 
+
 var SDNTrace = function() {
 
     var _self = this;
@@ -235,7 +234,7 @@ var SDNTrace = function() {
 
         // AJAX call
         $.ajax({
-            url: SDNLG_CONF.api_trace,
+            url: SDNLG_CONF.api_trace(),
             type: 'PUT',
             contentType: 'application/json; charset=utf-8',
             data: json_data
@@ -577,7 +576,7 @@ var SDNTrace = function() {
 
         // AJAX call
         $.ajax({
-            url: SDNLG_CONF.api_trace + "/" + traceId + "?q=" + Math.random(),
+            url: SDNLG_CONF.api_trace() + "/" + traceId + "?q=" + Math.random(),
             type: 'GET',
             dataType: 'json',
             crossdomain:true
@@ -602,6 +601,75 @@ var SDNTrace = function() {
  }; // SDNTrace
 
 
+
+
+
+
+
+var SDNTraceCPForm = function() {
+    var _self = this;
+    var _elem = null;
+
+    /**
+    Initialize form binds.
+    Parameter: parent element
+    */
+    this._init = function(elem) {
+        _elem = elem;
+
+        _elem.find('#sdn_tracecp_form_btn_new').on("click", function() {
+          _self.show();
+          _self.hideInfo();
+          $('#sdn_tracecp_form_btn_close').show();
+          $('#sdn_tracecp_form_btn_new').hide();
+        });
+
+        _elem.find('#sdn_tracecp_form_btn_close').on("click", function() {
+          _self.hide();
+          $('#sdn_tracecp_form_btn_close').hide();
+          $('#sdn_tracecp_form_btn_new').show();
+        });
+    };
+
+    this.clear = function() {
+    };
+
+    this.show = function() {
+        $('#sdn_tracecp_form_include_form').show();
+        $('#sdn_tracecp_form_btn_close').show();
+        $('#sdn_tracecp_form_btn_new').hide();
+
+        // Stopping any ongoing trace.
+        sdntrace.traceStop();
+        sdntrace.traceReset();
+        // Hide trace info
+        _self.hideInfo();
+    };
+    this.hide = function() {
+        $('#sdn_tracecp_form_include_form').hide();
+        $('#sdn_tracecp_form_btn_close').hide();
+        $('#sdn_tracecp_form_btn_new').show();
+    };
+
+    this.showInfo = function() {
+        $('#sdn_tracecp_form_include_info').show();
+        _self.hide();
+    };
+    this.hideInfo = function() {
+        $('#sdn_tracecp_form_include_info').hide();
+    };
+
+    this.showIconTimer = function() {
+        console.log('showIconTimer');
+        $('#sdn_tracecp_panel .loading-icon-div').show();
+    };
+    this.hideIconTimer = function() {
+        console.log('hideIconTimer');
+        $('#sdn_tracecp_panel .loading-icon-div').hide();
+    };
+}
+
+
 var SDNTraceCP = function() {
     var _self = this;
 
@@ -612,6 +680,141 @@ var SDNTraceCP = function() {
         */
         $(selector).addClass("new-link link-trace-cp");
     };
+
+
+    /**
+     * Build json string from form fields to send to trace layer 2 ajax.
+     */
+    this.buildTraceLayer2JSON = function() {
+        var layer2 = new Object();
+        layer2.trace = {};
+
+        let _switch = {};
+        _switch.dpid = $('#sdn_tracecp_form__switch-hidden').val();
+        _switch.in_port = $('#sdn_tracecp_form__switch-port-hidden').val();
+        if (_switch.in_port) {
+            _switch.in_port = parseInt(_switch.in_port, 10);
+        }
+        layer2.trace.switch = _switch;
+
+        let _eth = {};
+        _eth.dl_src = $('#cp_l2_dl_src').val();
+        _eth.dl_dst = $('#cp_l2_dl_dst').val();
+        _eth.dl_vlan = $('#cp_l2_dl_vlan').val();
+        if (_eth.dl_vlan) {
+            _eth.dl_vlan = parseInt(_eth.dl_vlan, 10);
+        }
+        _eth.dl_type = $('#cp_l2_dl_type').val();
+        if (_eth.dl_type) {
+            _eth.dl_type = parseInt(_eth.dl_type, 10);
+        }
+        layer2.trace.eth = _eth;
+
+        layer2 = removeEmptyJsonValues(layer2);
+        var layer2String = JSON.stringify(layer2);
+
+        return layer2String;
+    };
+
+    /**
+     * Build json string from form fields to send to trace layer 3 ajax.
+     */
+    this._build_trace_layer3_json = function() {
+        var layer3 = new Object();
+        layer3.trace = {};
+
+        let _switch = {};
+        _switch.dpid = $('#sdn_trace_form__switch-hidden').val();
+        _switch.in_port = $('#sdn_trace_form__switch-port-hidden').val();
+        if (_switch.in_port) {
+            _switch.in_port = parseInt(_switch.in_port, 10);
+        }
+        layer3.trace.switch = _switch;
+
+
+        let _eth = {};
+        _eth.dl_vlan = $('#cp_l3_dl_vlan').val();
+        if (_eth.dl_vlan) {
+            _eth.dl_vlan = parseInt(_eth.dl_vlan, 10);
+        }
+        layer3.trace.eth = _eth;
+
+        let _ip = {};
+        _ip.nw_src = $('#cp_l3_nw_src').val();
+        _ip.nw_dst = $('#cp_l3_nw_dst').val();
+        _ip.nw_tos = $('#cp_l3_nw_tos').val();
+        if (_ip.nw_tos) {
+            _ip.nw_tos = parseInt(_ip.nw_tos, 10);
+        }
+        layer3.trace.ip = _ip;
+
+        let _tp = {};
+        _tp.tp_src = $('#cp_l3_tp_src').val();
+        _tp.tp_dst = $('#cp_l3_tp_dst').val();
+        if (_tp.tp_dst) {
+            _tp.tp_dst = parseInt(_tp.tp_dst, 10);
+        }
+        layer3.trace.tp = _tp;
+
+        console.log(layer3);
+
+        layer3 = removeEmptyJsonValues(layer3);
+        var layer3String = JSON.stringify(layer3);
+
+        return layer3String;
+    };
+
+    /**
+     * Build json string from form fields to send to full trace ajax.
+     */
+    this._build_trace_layerfull_json = function() {
+        var layerfull = new Object();
+        layerfull.trace = {};
+
+        let _switch = {};
+        _switch.dpid = $('#sdn_trace_form__switch-hidden').val();
+        _switch.in_port = $('#sdn_trace_form__switch-port-hidden').val();
+        if (_switch.in_port) {
+            _switch.in_port = parseInt(_switch.in_port, 10);
+        }
+        layerfull.trace.switch = _switch;
+
+        let _eth = {};
+        _eth.dl_src = $('#cp_lf_dl_src').val();
+        _eth.dl_dst = $('#cp_lf_dl_dst').val();
+        _eth.dl_vlan = $('#cp_lf_dl_vlan').val();
+        if (_eth.dl_vlan) {
+            _eth.dl_vlan = parseInt(_eth.dl_vlan, 10);
+        }
+        _eth.dl_type = $('#cp_lf_dl_type').val();
+        if (_eth.dl_type) {
+            _eth.dl_type = parseInt(_eth.dl_type, 10);
+        }
+        layerfull.trace.eth = _eth;
+
+        let _ip = {};
+        _ip.nw_src = $('#cp_lf_nw_src').val();
+        _ip.nw_dst = $('#cp_lf_nw_dst').val();
+        _ip.nw_tos = $('#cp_lf_nw_tos').val();
+        if (_ip.nw_tos) {
+            _ip.nw_tos = parseInt(_ip.nw_tos, 10);
+        }
+        layerfull.trace.ip = _ip;
+
+        let _tp = {};
+        _tp.tp_src = $('#cp_lf_tp_src').val();
+        _tp.tp_dst = $('#cp_lf_tp_dst').val();
+        if (_tp.tp_dst) {
+            _tp.tp_dst = parseInt(_tp.tp_dst, 10);
+        }
+        layerfull.trace.tp = _tp;
+
+        layerfull = removeEmptyJsonValues(layerfull);
+        var layerfullString = JSON.stringify(layerfull);
+
+        return layerfullString;
+    };
+
 
 
     this.callTraceRequestId = function(json_data) {
@@ -632,13 +835,13 @@ var SDNTraceCP = function() {
         };
 
         // show loading icon
-        sdntraceform.hide();
-        sdntraceform.showIconTimer();
+        sdntracecpform.hide();
+        sdntracecpform.showIconTimer();
 
         // AJAX call
         $.ajax({
             //url: "/api/amlight/sdntrace_cp/trace",
-            url: SDNLG_CONF.api_trace_cp,
+            url: SDNLG_CONF.api_trace_cp(),
             type: 'PUT',
             contentType: 'application/json',
             data: json_data
@@ -689,7 +892,7 @@ var SDNTraceCP = function() {
         _flagCallTraceListenerAgain = false;
 
         // hide loading icon
-        sdntraceform.hideIconTimer();
+        sdntracecpform.hideIconTimer();
     };
 
     var _flagCallTraceListenerAgain = true;
@@ -847,7 +1050,7 @@ var SDNTraceCP = function() {
 
         // AJAX call
         $.ajax({
-            url: SDNLG_CONF.api_trace_cp + "/" + traceId + "?t=CP&q=" + Math.random(),
+            url: SDNLG_CONF.api_trace_cp() + "/" + traceId + "?t=CP&q=" + Math.random(),
             type: 'GET',
             dataType: 'json',
             crossdomain:true
@@ -878,14 +1081,13 @@ const sdntraceutil = new SDNTraceUtil();
 const sdntrace = new SDNTrace();
 const sdntracecp = new SDNTraceCP();
 const sdntraceform = new SDNTraceForm();
-
-// reference to the trace form dialog
-var sdn_trace_form_dialog = '';
+const sdntracecpform = new SDNTraceCPForm();
 
 
 export {
   sdntraceutil as sdntraceutil,
   sdntrace as sdntrace,
   sdntracecp as sdntracecp,
-  sdntraceform as sdntraceform
+  sdntraceform as sdntraceform,
+  sdntracecpform as sdntracecpform
 };

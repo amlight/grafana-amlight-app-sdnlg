@@ -412,7 +412,8 @@ rect.node  {
 
 
 #sdn_trace_form_include_form,
-#ksdn_trace_form_include_info {
+#sdn_trace_form_include_info {
   display: none;
   clear: both;
 }
+

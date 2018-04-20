@@ -116,6 +116,7 @@ var SDNTopology = function() {
     
     this.callSdntraceGetSwitchFlows = function(jsonObj, p_dpid, callback=null) {
         var ajax_done = function(jsonObj, p_callback) {
+            console.log('callSdntraceGetSwitchFlows ajax_done');
 
             var switch_obj = _self.get_node_by_id(p_dpid);
 
@@ -134,9 +135,9 @@ var SDNTopology = function() {
                 flowObj.priority = jsonFlow.priority;
                 flowObj.hard_timeout = jsonFlow.hard_timeout;
                 flowObj.byte_count = jsonFlow.stats.Bps;
-//                flowObj.duration_nsec = jsonFlow.duration_nsec;
                 flowObj.packet_count= jsonFlow.stats.pps;
-                flowObj.duration_sec = jsonFlow.duration_sec;
+//                flowObj.duration_nsec = jsonFlow.duration_nsec;
+//                flowObj.duration_sec = jsonFlow.duration_sec;
                 flowObj.table_id = jsonFlow.table_id;
 
                 flowObj.actions = [];
@@ -145,26 +146,25 @@ var SDNTopology = function() {
 
                     var flowActionObj = {};
                     flowActionObj.max_len = jsonAction.max_len;
-                    flowActionObj.type = jsonAction.type;
+                    flowActionObj.type = jsonAction.action_type;
                     flowActionObj.port = jsonAction.port;
                     flowActionObj.vlan_vid = jsonAction.vlan_vid;
                     flowObj.actions.push(flowActionObj);
                 }
 
                 flowObj.match = {};
-                /*
-                flowObj.match.wildcards = jsonFlow.match.wildcards;
+//                flowObj.match.wildcards = jsonFlow.match.wildcards;
                 flowObj.match.in_port = jsonFlow.match.in_port;
                 flowObj.match.dl_vlan = jsonFlow.match.dl_vlan;
                 flowObj.match.dl_src = jsonFlow.match.dl_src;
                 flowObj.match.dl_dst = jsonFlow.match.dl_dst;
                 flowObj.match.dl_type = jsonFlow.match.dl_type;
-                */
-                flowObj.match.in_port = jsonFlow.in_port;
-                flowObj.match.dl_vlan = jsonFlow.dl_vlan;
-                flowObj.match.dl_src = jsonFlow.dl_src;
-                flowObj.match.dl_dst = jsonFlow.dl_dst;
-                flowObj.match.dl_type = jsonFlow.dl_type;
+
+//                flowObj.match.in_port = jsonFlow.in_port;
+//                flowObj.match.dl_vlan = jsonFlow.dl_vlan;
+//                flowObj.match.dl_src = jsonFlow.dl_src;
+//                flowObj.match.dl_dst = jsonFlow.dl_dst;
+//                flowObj.match.dl_type = jsonFlow.dl_type;
 
                 switch_obj.flow_stat.flows.push(flowObj);
             }
@@ -190,11 +190,11 @@ var SDNTopology = function() {
                 pivot.table_id = jsonFlow.table_id || '';
 
 //                pivot.match__wildcards = jsonFlow.match.wildcards || '';
-                pivot.match__in_port = jsonFlow.in_port || ' ';
-                pivot.match__dl_vlan = jsonFlow.dl_vlan || '';
-                pivot.match__dl_src = jsonFlow.dl_src || '';
-                pivot.match__dl_dst = jsonFlow.dl_dst || '';
-                pivot.match__dl_type = jsonFlow.dl_type || '';
+                pivot.match__in_port = jsonFlow.match.in_port || ' ';
+                pivot.match__dl_vlan = jsonFlow.match.dl_vlan || '';
+                pivot.match__dl_src = jsonFlow.match.dl_src || '';
+                pivot.match__dl_dst = jsonFlow.match.dl_dst || '';
+                pivot.match__dl_type = jsonFlow.match.dl_type || '';
 
                 if (jsonFlow.actions) {
                     for(var y in jsonFlow.actions) {
@@ -229,7 +229,7 @@ var SDNTopology = function() {
 
         // AJAX call
         $.ajax({
-            url: SDNLG_CONF.api_stats + p_dpid + "/flows",
+            url: SDNLG_CONF.api_stats() + p_dpid + "/flows",
             dataType: 'json',
             crossdomain:true
         })
@@ -492,11 +492,15 @@ var SDNTopology = function() {
                 // render D3 force
                 d3lib.render_topology();
             }
+
+            if(callback) {
+                callback();
+            }
         };
 
         // AJAX call
         $.ajax({
-            url: SDNLG_CONF.api_topology,
+            url: SDNLG_CONF.api_topology(),
             dataType: 'json'
         })
         .done(function(json) {
@@ -573,7 +577,7 @@ var SDNTopology = function() {
 //                        console.log('Found port ' + p_dpid + " _ " + p_port_data.port_number);
                     }
                     portObj.speed = p_port_data.speed;
-                    portObj.label = p_port_data.name;
+                    portObj.name = p_port_data.name;
                     portObj.number = p_port_data.port_number;
                     //portObj.status = p_port_data.status;
                 }

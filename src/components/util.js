@@ -47,8 +47,21 @@ var isMacAddress = function(str) {
     return res;
 }
 
+
+function formatBytes(x){
+  const units = ['', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
+  let i = 0, number = parseInt(x, 10) || 0;
+
+  while(number >= 1024 && ++i) {
+      number = number/1024;
+  }
+
+  return(number.toFixed(number >= 10 || i < 1 ? 0 : 1) + ' ' + units[i]);
+}
+
 export {
   arrayRemoveDuplicates as arrayRemoveDuplicates,
   removeEmptyJsonValues as removeEmptyJsonValues,
-  isMacAddress as isMacAddress
+  isMacAddress as isMacAddress,
+  formatBytes as formatBytes
 };
