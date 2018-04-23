@@ -86,12 +86,6 @@ var SDNFlowTable = function() {
                 }
             ]
         });
-//
-//        $("#flow_stats_table").tabulator("toggleColumn","empty");
-//
-//        $("#flow_stats_table").tabulator("setFilter", [
-//            {field:"match__in_port", type:"=", value:''}
-//        ]);
 
         var tabledata = [
             {match__in_port:"no data"}
@@ -101,41 +95,15 @@ var SDNFlowTable = function() {
         var r = $("#flow_stats_table").tabulator("setData", tabledata);
     };
 
-    /**
-     * Inital dialog configuration.
-     * The Tabulator content is rendered inside a dialog widget.
-     * @param {type} self
-     * @returns {undefined}
-     */
-    var _init_dialog = function(self) {
-        // Trace form modal
-//        self.dialog = $("#flow_stats_table_dialog").dialog({
-//          autoOpen: false,
-//          height: 750,
-//          width: 1700,
-//          modal: true,
-//          buttons: {
-//            Cancel: function() {
-//              self.dialogClose();
-//            }
-//          },
-//          close: function() {
-//              self.dialogClose();
-//          }
-//        });
-//
-//        $("#flow_stats_table_dialog").on("dialogopen", function( event, ui ) {
-//            $("#flow_stats_table").tabulator("clearFilter", true);
-//            $("#flow_stats_table").tabulator("setSort", "priority", "desc"); //sort by PRIORITY groups
-//            $("#flow_stats_table").tabulator("setSort", "match__in_port", "asc"); //sort by PRIORITY groups
-//
-//        });
-    };
-
 
     this.setDataAndOpen = function(dpid, flow_stat, flow_pivot) {
         _self.setSwitchFlowPanelData(dpid, flow_stat);
         _self.setData(dpid, flow_pivot);
+        _self.setSelectedSwitchLabel(dpid);
+    };
+
+    this.setSelectedSwitchLabel = function(p_dpid) {
+        $('#flow_stats_form__switch-content > select').val(p_dpid);
     };
 
     /**
@@ -145,12 +113,9 @@ var SDNFlowTable = function() {
      */
     this.setData = function(dpid, json) {
         // console panel title
-        //$("#ui-id-1").html(dpid);
         $('.ui-dialog[aria-describedby=flow_stats_table_dialog] > div > span').html(dpid);
         // fill tabulator table data
         $("#flow_stats_table").tabulator("setData", json);
-        console.log("setData");
-        console.log(json);
     };
     
     /**
@@ -173,10 +138,6 @@ var SDNFlowTable = function() {
         };
 
         // display panel
-//        $('#switch_flows_panel').show();
-//        // animation to open panel
-//        $('#switch_flows_panel_collapse').collapse("show");
-        // fill html content
         $('#switch_flows_panel_dpid_value').html(p_dpid);
 
         var _flowStatObj = p_flowStat;
@@ -231,7 +192,6 @@ var SDNFlowTable = function() {
 
     var SDNFlowTable = function(self) {
         _init_tabulator(self);
-//        _init_dialog(self);
     }(this);
 };
 

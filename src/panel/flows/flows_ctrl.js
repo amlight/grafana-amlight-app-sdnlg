@@ -4,7 +4,7 @@ import 'lodash';
 import _ from 'lodash';
 
 import {SDNFlowTable} from  '../../components/sdnflowtable';
-import {setSDNFlowTable, main} from '../../components/main';
+import {sdntopology, setSDNFlowTable, main, getSDNFlowTable} from '../../components/main';
 
 import '../../external/tabulator_midnight.min.css!';
 import '../../css/panel/tabulator_custom.css!';
@@ -19,16 +19,22 @@ export class FlowsCtrl extends MetricsPanelCtrl {
     super($scope, $injector);
     _.defaults(this.panel, panelDefaults);
 
-    // used for initialization timeout
-    this.initialize_timeout = false;
-
     this.panelContainer = null;
     this.scoperef = $scope;
 
+    // used for initialization timeout
+    this.initialize_timeout = false;
+
+    // used in forms.html to store the selected switch field value
+    this.selectedSwitch = "";
+
     this.events.on('init-edit-mode', this.onInitEditMode.bind(this));
     this.events.on('panel-teardown', this.onPanelTeardown.bind(this));
-    this.events.on('render', this.onRender.bind(this));
     this.events.on('panel-initialized', this.onInitialized.bind(this));
+  }
+
+  getSwitches() {
+    return sdntopology.switches;
   }
 
   onInitEditMode() {
@@ -47,17 +53,10 @@ export class FlowsCtrl extends MetricsPanelCtrl {
     this.panelContainer = container;
   }
 
-  onRender() {
-//    if(!this.initialized) {
-//        setTimeout(this.onInitialized, 2000);
-//    }
-  }
-
   onInitialized() {
     clearTimeout(this.initialize_timeout);
-    console.log('onInitialized');
-    console.log(document.getElementById('flow_stats_table'));
 
+    // Verify if html has been loaded.
     if (document.getElementById('flow_stats_table')) {
         setSDNFlowTable(new SDNFlowTable());
 
@@ -69,8 +68,8 @@ export class FlowsCtrl extends MetricsPanelCtrl {
         main.initializeApp(callback);
 
     } else {
-      console.log('set timeout');
-      setTimeout(this.onInitialized, 1000);
+      // if html isnt loaded, wait
+      setTimeout(this.onInitialized, 250);
     }
   }
 
@@ -79,6 +78,18 @@ export class FlowsCtrl extends MetricsPanelCtrl {
 
     // force a render
     this.onRender();
+  }
+
+  /**
+  * onchange action on switch filter drop down.
+  */
+  selectSwitch() {
+    var data = sdntopology.get_node_by_id(this.selectedSwitch.dpid);
+    var callback = function() {
+        getSDNFlowTable().setDataAndOpen(data.dpid, data.flow_stat, data.flow_pivot);
+    }
+    sdntopology.callSdntraceGetSwitchFlows(null, data.dpid, callback);
+
   }
 };
 

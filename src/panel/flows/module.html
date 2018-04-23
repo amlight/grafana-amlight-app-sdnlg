@@ -1,5 +1,16 @@
 <!DOCTYPE html>
 <meta charset="utf-8">
-
+<div id="flow_stats_form">
+    <div>
+        <!-- Switches list filter -->
+        <input type="hidden" name="flow_stats_form__switch-hidden" id="sdn_trace_form__switch-hidden" value="{{ctrl.selectedSwitch.dpid}}">
+        <div><label>Switch:</label></div>
+        <div id="flow_stats_form__switch-content">
+            <select class="form-control" ng-options="option.id for option in ctrl.getSwitches() track by option.id"
+            ng-model="ctrl.selectedSwitch" ng-change="ctrl.selectSwitch()"></select>
+        </div>
+    </div>
+</div>
+<hr />
 <div id="flow_stats_table">
 </div>
