@@ -32,3 +32,6 @@ fig.yml
 profile.cov
 grafana
 .notouch
+
+dist/
+node_modules/
