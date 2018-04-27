@@ -382,7 +382,12 @@ rect.node  {
 
 
 /* use important because the highlight is changing the style attribute */
-.node-trace-active,
+.node-trace-active {
+    /*
+    stroke: rgb(30, 170, 40) !important;
+    */
+    stroke-width: 0.4em !important;
+}
 .link-trace-active {
     stroke: rgb(30, 170, 40) !important;
     stroke-width: 0.4em !important;
@@ -399,7 +404,7 @@ rect.node  {
 }
 
 /* Link path control plane trace  */
-.link-trace-cp {
+.link-tracecp-active {
   stroke-dasharray: 5,5;
   stroke-dashoffset: 5;
   /*
@@ -409,11 +414,32 @@ rect.node  {
   stroke-width: 0.3em;
 }
 
-
-
 #sdn_trace_form_include_form,
 #sdn_trace_form_include_info {
   display: none;
   clear: both;
 }
 
+/* Trace panel result */
+#tracecp_panel_info__header,
+#trace_panel_info__header {
+  display: inline-block;
+  vertical-align: top;
+  width: fit-content;
+  font-size: 0.9rem;
+  border: 1px solid darkslategray;
+}
+
+#tracecp_panel_info__header {
+  padding: 5px 0 5px 5px;
+}
+#trace_panel_info__header {
+  padding: 5px 0 5px 5px;
+}
+
+
+#tracecp_panel_info__header h4,
+#trace_panel_info__header h4 {
+ font-size: 1rem;
+ margin-right: 2em;
+}

@@ -75,9 +75,6 @@ export class FlowsCtrl extends MetricsPanelCtrl {
 
   link(scope, elem, attrs, ctrl) {
     ctrl.setContainer(elem.find('.panel-content'));
-
-    // force a render
-    this.onRender();
   }
 
   /**
