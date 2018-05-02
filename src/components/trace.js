@@ -1,6 +1,6 @@
 import {SDNLG_CONF} from "./conf";
-import {removeEmptyJsonValues, getCSSRule} from "./util";
-import {sdntopology, sdncolor, forcegraph, d3lib} from "./main";
+import {removeEmptyJsonValues} from "./util";
+import {forcegraph, d3lib} from "./main";
 
 /* global forcegraph, MOCK, SDNLG_CONF, d3lib */
 
@@ -390,45 +390,48 @@ var SDNTrace = function() {
 
                 var _flag_multiple_starting_counter = 0;
                 for (var i = 0, len = jsonObj.result.length; i < len; i++) {
-
-                    // FIXME: workaround for multiple starting type
-                    if (jsonObj.result[i].type !== REST_TRACE_TYPE.STARTING || (jsonObj.result[i].type === REST_TRACE_TYPE.STARTING && _flag_multiple_starting_counter > 0)) {
-                        htmlContent += "<tr data-type="+ jsonObj.result[i].type +">";
-                        htmlContent += "<td>" + (i) + "</td>";
-                    }
-
                     // FIXME: workaround for multiple starting type
                     if (jsonObj.result[i].type === REST_TRACE_TYPE.STARTING && (_flag_multiple_starting_counter === 0)) {
                         _flag_multiple_starting_counter = _flag_multiple_starting_counter + 1;
                     // FIXME: workaround for multiple starting type
                     } else if ((jsonObj.result[i].type === REST_TRACE_TYPE.STARTING && _flag_multiple_starting_counter > 0) || jsonObj.result[i].type === REST_TRACE_TYPE.TRACE) {
+                        htmlContent += "<tr data-type="+ jsonObj.result[i].type +">";
                         htmlContent += "<td class='dataCol'>" + jsonObj.result[i].dpid + "</td>";
                         htmlContent += "<td class='dataCol'>" + jsonObj.result[i].port + "</td>";
                         htmlContent += "<td>" + jsonObj.result[i].time + "</td>";
+                        htmlContent += "</tr>";
                     } else if (jsonObj.result[i].type === REST_TRACE_TYPE.INTERTRACE) {
+                        htmlContent += "<tr data-type="+ jsonObj.result[i].type +">";
                         htmlContent += "<td colspan='3'><strong>Interdomain: " + jsonObj.result[i].domain + "</strong></td>";
+                        htmlContent += "</tr>";
                     } else if (jsonObj.result[i].type === REST_TRACE_TYPE.LAST) {
-                        htmlContent += "<td colspan='3'>";
                         if (jsonObj.result[i].reason === REST_TRACE_REASON.ERROR) {
-                            htmlContent += "<span class='trace_result_item_error'>Error: ";
-                            htmlContent += jsonObj.result[i].msg || "";
-                            htmlContent += "</span>";
+                            let pspan = $("<span></span>");
+                            pspan.addClass('trace_result_item_error');
+                            pspan.html("Error: " + (jsonObj.result[i].msg || ""));
+                            $("#tracecp_panel_info__msg").append(pspan);
                         } else if (jsonObj.result[i].reason === REST_TRACE_REASON.DONE) {
-                            htmlContent += "<span class='trace_result_item_done'>Trace completed. ";
+                            let pspan = $("<span></span>");
+                            pspan.addClass('trace_result_item_done');
+                            let pmsg = "Trace completed. ";
                             if (jsonObj.result[i].msg !== 'none') {
-                                htmlContent += jsonObj.result[i].msg || "";
+                                pmsg += jsonObj.result[i].msg || "";
                             }
-                            htmlContent += "</span>";
+                            pspan.html(pmsg);
+                            $("#tracecp_panel_info__msg").append(pspan);
                         } else if (jsonObj.result[i].reason === REST_TRACE_REASON.LOOP) {
-                            htmlContent += "<span class='trace_result_item_loop'>Trace completed with loop. ";
-                            htmlContent += jsonObj.result[i].msg || "";
-                            htmlContent += "</span>";
+                            let pspan = $("<span></span>");
+                            pspan.addClass('trace_result_item_loop');
+                            pspan.html("Trace completed with loop. " + (jsonObj.result[i].msg || ""));
+                            $("#tracecp_panel_info__msg").append(pspan);
                         }
-                        htmlContent += "</td>";
+
                     } else if (jsonObj.result[i].type === REST_TRACE_TYPE.ERROR) {
-                        htmlContent += "<td colspan='3'>" + jsonObj.result[i].message + "</td>";
+                        let pspan = $("<span></span>");
+                        pspan.html(jsonObj.result[i].message);
+                        $("#tracecp_panel_info__msg").append(pspan);
                     }
-                    htmlContent += "</tr>";
+
                 }
                 htmlContent += "</tbody></table>";
             }

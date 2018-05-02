@@ -443,3 +443,8 @@ rect.node  {
  font-size: 1rem;
  margin-right: 2em;
 }
+
+
+#tracecp_panel_info__msg {
+ margin-top: 1em;
+}

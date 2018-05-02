@@ -2,14 +2,14 @@ import {MetricsPanelCtrl} from 'app/plugins/sdk';
 import * as _ from 'lodash';
 
 import {sdntopology} from '../../components/main';
-import {sdntraceutil, sdntrace, sdntracecp, sdntracecpform} from "../../components/trace";
+import {sdntrace, sdntracecp} from "../../components/trace";
 
 import '../../css/panel/sdnlg-panel.css!';
 
 
 const panelDefaults = {
   title: "Trace controle plane",
-  bgColor: null,
+  traceColor: "rgb(196, 0, 255) !important",
 };
 
 export class TraceCPCtrl extends MetricsPanelCtrl {
@@ -25,7 +25,9 @@ export class TraceCPCtrl extends MetricsPanelCtrl {
     // used in forms.html to store the selected switch port field value
     this.selectedSwitchPort = "";
 
-    this.sdntracecpform = sdntracecpform;
+    this.traceColor = '';
+
+//    this.sdntracecpform = sdntracecpform;
 
     this.events.on('init-edit-mode', this.onInitEditMode.bind(this));
     this.events.on('panel-teardown', this.onPanelTeardown.bind(this));
@@ -68,7 +70,7 @@ export class TraceCPCtrl extends MetricsPanelCtrl {
     this.onRender();
 
     // initialize trace form
-    sdntracecpform._init(elem.find('.panel-content'));
+//    sdntracecpform._init(elem.find('.panel-content'));
   }
 
 
