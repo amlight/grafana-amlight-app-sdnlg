@@ -359,6 +359,32 @@ var SDNTrace = function() {
 
 
     this.callTraceListener = function(traceId) {
+        var colorRender = function() {
+            $("#trace_panel_info__result tr").each(function(index){
+              let _switchA = $(this).find(".dataCol:eq(0)");
+              let _portA = $(this).find(".dataCol:eq(1)");
+
+              let _switchB = $("#tracecp_panel_info__result tr:nth-child(" + index + ")").find(".dataCol:eq(0)");
+              let _portB = $("#tracecp_panel_info__result tr:nth-child(" + index + ")").find(".dataCol:eq(1)");
+
+              if (_switchA.text() === _switchB.text()) {
+                _switchA.css("color","greenyellow");
+                _switchB.css("color","greenyellow");
+              } else {
+                _switchA.css("color","red");
+                _switchB.css("color","red");
+              }
+
+              if (_portA.text() === _portB.text()) {
+                _portA.css("color","greenyellow");
+                _portB.css("color","greenyellow");
+              } else {
+                _portA.css("color","red");
+                _portB.css("color","red");
+              }
+            });
+        }
+
         var htmlRender = function(jsonObj) {
             /**
             * Render trace result html info.
@@ -439,6 +465,7 @@ var SDNTrace = function() {
             $("#trace_panel_info__result").html(htmlContent);
 
             sdntraceform.hide();
+            colorRender();
         };
 
         var _addNewHtmlNode = function(_id) {
