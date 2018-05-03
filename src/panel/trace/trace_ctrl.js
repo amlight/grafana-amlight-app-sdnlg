@@ -3,14 +3,15 @@ import {MetricsPanelCtrl} from 'app/plugins/sdk';
 import 'lodash';
 import _ from 'lodash';
 
-import {sdntopology} from '../../components/main';
+import {sdntopology, sdncolor} from '../../components/main';
 import {sdntrace, sdntraceform, sdntracecp, sdntracecpform} from "../../components/trace";
 
 import '../../css/panel/sdnlg-panel.css!';
 
 
 const panelDefaults = {
-  traceColor: "rgb(196, 0, 255) !important"
+  traceColor: sdncolor.TRACE_COLOR_ACTIVE,
+  tracecpColor: sdncolor.TRACECP_COLOR_ACTIVE
 };
 
 export class TraceCtrl extends MetricsPanelCtrl {
@@ -24,6 +25,7 @@ export class TraceCtrl extends MetricsPanelCtrl {
     this.scoperef = $scope;
 
     this.traceColor;
+    this.tracecpColor;
 
     // used in forms.html to store the selected switch field value
     this.selectedSwitch = "";
@@ -36,7 +38,6 @@ export class TraceCtrl extends MetricsPanelCtrl {
     this.events.on('init-edit-mode', this.onInitEditMode.bind(this));
     this.events.on('panel-teardown', this.onPanelTeardown.bind(this));
     this.events.on('render', this.onRender.bind(this));
-
     this.events.on('component-did-mount', this.panelDidMount.bind(this));
 
     //this.events.on('panel-initialized', this.render.bind(this));
@@ -59,22 +60,27 @@ export class TraceCtrl extends MetricsPanelCtrl {
   }
 
   onRender() {
-      console.log('render');
+
+  }
+
+  onEdit() {
+    sdntrace.configureColors(this.$scope.ctrl.panel.traceColor);
+    sdntracecp.configureColors(this.$scope.ctrl.panel.tracecpColor);
   }
 
   panelDidMount() {
-    console.log('panelDidMount');
-
+    //console.log('panelDidMount');
   }
 
   link(scope, elem, attrs, ctrl) {
-    console.log('link');
     ctrl.setContainer(elem.find('.panel-content'));
     // force a render
     this.onRender();
 
     // initialize trace form
     sdntraceform._init(elem.find('.panel-content'));
+    sdntrace.configureColors(this.$scope.ctrl.panel.traceColor);
+    sdntracecp.configureColors(this.$scope.ctrl.panel.tracecpColor);
   }
 
 

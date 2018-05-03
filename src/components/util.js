@@ -59,9 +59,24 @@ function formatBytes(x){
   return(number.toFixed(number >= 10 || i < 1 ? 0 : 1) + ' ' + units[i]);
 }
 
+function injectStyles(p_id, p_rule) {
+  // remove old styles
+  var elem = document.getElementById(p_id);
+  if(elem) {
+    elem.parentNode.removeChild(elem);
+  }
+
+  // Works in IE6
+  var div = document.createElement('div');
+  div.id = p_id;
+  div.innerHTML = '&shy;<style>' + p_rule + '</style>';
+  document.body.appendChild(div.childNodes[1]);
+}
+
 export {
   arrayRemoveDuplicates as arrayRemoveDuplicates,
   removeEmptyJsonValues as removeEmptyJsonValues,
   isMacAddress as isMacAddress,
-  formatBytes as formatBytes
+  formatBytes as formatBytes,
+  injectStyles as injectStyles
 };

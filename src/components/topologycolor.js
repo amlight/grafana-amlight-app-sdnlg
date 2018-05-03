@@ -32,6 +32,9 @@ var SDNColor = function() {
     this.LINK_COLOR_HIGHLIGHT = {'domain': "#4D7C9D", 'host': "#4D7C9D", 'switch': "#4D7C9D"};
     this.LINK_COLOR_HIDE = {'domain': 'white', 'host': 'white', 'switch': 'white'};
 
+    this.TRACE_COLOR_ACTIVE = "rgb(30, 170, 40)";
+    this.TRACECP_COLOR_ACTIVE = "rgb(196, 0, 255)";
+
     /**
      * Get color CSS name.
      * @param {type} code binary color code

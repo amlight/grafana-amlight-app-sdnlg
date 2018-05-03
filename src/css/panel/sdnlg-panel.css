@@ -383,14 +383,12 @@ rect.node  {
 
 /* use important because the highlight is changing the style attribute */
 .node-trace-active {
-    /*
-    stroke: rgb(30, 170, 40) !important;
-    */
     stroke-width: 0.4em !important;
+    stroke: rgb(30, 170, 40);
 }
 .link-trace-active {
-    stroke: rgb(30, 170, 40) !important;
     stroke-width: 0.4em !important;
+    stroke: rgb(30, 170, 40) !important;
 }
 
 .trace_result_item_error {
@@ -407,11 +405,8 @@ rect.node  {
 .link-tracecp-active {
   stroke-dasharray: 5,5;
   stroke-dashoffset: 5;
-  /*
-  stroke: rgb(52, 136, 42);
-  */
-  stroke: rgb(196, 0, 255) !important;
   stroke-width: 0.3em;
+  stroke: rgb(196, 0, 255);
 }
 
 #sdn_trace_form_include_form,

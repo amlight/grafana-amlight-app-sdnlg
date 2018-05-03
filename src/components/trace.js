@@ -1,6 +1,6 @@
 import {SDNLG_CONF} from "./conf";
-import {removeEmptyJsonValues} from "./util";
-import {forcegraph, d3lib} from "./main";
+import {removeEmptyJsonValues, injectStyles} from "./util";
+import {forcegraph, d3lib, sdncolor} from "./main";
 
 /* global forcegraph, MOCK, SDNLG_CONF, d3lib */
 
@@ -32,6 +32,8 @@ var SDNTraceForm = function() {
           $('#sdn_trace_form_btn_close').hide();
           $('#sdn_trace_form_btn_new').show();
         });
+
+
     };
 
     this.clear = function() {
@@ -85,6 +87,12 @@ var SDNTrace = function() {
     // last trace id executing
     this.lastTraceID = "";
 
+    this.configureColors = function(p_color) {
+        var _color =  typeof p_color !== 'undefined' ? p_color : sdncolor.TRACE_COLOR_ACTIVE;
+
+        injectStyles("style_trace_active", " .node-trace-active-color {stroke: " + _color + " !important;}" +
+                     " .link-trace-active-color {stroke: " + _color + " !important;}");
+    }
 
     this.clearTraceInterface = function() {
         /**
@@ -100,25 +108,11 @@ var SDNTrace = function() {
         forcegraph.endHighlight();
 
         // clear d3 graph trace classes
-        $("path").removeClass("node-trace-active");
-        $("line").removeClass("link-trace-active");
-        $("line").removeClass("link-tracecp-active");
-
-        $("path").each(function() {
-            if ($(this).attr("data-nodeid")) {
-            }
-        });
+        d3lib.clearActivate();
 
         // close trace form
         sdntraceform.hide();
         sdntraceform.hideInfo();
-    };
-
-    this.highlightPath = function(selector) {
-        /**
-        * Highlight path. Receive selector var.
-        */
-        $(selector).addClass("new-link link-trace-active");
     };
 
     this.callTraceRequestId = function(json_data) {
@@ -482,7 +476,7 @@ var SDNTrace = function() {
             Add html data selector after add a new link
             */
             var html_selector = "#link-" + _idFrom +"-"+ _idTo;
-            _self.highlightPath(html_selector);
+            d3lib.startPathActivate(_idFrom, _idTo);
 
             $(html_selector).attr("data-linkid", _idFrom +"-"+ _idTo);
         };
@@ -536,13 +530,7 @@ var SDNTrace = function() {
 
                         if (i > 0 && jsonObj.result[i-1].hasOwnProperty("dpid") && jsonObj.result[i].hasOwnProperty("dpid")) {
                             // Add new link between nodes
-                            var css_selector = document.getElementById("link-" + jsonObj.result[i-1].dpid +"-"+ jsonObj.result[i].dpid);
-                            _self.highlightPath(css_selector);
-
-                            // Activate the return link too
-
-                            css_selector = document.getElementById("link-" + jsonObj.result[i].dpid +"-"+ jsonObj.result[i-1].dpid);
-                            _self.highlightPath(css_selector);
+                            d3lib.startPathActivate(jsonObj.result[i-1].dpid, jsonObj.result[i].dpid)
                         }
 
                         last_node_id = _id;
@@ -554,16 +542,15 @@ var SDNTrace = function() {
                         if (_self._flagCallTraceListenerAgainCounter < 12) {
                             _self._flagCallTraceListenerAgainCounter = _self._flagCallTraceListenerAgainCounter + 1;
                         } else {
-                            console.log('type last');
                             // stop the interval loop
                             _self.traceStop();
                         }
                     } else if (last_result_item.type === REST_TRACE_TYPE.ERROR) {
-                        console.log('type error');
                         // stop the interval loop
                         _self.traceStop();
                     }
                 }
+
                 htmlRender(jsonObj);
             } catch(err) {
                 _self.traceStop();
@@ -607,22 +594,13 @@ var SDNTrace = function() {
  }; // SDNTrace
 
 
-
-
-
-
-
 var SDNTraceCP = function() {
     var _self = this;
 
-
-    this.highlightPath = function(selector) {
-        /**
-        * Highlight path. Receive selector var.
-        */
-        $(selector).addClass("new-link link-trace-cp");
-    };
-
+    this.configureColors = function(p_color) {
+        var _color =  typeof p_color !== 'undefined' ? p_color : sdncolor.TRACECP_COLOR_ACTIVE;
+        injectStyles("style_tracecp_active", " .link-tracecp-active-color {stroke: " + _color + " !important;}");
+    }
 
     /**
      * Build json string from form fields to send to trace layer 2 ajax.
@@ -697,8 +675,6 @@ var SDNTraceCP = function() {
             _tp.tp_dst = parseInt(_tp.tp_dst, 10);
         }
         layer3.trace.tp = _tp;
-
-        console.log(layer3);
 
         layer3 = removeEmptyJsonValues(layer3);
         var layer3String = JSON.stringify(layer3);
@@ -842,7 +818,7 @@ var SDNTraceCP = function() {
             Add html data selector after add a new link
             */
             var html_selector = "#link-CP" + _idFrom +"-"+ _idTo;
-            _self.highlightPath(html_selector);
+            d3lib.startPathCPActivate(_idFrom, _idTo);
             $(html_selector).attr("data-linkid", _idFrom +"-"+ _idTo);
         };
 
@@ -871,17 +847,14 @@ var SDNTraceCP = function() {
                                 d3lib.addNewLink(last_node_id, _id, "CP");
                                 _addNewHtmlLink(last_node_id, _id, "CP");
                             }
-                            $(document.getElementById("node-" + _id)).addClass("node-trace-active");
+                            d3lib.startNodeActivate(_id);
                         }
 
                         if (i > 0 && jsonObj.result[i-1].hasOwnProperty("dpid") && jsonObj.result[i].hasOwnProperty("dpid")) {
                             // Add new link between nodes
                             var css_selector = document.getElementById("link-CP" + jsonObj.result[i-1].dpid +"-"+ jsonObj.result[i].dpid);
-                            _self.highlightPath(css_selector);
-                            // Activate the return link too
+                            d3lib.startPathCPActivate(jsonObj.result[i-1].dpid, jsonObj.result[i].dpid);
 
-                            css_selector = document.getElementById("link-CP" + jsonObj.result[i].dpid +"-"+ jsonObj.result[i-1].dpid);
-                            _self.highlightPath(css_selector);
                         }
 
                         last_node_id = _id;

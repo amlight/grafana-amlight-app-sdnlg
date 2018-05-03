@@ -3,7 +3,6 @@ import {sdntopology, sdncolor, getSDNFlowTable, forcegraph, d3lib} from "./main"
 import {Switch, Link, Port, Domain, Host} from "./domain"
 import {formatBytes} from "./util"
 
-
 /** @constant */
 var SPEED_100GB = 100000000000;
 /** @constant */
@@ -64,11 +63,9 @@ var ForceGraphContextMenu = function() {
 //                action: function() {}
 //            },
             {
-
                 title: 'Flows',
                 action: function(elm, d, i) {
                     var callback = function() {
-                        console.log('Flows callback ');
                         getSDNFlowTable().setDataAndOpen(d.data.dpid, d.data.flow_stat, d.data.flow_pivot);
                     }
                     sdntopology.callSdntraceGetSwitchFlows(null, d.data.dpid, callback);
@@ -923,6 +920,80 @@ var D3JS = function() {
             this.edges = [];
         }
     };
+
+    this.startNodeActivate = function(p_id) {
+        var css_selector = document.getElementById("node-" + p_id);
+        $(css_selector).addClass("node-trace-active");
+
+        for (var k in this.nodes){
+            if (this.nodes[k].id === p_id) {
+                this.nodes[k].isActive = true;
+                break;
+            }
+        }
+    };
+
+    this.startPathActivate = function(p_id_from, p_id_to) {
+        var css_selector = document.getElementById("link-" + p_id_from +"-"+ p_id_to);
+        $(css_selector).addClass("link-trace-active link-trace-active-color");
+
+        css_selector = document.getElementById("link-" + p_id_to +"-"+ p_id_from);
+        $(css_selector).addClass("link-trace-active link-trace-active-color");
+
+        //
+        // for (var k in this.nodes){
+        //     if (this.nodes[k].id === id) {
+        //          this.data.isActive = true;
+        //     }
+        // }
+        // Delete the edges related to the deleted node
+        for (var k in this.edges){
+            if (this.edges.hasOwnProperty(k) && this.edges[k]) {
+                if (this.edges[k].source.id === p_id_from && this.edges[k].target.id === p_id_to) {
+                    this.edges[k].isActive = true;
+                    break;
+                }
+
+                if (this.edges[k].source.id === p_id_to && this.edges[k].target.id === p_id_from) {
+                    this.edges[k].isActive = true;
+                    break;
+                }
+            }
+        }
+    };
+
+    this.startPathCPActivate = function(p_id_from, p_id_to) {
+        var css_selector = document.getElementById("link-CP" + p_id_from +"-"+ p_id_to);
+        $(css_selector).addClass("link-tracecp-active link-tracecp-active-color");
+
+        css_selector = document.getElementById("link-CP" + p_id_to +"-"+ p_id_from);
+        $(css_selector).addClass("link-tracecp-active link-tracecp-active-color");
+
+        for (var k in this.edges){
+            if (this.edges.hasOwnProperty(k) && this.edges[k]) {
+                if (this.edges[k].source.id === p_id_from && this.edges[k].target.id === p_id_to) {
+                    this.edges[k].isCPActive = true;
+                    break;
+                }
+
+                if (this.edges[k].source.id === p_id_to && this.edges[k].target.id === p_id_from) {
+                    this.edges[k].isCPActive = true;
+                    break;
+                }
+            }
+        }
+    };
+
+    this.clearActivate = function() {
+        for (var k in this.nodes){
+            return this.nodes[k].data.isActive = false;
+        }
+
+        $("path").removeClass("node-trace- node-trace-active-color");
+        $("line").removeClass("link-trace-active link-trace-active-color");
+        $("line").removeClass("link-tracecp-active link-tracecp-active-color");
+    };
+
 
     /**
      * Create D3JS network nodes.
