@@ -34,7 +34,6 @@ export class TraceCtrl extends MetricsPanelCtrl {
 
     this.sdntraceform = sdntraceform;
 
-
     this.events.on('init-edit-mode', this.onInitEditMode.bind(this));
     this.events.on('panel-teardown', this.onPanelTeardown.bind(this));
     this.events.on('render', this.onRender.bind(this));
@@ -79,10 +78,10 @@ export class TraceCtrl extends MetricsPanelCtrl {
 
     // initialize trace form
     sdntraceform._init(elem.find('.panel-content'));
+    sdntraceform.show();
     sdntrace.configureColors(this.$scope.ctrl.panel.traceColor);
     sdntracecp.configureColors(this.$scope.ctrl.panel.tracecpColor);
   }
-
 
   onClickLayer2() {
     var jsonStr = sdntrace.buildTraceLayer2JSON();
@@ -100,7 +99,6 @@ export class TraceCtrl extends MetricsPanelCtrl {
     sdntracecp.callTraceRequestId(jsonStr);
   }
 
-
   getSwitches() {
     return sdntopology.switches;
   }
@@ -108,11 +106,7 @@ export class TraceCtrl extends MetricsPanelCtrl {
   getSwitchPorts(dpid) {
     return sdntopology.get_switch_ports(dpid);
   }
-
-
-
 };
 
 
 TraceCtrl.templateUrl = 'public/plugins/grafana-amlight-app-sdnlg/panel/trace/module.html';
-

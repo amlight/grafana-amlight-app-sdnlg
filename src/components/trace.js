@@ -32,8 +32,6 @@ var SDNTraceForm = function() {
           $('#sdn_trace_form_btn_close').hide();
           $('#sdn_trace_form_btn_new').show();
         });
-
-
     };
 
     this.clear = function() {
@@ -47,6 +45,7 @@ var SDNTraceForm = function() {
         // Stopping any ongoing trace.
         sdntrace.traceStop();
         sdntrace.traceReset();
+        sdntrace.clearTraceInterface();
         // Hide trace info
         _self.hideInfo();
     };
@@ -405,7 +404,7 @@ var SDNTrace = function() {
             var htmlContent = "";
             if(jsonObj.result) {
                 htmlContent += "<table id='trace_panel_info__result' class='table grafana-options-table'>";
-                htmlContent += "<thead><tr><th></th><th>DPID</th><th>In. Port</th><th>Time</th></tr></thead>";
+                htmlContent += "<thead><tr><th>DPID</th><th>In. Port</th><th>Time</th></tr></thead>";
                 htmlContent += "<tbody>";
 
                 var _flag_multiple_starting_counter = 0;
