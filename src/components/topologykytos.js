@@ -686,7 +686,7 @@ var SDNTopology = function() {
         sdntrace.renderHtmlTraceFormPorts(d.dpid, ports);
 
         // open trace form panel
-        sdntraceform.show();
+        sdntraceform.showForm();
 
     };
 

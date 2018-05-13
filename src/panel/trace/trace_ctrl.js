@@ -59,7 +59,6 @@ export class TraceCtrl extends MetricsPanelCtrl {
   }
 
   onRender() {
-
   }
 
   onEdit() {
@@ -78,7 +77,7 @@ export class TraceCtrl extends MetricsPanelCtrl {
 
     // initialize trace form
     sdntraceform._init(elem.find('.panel-content'));
-    sdntraceform.show();
+    sdntraceform.showForm();
     sdntrace.configureColors(this.$scope.ctrl.panel.traceColor);
     sdntracecp.configureColors(this.$scope.ctrl.panel.tracecpColor);
   }

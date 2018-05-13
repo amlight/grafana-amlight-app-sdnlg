@@ -69,7 +69,6 @@ export class TopologyCtrl extends MetricsPanelCtrl {
     var tmpPanelWidthCSS = $("div.panel > plugin-component > panel-plugin-amlight-sdnlg-app-panel > grafana-panel > div.panel-container ").css("width");
     tmpPanelWidthCSS = String(tmpPanelWidthCSS);
 
-
     var tmpPanelWidthPx = tmpPanelWidthCSS.replace("px","");
     var tmpPanelWidth = parseInt(tmpPanelWidthPx);
     // get our "span" setting
@@ -104,7 +103,6 @@ export class TopologyCtrl extends MetricsPanelCtrl {
     }
     return actualHeight;
   }
-
 
   onRender() {
   }
@@ -193,7 +191,6 @@ export class TopologyCtrl extends MetricsPanelCtrl {
 
     main.initializeApp(callback);
   }
-
 
   link(scope, elem, attrs, ctrl) {
     ctrl.setContainer(elem.find('.panel-content'));

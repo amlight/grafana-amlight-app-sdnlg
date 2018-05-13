@@ -21,14 +21,15 @@ var SDNTraceForm = function() {
         _elem = elem;
 
         _elem.find('#sdn_trace_form_btn_new').on("click", function() {
-          _self.show();
-          _self.hideInfo();
+          sdntrace.clearTraceInterface();
+          _self.showForm();
+
           $('#sdn_trace_form_btn_close').show();
           $('#sdn_trace_form_btn_new').hide();
         });
 
         _elem.find('#sdn_trace_form_btn_close').on("click", function() {
-          _self.hide();
+          _self.hideForm();
           $('#sdn_trace_form_btn_close').hide();
           $('#sdn_trace_form_btn_new').show();
         });
@@ -37,19 +38,24 @@ var SDNTraceForm = function() {
     this.clear = function() {
     };
 
-    this.show = function() {
-        $('#sdn_trace_form_include_form').show();
-        $('#sdn_trace_form_btn_close').show();
+    /**
+     * Show trace form.
+     * It also cleans and hides all the informations in the panel to display propperly the form.
+     */
+    this.showForm = function() {
         $('#sdn_trace_form_btn_new').hide();
 
-        // Stopping any ongoing trace.
-        sdntrace.traceStop();
-        sdntrace.traceReset();
-        sdntrace.clearTraceInterface();
         // Hide trace info
         _self.hideInfo();
+
+        $('#sdn_trace_form_include_form').show();
+        $('#sdn_trace_form_btn_close').show();
     };
-    this.hide = function() {
+
+    /**
+     * Hide trace form.
+     */
+    this.hideForm = function() {
         $('#sdn_trace_form_include_form').hide();
         $('#sdn_trace_form_btn_close').hide();
         $('#sdn_trace_form_btn_new').show();
@@ -57,7 +63,7 @@ var SDNTraceForm = function() {
 
     this.showInfo = function() {
         $('#sdn_trace_form_include_info').show();
-        _self.hide();
+        _self.hideForm();
     };
     this.hideInfo = function() {
         $('#sdn_trace_form_include_info').hide();
@@ -104,28 +110,32 @@ var SDNTrace = function() {
         $("#trace_panel_info__result").html("");
 
         // clear d3 graph highlight nodes, links
-        forcegraph.endHighlight();
+        if (forcegraph) {
+            forcegraph.endHighlight();
+        }
 
         // clear d3 graph trace classes
-        d3lib.clearActivate();
+        if (d3lib) {
+            d3lib.clearActivate();
+        }
 
         // close trace form
-        sdntraceform.hide();
-        sdntraceform.hideInfo();
+        if (sdntraceform) {
+            sdntraceform.hideForm();
+            sdntraceform.hideInfo();
+        }
     };
 
+    /**
+     * Call ajax to trace.
+     * Param:
+     *    json_data: Data in json String format to send as PUT method.
+     */
     this.callTraceRequestId = function(json_data) {
-        /**
-         * Call ajax to trace.
-         * Param:
-         *    json_data: Data in json String format to send as PUT method.
-         */
 
         _self.clearTraceInterface();
 
-        sdntraceform.showInfo();
         sdntraceform.showIconTimer();
-
 
         var ajaxDone = function(json) {
             // Stopping any ongoing trace.
@@ -156,7 +166,7 @@ var SDNTrace = function() {
             console.warn("call_trace_request_id ajax error" );
         })
         .always(function() {
-            $('#trace_panel_info').show();
+            sdntraceform.showInfo();
         });
     };
 
@@ -351,6 +361,12 @@ var SDNTrace = function() {
     };
 
 
+    /**
+     * Call trace REST service to retrieve a trace result.
+     * User must keep calling this service until the result retuns a SUCCESS or FAIL.
+     *
+     * @param traceId Trace ID number
+     */
     this.callTraceListener = function(traceId) {
         var colorRender = function() {
             $("#trace_panel_info__result tr").each(function(index){
@@ -378,10 +394,11 @@ var SDNTrace = function() {
             });
         }
 
+        /**
+         * Render trace result html info.
+         * @param jsonObj json received from REST trace service.
+         */
         var htmlRender = function(jsonObj) {
-            /**
-            * Render trace result html info.
-            */
             if(jsonObj.result) {
                 // FIXME workaround for multiple starting type
                 var _flag_multiple_starting_counter = 0;
@@ -457,7 +474,7 @@ var SDNTrace = function() {
             // Result items
             $("#trace_panel_info__result").html(htmlContent);
 
-            sdntraceform.hide();
+            sdntraceform.hideForm();
             colorRender();
         };
 
