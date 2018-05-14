@@ -1,7 +1,8 @@
 import * as d3 from '../external/d3';
 import {sdntopology, sdncolor, getSDNFlowTable, forcegraph, d3lib} from "./main";
-import {Switch, Link, Port, Domain, Host} from "./domain"
-import {formatBytes} from "./util"
+import {Switch, Link, Port, Domain, Host} from "./domain";
+import {sdndeviceinfo} from "./info";
+import {formatBytes} from "./util";
 
 /** @constant */
 var SPEED_100GB = 100000000000;
@@ -314,9 +315,11 @@ var ForceGraph = function(p_args, p_data) {
         });
     };
 
-
-    // focus highlight (on node mousedown)
-    var setSwitchFocus = function(d) {
+    /**
+     * Focus on a clicked switch. (on node mousedown)
+     * @param d D3 data object.
+     */
+    var focusSwitch = function(d) {
         // Set data info panel
         if(d && d.data) {
             $('#port_panel_info').hide();
@@ -324,7 +327,8 @@ var ForceGraph = function(p_args, p_data) {
             $('#switch_flows_panel').hide();
             $('#domain_panel_info').hide();
 
-            _setSwitchFocusPanelData(d);
+            // show all the switch data in the panel
+            _showSwitchPanelData(d);
         }
 
         // Set nodes and links opacity to all of them that are not connected to the clicked node
@@ -369,7 +373,7 @@ var ForceGraph = function(p_args, p_data) {
             $('#port_panel_info_number_value').html(d.data.number);
             $('#port_panel_info_speed_value').html(d.data.speed);
             $('#port_panel_info_status_value').html(d.data.status);
-            _setSwitchFocusPanelData(d.from_sw);
+            _showSwitchPanelData(d.from_sw);
         }
     };
 
@@ -412,47 +416,13 @@ var ForceGraph = function(p_args, p_data) {
     /**
      * Focus and show to the lateral switch panel data.
      * Use with set_switch_focus to set the lateral panel data
-     * @param {type} d
-     * @returns {undefined}
+     * @param {type} d D3 data object
+     * @returns {}
      */
-    var _setSwitchFocusPanelData = function(d) {
+    var _showSwitchPanelData = function(d) {
 //        // display panel
 //        show_right_pannel();
-//        $('#switch_panel_info').show();
-//        // animation to open panel
-//        $('#switch_panel_info_collapse').collapse("show");
-//        // fill html content
-//
-//        $('#switch_panel_info_dpid_value').html(d.data.dpid);
-//        var name = d.data.getName();
-//        if (name && name.length > 0) {
-//            $('#switch_panel_info_name').show();
-//            $('#switch_panel_info_name_value').html(name);
-//        } else {
-//            $('#switch_panel_info_name').hide();
-//        }
-//
-//        $('#switch_panel_info_flows_value').html(d.data.number_flows);
-//        if (d.data.number_flows && d.data.number_flows > 0) {
-//            // Open flow panel clicking the flow number
-//            $('#switch_panel_info_flows').css('cursor', 'pointer');
-//            $('#switch_panel_info_flows').css('text-decoration', 'underline');
-//            $('#switch_panel_info_flows').click(function() {
-//                sdnflowtable.setDataAndOpen(d.data.dpid, d.data.flow_stat, d.data.flow_pivot);
-//            });
-//        }
-//
-//        if (d.data.domain) {
-//            $('#switch_panel_info_domain').show();
-//            $('#switch_panel_info_domain_value').html(d.data.domain);
-//        } else {
-//            $('#switch_panel_info_domain').hide();
-//        }
-//        $('#switch_panel_info_tcp_port_value').html(d.data.tcp_port);
-//        $('#switch_panel_info_openflow_version_value').html(d.data.openflow_version);
-//        $('#switch_panel_info_switch_vendor_value').html(d.data.switch_vendor);
-//        $('#switch_panel_info_ip_address_value').html(d.data.ip_address);
-//        $('#switch_panel_info_color_value').html(d.data.switch_color);
+        sdndeviceinfo.switchInfo.show(d.data);
     };
 
     /**
@@ -621,7 +591,7 @@ var ForceGraph = function(p_args, p_data) {
                     } else if (d.type === Switch.TYPE) {
                         // focus_node to control highlight events
                         focus_node = d;
-                        setSwitchFocus(d);
+                        focusSwitch(d);
                     } else if (d.type === Domain.TYPE) {
                         // focus_node to control highlight events
                         focus_node = d;

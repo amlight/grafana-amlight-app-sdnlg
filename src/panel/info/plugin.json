@@ -1,9 +1,9 @@
 {
   "type": "panel",
-  "name": "SDN LG Trace Control Plane Panel",
-  "id": "amlight-sdnlg-trace_cp-panel",
+  "name": "SDN LG Switch information panel",
+  "id": "amlight-sdnlg-info-panel",
   "info": {
-    "description": "Trace Controle Plane panel for SDN LG",
+    "description": "Switch information for SDN LG",
     "author": {
       "name": "Amlight",
       "url": "https://amlight.net"
