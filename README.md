@@ -1,90 +1,56 @@
-Icons from
-topology
-https://thenounproject.com/term/network-topology/1569721/
-nodes
-https://thenounproject.com/search/?q=nodes&i=1509979
-tables
-https://thenounproject.com/search/?q=table&i=1061423
-https://thenounproject.com/search/?q=table&i=662371
-https://thenounproject.com/search/?q=table&i=512574
 
+## AmLight’s SDN Looking Glass
+Central point for SDN troubleshooting:
 
-## What makes a good README?
-The following is the recommended format for the READMEs appearing on Grafana.net. 
+Centralizes all monitoring and troubleshooting information being slice/app-independent
+Stores all statistical data (flow, ports, etc.) and OpenFlow messages into a persistent backend
+Tracks real time OpenFlow control plane messages
+Tracks non-OpenFlow information (for instance, CPU utilization)
+Supports active and passive topology discovery (LLDP or input file)
 
-#### Screenshots
-**Important**: Screenshots are not part of the README, but are an essential part of presenting your plugin successfully. Screenshots are packaged within the /src directory of the plugin itself and specified within plugin.json; more information can be found [here](#). 
-
--------
-
-![img](https://circleci.com/gh/raintank/worldping-app.svg?style=shield&circle-token=:circle-token) *Build icons are great if you have it*
-
-The README should start with a clear, long-form description of what your Grafana plugin does. The short description appears above under the plugin title, so you can be a bit more verbose with the purpose of the app, what it's for and why you should use it.
-
-Remember that sometimes, people downloading this app may not know what underlying service or technology is, and this is an opportunity to explain it. 
-
-
-## Live Demo
-
-A live demo is always the best way to show off your plugin. You can link off to a snapshot or live demo hosted on your Grafana. 
 
 ## Features
 
-This next section should talk about the features of the plugin within Grafana. 
 
-### Biggest Features
-The larger features can demand their own section. 
+### Topology
 
+The SDN topology shows the current devices topology in the format of a graph.
 
-```
-You can add code blocks.
-```
+This panel has the basic navigation where the user can pan the visual field with click and drag
+in any part of the empty area.
+The nodes can be repositioned with click and drag to better suit the visualization.
+Use the mouse wheels to zoom in/out the topology.
 
-Create | Tables
------------- | -------------
-1 | 2
-A | B
+The labels of nodes and links can be activate/deactivate in the panel "Edit" session.
 
-Or add images
-
-![Image Title](http://grafana.org/assets/img/blog/mixed_styles.png)
-
-All standard markdown is supported. For a nice reference, view [Github's Mastering Markdown](https://guides.github.com/features/mastering-markdown/) article. 
+Right click over the nodes will open a contextual display, that will trigger action in other panels, if they are available.
 
 
-### Functionality within Grafana
-If the feature differs slightly within Grafana, or offers additional functionality not previously available, this is a great place to mention that. 
+### Trace
 
-### Additional Features
+This panel execute the data plane trance and control plane trace in the same action.
+Fill the form with the data to perform the trace and hit "Submit".
 
-For non-headline features, bulleted lists can be effective and concise way to increase skimmability.
-
-- Goes great on toast.
-- Best thing since sliced bread. 
-- Bears, beets, Battlestar Galactica. 
+The trace path information will be displayed in this same panel.
+The path will also be highlighted over the topology, if the panel is available.
 
 
-## External Dependencies
+### Flows information
 
-The Installation tab only covers the installation of the plugin itself, so if your plugin relies on external technologies, this is a great place to explain what else a user may need to do. 
+This panel will display all the interface flows of a selected device.
 
-If the set instructions are more complex, and more coupled with specific actions within the application (for example, adding a `device` within a UI page), it can be more effective to build those instructions either directly into the app or maintain external documentation. 
+The table can be reordered clicking the title.
+
+You can also use the topology contextual menu to trigger the action to select a device.
 
 
-
-#### Changelog
-
-The README can also include a trailing list of changes for recent versions. 
-
-##### v1.0.6
-- Updated the knickerbocker widget to accept multi-input threading. 
-- Dialed up the down.
-- Righted the left
-
-##### v1.0.5
-- Fixed bugs introduced in 1.0.4.
-- Introduced bugs that will be fixed in 1.0.6
-
+## Reference
+This project used the icons from:
+https://thenounproject.com/term/network-topology/1569721/
+https://thenounproject.com/search/?q=nodes&i=1509979
+https://thenounproject.com/search/?q=table&i=1061423
+https://thenounproject.com/search/?q=table&i=662371
+https://thenounproject.com/search/?q=table&i=512574
 
 
 
