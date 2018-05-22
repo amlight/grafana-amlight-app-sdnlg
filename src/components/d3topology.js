@@ -322,13 +322,8 @@ var ForceGraph = function(p_args, p_data) {
     var focusSwitch = function(d) {
         // Set data info panel
         if(d && d.data) {
-            $('#port_panel_info').hide();
-            $('#switch_to_panel_info').hide();
-            $('#switch_flows_panel').hide();
-            $('#domain_panel_info').hide();
-
             // show all the switch data in the panel
-            _showSwitchPanelData(d);
+            sdndeviceinfo.switchInfo.show(d.data);
         }
 
         // Set nodes and links opacity to all of them that are not connected to the clicked node
@@ -353,27 +348,12 @@ var ForceGraph = function(p_args, p_data) {
 
     // focus highlight (on node mousedown)
     var setPortFocus = function(d) {
-        $('#domain_panel_info').hide();
-        $('#switch_flows_panel').hide();
 
         // Set data info panel
         if(d && d.data) {
-
-            $('#port_panel_info').show();
-            var name = d.data.label;
-            $('#port_panel_info_collapse').collapse("show");
-
-            if (name && name.length > 0) {
-                $('#port_panel_info_name').show();
-                $('#port_panel_info_name_value').html(name);
-            } else {
-                $('#port_panel_info_name').hide();
-            }
-
-            $('#port_panel_info_number_value').html(d.data.number);
-            $('#port_panel_info_speed_value').html(d.data.speed);
-            $('#port_panel_info_status_value').html(d.data.status);
-            _showSwitchPanelData(d.from_sw);
+            // show switch info.
+            sdndeviceinfo.switchInfo.show(d.from_sw.data);
+            sdndeviceinfo.portInfo.show(d.data);
         }
     };
 
@@ -411,18 +391,6 @@ var ForceGraph = function(p_args, p_data) {
         } else {
             $('#domain_panel_info_name').hide();
         }
-    };
-
-    /**
-     * Focus and show to the lateral switch panel data.
-     * Use with set_switch_focus to set the lateral panel data
-     * @param {type} d D3 data object
-     * @returns {}
-     */
-    var _showSwitchPanelData = function(d) {
-//        // display panel
-//        show_right_pannel();
-        sdndeviceinfo.switchInfo.show(d.data);
     };
 
     /**

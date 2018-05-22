@@ -1,3 +1,4 @@
+import {formatBits} from "./util";
 
 /** @constant */
 const REST_TRACE_TYPE = {'STARTING':'starting', 'LAST':'last', 'TRACE':'trace', 'INTERTRACE':'intertrace'};
@@ -9,6 +10,7 @@ class SDNDeviceInfo {
     constructor() {
         this._self = this;
         this.switchInfo = new SwitchInfo();
+        this.portInfo = new PortInfo();
     }
 }
 
@@ -19,11 +21,15 @@ class SwitchInfo {
     }
 
     show(data) {
+        // hide port info panel. Otherwise it will show wrong association with switch data.
+        $('#port_panel_info').hide();
+
+        // show switch info panel.
         $('#switch_panel_info').show();
         // fill html content
 
         $('#switch_panel_info_dpid_value').html(data.dpid);
-        var name = data.getName();
+        let name = data.getName();
         if (name && name.length > 0) {
             $('#switch_panel_info_name').show();
             $('#switch_panel_info_name_value').html(name);
@@ -34,11 +40,14 @@ class SwitchInfo {
         $('#switch_panel_info_flows_value').html(data.number_flows);
         if (data.number_flows && data.number_flows > 0) {
             // Open flow panel clicking the flow number
-            $('#switch_panel_info_flows').css('cursor', 'pointer');
-            $('#switch_panel_info_flows').css('text-decoration', 'underline');
-            $('#switch_panel_info_flows').click(function() {
-                sdnflowtable.setDataAndOpen(data.dpid, data.flow_stat, data.flow_pivot);
-            });
+            $('#switch_panel_info_flows')
+                .css({
+                    "cursor": "pointer",
+                    "text-decoration": "underline"
+                })
+                .click(function() {
+                    sdnflowtable.setDataAndOpen(data.dpid, data.flow_stat, data.flow_pivot);
+                });
         }
 
         if (data.domain) {
@@ -54,6 +63,54 @@ class SwitchInfo {
         $('#switch_panel_info_color_value').html(data.switch_color);
     }
 
+    /**
+    Initialize form binds.
+    Parameter: parent element
+    */
+    _init(elem) {
+        _elem = elem;
+    }
+}
+
+class PortInfo {
+    constructor() {
+        this._self = this;
+    }
+
+    show(data) {
+
+        console.log('PortInfo.show');
+        console.log(data);
+
+        $('#port_panel_info').show();
+        let name = data.label;
+
+        if (name && name.length > 0) {
+            $('#port_panel_info_name').show();
+            $('#port_panel_info_name_value').html(name);
+        } else {
+            $('#port_panel_info_name').hide();
+        }
+
+        $('#port_panel_info_number_value').html(data.number);
+        $('#port_panel_info_speed_value').html(formatBits(data.speed));
+        $('#port_panel_info_status_value').html(data.status);
+
+        $('#port_panel_info_collisions_value').html(data.stats.collisions);
+
+        $('#port_panel_info_rx_bytes_value').html(data.stats.rx_bytes);
+        $('#port_panel_info_rx_crc_err_value').html(data.stats.rx_crc_err);
+        $('#port_panel_info_rx_dropped_value').html(data.stats.rx_dropped);
+        $('#port_panel_info_rx_errors_value').html(data.stats.rx_errors);
+        $('#port_panel_info_rx_frame_err_value').html(data.stats.rx_frame_err);
+        $('#port_panel_info_rx_over_err_value').html(data.stats.rx_over_err);
+        $('#port_panel_info_rx_packets_value').html(data.stats.rx_packets);
+
+        $('#port_panel_info_tx_bytes_value').html(data.stats.tx_bytes);
+        $('#port_panel_info_tx_dropped_value').html(data.stats.tx_dropped);
+        $('#port_panel_info_tx_errors_value').html(data.stats.tx_errors);
+        $('#port_panel_info_tx_packets_value').html(data.stats.tx_packets);
+    }
 
     /**
     Initialize form binds.
@@ -61,36 +118,9 @@ class SwitchInfo {
     */
     _init(elem) {
         _elem = elem;
-
-        _elem.find('#sdn_trace_form_btn_new').on("click", function() {
-          sdntrace.clearTraceInterface();
-          _self.showForm();
-
-          $('#sdn_trace_form_btn_close').show();
-          $('#sdn_trace_form_btn_new').hide();
-        });
-
-        _elem.find('#sdn_trace_form_btn_close').on("click", function() {
-          _self.hideForm();
-          $('#sdn_trace_form_btn_close').hide();
-          $('#sdn_trace_form_btn_new').show();
-        });
-    }
-
-    /**
-     * Show trace form.
-     * It also cleans and hides all the informations in the panel to display propperly the form.
-     */
-    showForm() {
-        $('#sdn_trace_form_btn_new').hide();
-
-        // Hide trace info
-        _self.hideInfo();
-
-        $('#sdn_trace_form_include_form').show();
-        $('#sdn_trace_form_btn_close').show();
     }
 }
+
 
 const sdndeviceinfo = new SDNDeviceInfo();
 

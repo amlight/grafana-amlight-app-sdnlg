@@ -204,6 +204,20 @@ var Port = function(node_id, port_id, number, label) {
     this.speed = '';
     this.uptime = '';
     this.status = '';
+    this.stats = {
+        collisions: 0,
+        rx_bytes: 0,
+        rx_crc_err: 0,
+        rx_dropped: 0,
+        rx_errors: 0,
+        rx_frame_err: 0,
+        rx_over_err: 0,
+        rx_packets: 0,
+        tx_bytes: 0,
+        tx_dropped: 0,
+        tx_errors: 0,
+        tx_packets: 0
+    };
 
     this.getD3jsData = function() {
         var nodeObj = {

@@ -580,9 +580,22 @@ var SDNTopology = function() {
                     portObj.name = p_port_data.name;
                     portObj.number = p_port_data.port_number;
                     //portObj.status = p_port_data.status;
+                    portObj.stats.collisions = p_port_data.stats.collisions;
+
+                    portObj.stats.rx_bytes = p_port_data.stats.rx_bytes;
+                    portObj.stats.rx_crc_err = p_port_data.stats.rx_crc_err;
+                    portObj.stats.rx_dropped = p_port_data.stats.rx_dropped;
+                    portObj.stats.rx_errors = p_port_data.stats.rx_errors;
+                    portObj.stats.rx_frame_err = p_port_data.stats.rx_frame_err;
+                    portObj.stats.rx_over_err = p_port_data.stats.rx_over_err;
+                    portObj.stats.rx_packets = p_port_data.stats.rx_packets;
+
+                    portObj.stats.tx_bytes = p_port_data.stats.tx_bytes;
+                    portObj.stats.tx_dropped = p_port_data.stats.tx_dropped;
+                    portObj.stats.tx_errors = p_port_data.stats.tx_errors;
+                    portObj.stats.tx_packets = p_port_data.stats.tx_packets;
                 }
             }
-
         }
     };
 

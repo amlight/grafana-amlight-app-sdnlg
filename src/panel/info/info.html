@@ -1,5 +1,5 @@
 <div>
-    <div id="switch_panel_info" style="display:none;" class="panel panel-default">
+    <div id="switch_panel_info" style="display:none;" class="panel_info">
         <div class="panel-heading">
             <h4 class="panel-title">
                 <a data-toggle="collapse" href="#switch_panel_info_collapse">Switch</a>
@@ -61,25 +61,119 @@
             </div>
         </div>
     </div>
-    <!--<div id="port_panel_info" style="display:none;" class="panel panel-default">-->
-        <!--<div class="panel-heading">-->
-            <!--<h4 class="panel-title">-->
-                <!--<a data-toggle="collapse" href="#port_panel_info_collapse">Port</a>-->
-            <!--</h4>-->
-        <!--</div>-->
-        <!--<div id="port_panel_info_collapse" class="panel-collapse collapse">-->
-            <!--<div class="panel-body">-->
-                <!--<div>-->
-                    <!--<ul>-->
-                        <!--<li id="port_panel_info_name"><span>Name: </span><span id="port_panel_info_name_value"></span></li>-->
-                        <!--<li id="port_panel_info_number"><span>Number: </span><span id="port_panel_info_number_value"></span></li>-->
-                        <!--&lt;!&ndash;<li id="port_panel_info_flows"><span>N. Flows: </span><span id="port_panel_info_flows_value"></span></li>&ndash;&gt;-->
-                        <!--<li id="port_panel_info_speed"><span>Speed: </span><span id="port_panel_info_speed_value"></span></li>-->
-                        <!--&lt;!&ndash;<li id="port_panel_info_uptime"><span>Uptime: </span><span id="port_panel_info_uptime_value"></span></li>&ndash;&gt;-->
-                        <!--<li id="port_panel_info_status"><span>Status: </span><span id="port_panel_info_status_value"></span></li>-->
-                    <!--</ul>-->
-                <!--</div>-->
-            <!--</div>-->
-        <!--</div>-->
-    <!--</div>-->
+    <div id="port_panel_info" style="display:none;" class="panel_info">
+        <div class="panel-heading">
+            <h4 class="panel-title">
+                <a data-toggle="collapse" href="#port_panel_info_collapse">Port</a>
+            </h4>
+        </div>
+        <div id="port_panel_info_collapse" class="panel-collapse collapse">
+            <div class="panel-body">
+                <div class="gf-form-group" >
+                    <div class="gf-form">
+                        <div class="gf-form-label width-15" id="port_panel_info_name">
+                            <span><strong>Name: </strong></span>
+                            <span id="port_panel_info_name_value"></span>
+                        </div>
+                    </div>
+                    <div class="gf-form">
+                        <div class="gf-form-label width-15" id="port_panel_info_number">
+                            <span><strong>Number: </strong></span>
+                            <span id="port_panel_info_number_value"></span>
+                        </div>
+                    </div>
+                    <div class="gf-form">
+                        <div class="gf-form-label width-15" id="port_panel_info_speed">
+                            <span><strong>Speed: </strong></span>
+                            <span id="port_panel_info_speed_value"></span>
+                        </div>
+                    </div>
+                    <div class="gf-form">
+                        <div class="gf-form-label width-15" id="port_panel_info_status">
+                            <span><strong>Status: </strong></span>
+                            <span id="port_panel_info_status_value"></span>
+                        </div>
+                    </div>
+
+                    <div class="gf-form">
+                        <div class="gf-form-label width-15" id="port_panel_info_collisions">
+                            <span><strong>Collision: </strong></span>
+                            <span id="port_panel_info_collisions_value"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="gf-form-group">
+
+                    <div class="gf-form">
+                        <div class="gf-form-label width-10" id="port_panel_info_rx_bytes">
+                            <span><strong>RX bytes: </strong></span>
+                            <span id="port_panel_info_rx_bytes_value"></span>
+                        </div>
+                    </div>
+                    <div class="gf-form">
+                        <div class="gf-form-label width-10" id="port_panel_info_rx_crc_err">
+                            <span><strong>RX CRC error: </strong></span>
+                            <span id="port_panel_info_rx_crc_err_value"></span>
+                        </div>
+                    </div>
+                    <div class="gf-form">
+                        <div class="gf-form-label width-10" id="port_panel_info_rx_dropped">
+                            <span><strong>RX dropped: </strong></span>
+                            <span id="port_panel_info_rx_dropped_value"></span>
+                        </div>
+                    </div>
+                    <div class="gf-form">
+                        <div class="gf-form-label width-10" id="port_panel_info_rx_errors">
+                            <span><strong>RX errors: </strong></span>
+                            <span id="port_panel_info_rx_errors_value"></span>
+                        </div>
+                    </div>
+                    <div class="gf-form">
+                        <div class="gf-form-label width-10" id="port_panel_info_rx_frame_err">
+                            <span><strong>RX frame error: </strong></span>
+                            <span id="port_panel_info_rx_frame_err_value"></span>
+                        </div>
+                    </div>
+                    <div class="gf-form">
+                        <div class="gf-form-label width-10" id="port_panel_info_rx_over_err">
+                            <span><strong>RX over error: </strong></span>
+                            <span id="port_panel_info_rx_over_err_value"></span>
+                        </div>
+                    </div>
+                    <div class="gf-form">
+                        <div class="gf-form-label width-10" id="port_panel_info_rx_packets">
+                            <span><strong>RX packets: </strong></span>
+                            <span id="port_panel_info_rx_packets_value"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="gf-form-group">
+                    <div class="gf-form">
+                        <div class="gf-form-label width-10" id="port_panel_info_tx_bytes">
+                            <span><strong>TX bytes: </strong></span>
+                            <span id="port_panel_info_tx_bytes_value"></span>
+                        </div>
+                    </div>
+                    <div class="gf-form">
+                        <div class="gf-form-label width-10" id="port_panel_info_tx_dropped">
+                            <span><strong>TX dropped: </strong></span>
+                            <span id="port_panel_info_tx_dropped_value"></span>
+                        </div>
+                    </div>
+                    <div class="gf-form">
+                        <div class="gf-form-label width-10" id="port_panel_info_tx_errors">
+                            <span><strong>TX errors: </strong></span>
+                            <span id="port_panel_info_tx_errors_value"></span>
+                        </div>
+                    </div>
+                    <div class="gf-form">
+                        <div class="gf-form-label width-10" id="port_panel_info_tx_packets">
+                            <span><strong>TX packets: </strong></span>
+                            <span id="port_panel_info_tx_packets_value"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>

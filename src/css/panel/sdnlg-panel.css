@@ -248,11 +248,18 @@ rect.node  {
     overflow: hidden;
 }
 
-
-#port_panel_info_collapse > div > div > ul > li > span:nth-child(1),
-#switch_panel_info_collapse > div > div > ul > li > span:nth-child(1) {
-    font-weight: bold;
+/* Panel: Info */
+.panel_info {
+  display: inline-block;
+  vertical-align: top;
 }
+
+#port_panel_info_collapse > div > .gf-form-group {
+    display: inline-block;;
+    vertical-align: top;
+}
+
+/* Panel: trace */
 #trace_cp_panel_info .loading-icon-div,
 #trace_panel_info .loading-icon-div {
   margin:0;
@@ -261,6 +268,35 @@ rect.node  {
   float:right;
 }
 
+/* Trace panel result */
+#tracecp_panel_info__header,
+#trace_panel_info__header {
+  display: inline-block;
+  vertical-align: top;
+  width: fit-content;
+  font-size: 0.9rem;
+  border: 1px solid darkslategray;
+}
+
+#tracecp_panel_info__header {
+  padding: 5px 0 5px 5px;
+}
+#trace_panel_info__header {
+  padding: 5px 0 5px 5px;
+}
+
+
+#tracecp_panel_info__header h4,
+#trace_panel_info__header h4 {
+ font-size: 1rem;
+ margin-right: 2em;
+}
+
+
+#tracecp_panel_info__msg {
+ margin-top: 1em;
+}
+/* Panel: trace */
 
 .navbar-inverse .navbar-toggle-always {
   border-color: #333333;
@@ -322,11 +358,9 @@ rect.node  {
 
 
 
-
-
-
-
-
+/*
+D3 Context menu
+ */
 .d3-context-menu {
 	position: absolute;
 	display: none;
@@ -374,13 +408,14 @@ rect.node  {
     background-color: #efefef;
     color: darkgray;
 }
+/*
+D3 Context menu
+ */
 
 
 /**
  D3 trace
 */
-
-
 /* use important because the highlight is changing the style attribute */
 .node-trace-active {
     stroke-width: 0.4em !important;
@@ -413,32 +448,6 @@ rect.node  {
 #sdn_trace_form_include_info {
   clear: both;
 }
-
-/* Trace panel result */
-#tracecp_panel_info__header,
-#trace_panel_info__header {
-  display: inline-block;
-  vertical-align: top;
-  width: fit-content;
-  font-size: 0.9rem;
-  border: 1px solid darkslategray;
-}
-
-#tracecp_panel_info__header {
-  padding: 5px 0 5px 5px;
-}
-#trace_panel_info__header {
-  padding: 5px 0 5px 5px;
-}
-
-
-#tracecp_panel_info__header h4,
-#trace_panel_info__header h4 {
- font-size: 1rem;
- margin-right: 2em;
-}
-
-
-#tracecp_panel_info__msg {
- margin-top: 1em;
-}
+/**
+ D3 trace
+*/
