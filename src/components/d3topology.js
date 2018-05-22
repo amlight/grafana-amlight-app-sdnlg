@@ -2,7 +2,7 @@ import * as d3 from '../external/d3';
 import {sdntopology, sdncolor, getSDNFlowTable, forcegraph, d3lib} from "./main";
 import {Switch, Link, Port, Domain, Host} from "./domain";
 import {sdndeviceinfo} from "./info";
-import {formatBytes} from "./util";
+import {formatBits} from "./util";
 
 /** @constant */
 var SPEED_100GB = 100000000000;
@@ -689,7 +689,7 @@ var ForceGraph = function(p_args, p_data) {
                         .append("tspan")
                             .attr("dx", 0)
                             .attr("dy", 0)
-                            .text(function(d) { return formatBytes(d.speed); })
+                            .text(function(d) { return formatBits(d.speed); })
                     .merge(link_label);
 
         // setting data

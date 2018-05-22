@@ -59,6 +59,17 @@ function formatBytes(x){
   return(number.toFixed(number >= 10 || i < 1 ? 0 : 1) + ' ' + units[i]);
 }
 
+function formatBits(x){
+  const units = ['', 'Kb', 'Mb', 'Gb', 'Tb', 'Pb', 'Eb', 'Zb', 'Yb'];
+  let i = 0, number = parseInt(x, 10) || 0;
+
+  while(number >= 1000 && ++i) {
+      number = number/1000;
+  }
+
+  return(number.toFixed(number >= 10 || i < 1 ? 0 : 1) + ' ' + units[i]);
+}
+
 function injectStyles(p_id, p_rule) {
   // remove old styles
   var elem = document.getElementById(p_id);
@@ -78,5 +89,6 @@ export {
   removeEmptyJsonValues as removeEmptyJsonValues,
   isMacAddress as isMacAddress,
   formatBytes as formatBytes,
+  formatBits as formatBits,
   injectStyles as injectStyles
 };
