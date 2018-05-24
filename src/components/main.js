@@ -12,6 +12,9 @@ import {sdntraceform} from "./trace";
 var setForcegraph = function(p_forcegraph) {
     forcegraph = p_forcegraph;
 }
+var setForcegraphPersistency = function(p_forcegraphPersistency) {
+    forceGraphPersistency = p_forcegraphPersistency;
+}
 var setSDNFlowTable = function(p_sdnflowtable) {
     sdnflowtable = p_sdnflowtable;
 }
@@ -49,12 +52,9 @@ var Main = function() {
     //            callback();
     //        }
 
-
             _self._appConfigLoading = false;
             _self._appInitialized = true;
 
-
-            console.log('initializeApp callbacks');
             for(var x in _self._initializationCallbacks) {
                 _self._initializationCallbacks[x]();
             }
@@ -82,7 +82,6 @@ var Main = function() {
 
 
     this.initializeApp = function(callback) {
-        console.log('initializeApp');
         if(_self._appInitialized) {
             callback();
             return;
@@ -105,6 +104,7 @@ var Main = function() {
 
 
 var forcegraph = '';
+var forceGraphPersistency = '';
 var sdntopology = new SDNTopology();
 var d3lib = new D3JS();
 var sdncolor = new SDNColor();
@@ -115,6 +115,8 @@ var main = new Main();
 export {
   forcegraph as forcegraph,
   setForcegraph as setForcegraph,
+  forceGraphPersistency as forceGraphPersistency,
+  setForcegraphPersistency as setForcegraphPersistency,
   sdntopology as sdntopology,
   sdncolor as sdncolor,
   sdnflowtable as sdnflowtable,

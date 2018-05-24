@@ -79,9 +79,6 @@ class PortInfo {
 
     show(data) {
 
-        console.log('PortInfo.show');
-        console.log(data);
-
         $('#port_panel_info').show();
         let name = data.label;
 

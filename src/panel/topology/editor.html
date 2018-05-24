@@ -36,5 +36,11 @@
 			<gf-form-switch id="topology__toolbar__btn__label__speed" class="gf-form" label="Toggle switch Software"
 							label-class="width-15" checked="ctrl.panel.checkedLabelNodeSoftware" on-change="ctrl.toggleNodeSofware()"></gf-form-switch>
 		</div>
+		<div class="gf-form gf-form--v-stretch">
+			<span class="gf-form-label width-7">Graph</span>
+			<textarea id="topology__toolbar__graph" class="gf-form-input width-25 ng-pristine ng-valid ng-empty ng-touched" rows="3"
+					  ng-model="ctrl.panel.graphPersistency" placeholder="Panel graph data"></textarea>
+		</div>
+
 	</div>
 </div>

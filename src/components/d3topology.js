@@ -1,5 +1,5 @@
 import * as d3 from '../external/d3';
-import {sdntopology, sdncolor, getSDNFlowTable, forcegraph, d3lib} from "./main";
+import {sdntopology, sdncolor, getSDNFlowTable, forcegraph, forceGraphPersistency, d3lib} from "./main";
 import {Switch, Link, Port, Domain, Host} from "./domain";
 import {sdndeviceinfo} from "./info";
 import {formatBits} from "./util";
@@ -86,6 +86,59 @@ var ForceGraphContextMenu = function() {
         $('.d3-context-menu').hide();
     };
 };
+
+
+/**
+ * Persistency class for the D3 graph.
+ */
+class ForceGraphPersistency {
+    /**
+     * Save the graph in a object elem and in the field fieldName
+     * @param elem
+     * @param fieldName
+     */
+    constructor(elem, fieldName) {
+        this._self = this;
+        this._elem = elem;
+        this._fieldName = fieldName;
+    }
+
+    /**
+     * Load the graph positions.
+     * @returns {*}
+     */
+    load() {
+        var prevLoc = [];
+
+        if (this._elem && this._elem[this._fieldName]) {
+            prevLoc = JSON.parse(this._elem[this._fieldName]);
+            return prevLoc.data;
+        }
+        return
+    }
+
+    /**
+     * Save D3 data nodes.
+     * Ex: d3.selectAll(".node")
+     *
+     * @param data D3 nodes.
+     */
+    save(data) {
+        // Save node positions to an object:
+        var prevLoc = [];
+
+        data.each(function(d) {
+            if (d && d.id) {
+                prevLoc.push({'id':d.id, 'x':d.x, 'y':d.y});
+            }
+        });
+
+        if (this._elem && prevLoc.length > 0) {
+            this._elem[this._fieldName] = JSON.stringify({"data":prevLoc});
+        }
+    }
+}
+
 
 
 /**
@@ -253,6 +306,8 @@ var ForceGraph = function(p_args, p_data) {
         
         focus_node = null;
         _self.endHighlight(d);
+
+        forceGraphPersistency.save(d3.selectAll(".node"));
     };
 
     /**
@@ -480,6 +535,38 @@ var ForceGraph = function(p_args, p_data) {
         d3.selectAll(".speed-label").attr("transform", transformLinkSpeedLabel);
     }
 
+    /**
+     * Load the topology previous positions.
+     */
+    function loadPositions() {
+        // Load the previous graph positions
+        var prevLoc = forceGraphPersistency.load();
+
+        if (prevLoc) {
+            // try to fix the position for every node.
+            d3.selectAll(".node").each(function (d) {
+                let oldX = 0;
+                let oldY = 0;
+
+                // find the node
+                let prev = null;
+                for (let i in prevLoc) {
+                    if (prevLoc[i].id === d.id) {
+                        oldX = prevLoc[i].x;
+                        oldY = prevLoc[i].y;
+                        break;
+                    }
+                }
+
+                // if the node exists, set the fixed location
+                if (oldX !== 0 || oldY !== 0) {
+                    d.fx = oldX;
+                    d.fy = oldY;
+                }
+            });
+        }
+    }
+
     this.draw = function() {
         force.stop();
 
@@ -663,6 +750,9 @@ var ForceGraph = function(p_args, p_data) {
         // setting data
         force.force("link").links(_data.links, function(d) { return d.source.id + "-" + d.target.id; });
         force.nodes(_data.nodes, function(d) { return d.id;});
+
+        // load nodes positions
+        loadPositions();
 
         force.restart();
     };
@@ -1089,6 +1179,7 @@ var D3JS = function() {
 export {
   ForceGraph as ForceGraph,
   ForceGraphContextMenu as ForceGraphContextMenu,
+  ForceGraphPersistency as ForceGraphPersistency,
   D3JS
 };
 

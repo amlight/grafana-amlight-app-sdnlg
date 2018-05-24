@@ -4,9 +4,9 @@ import 'lodash';
 import _ from 'lodash';
 
 import * as d3 from '../../external/d3';
-import {forcegraph, setForcegraph,  sdntopology, d3lib, main} from '../../components/main';
+import {forcegraph, setForcegraph, setForcegraphPersistency, sdntopology, d3lib, main} from '../../components/main';
 import {SDNTopology} from '../../components/topologykytos';
-import {ForceGraph, D3JS} from "../../components/d3topology";
+import {ForceGraph, ForceGraphPersistency, D3JS} from "../../components/d3topology";
 
 import '../../css/panel/sdnlg-panel.css!';
 
@@ -39,6 +39,8 @@ export class TopologyCtrl extends MetricsPanelCtrl {
     this.checkedLabelNodeVendor;
     this.checkedLabelNodeHardware;
     this.checkedLabelNodeSoftware;
+
+    this.graphPersistency;
 
     this._forcegraph = null;
 
@@ -221,6 +223,9 @@ export class TopologyCtrl extends MetricsPanelCtrl {
         };
 
         setForcegraph(new ForceGraph(forceArgs, data));
+
+        let graphPersistency = new ForceGraphPersistency(this.$scope.ctrl.panel, "graphPersistency");
+        setForcegraphPersistency(graphPersistency);
     }
   }
 };
