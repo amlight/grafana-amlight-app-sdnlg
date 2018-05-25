@@ -5,39 +5,39 @@ import {sdndeviceinfo} from "./info";
 import {formatBits} from "./util";
 
 /** @constant */
-var SPEED_100GB = 100000000000;
+const SPEED_100GB = 100000000000;
 /** @constant */
-var SPEED_10GB = 10000000000;
+const SPEED_10GB = 10000000000;
 /** @constant */
-var SPEED_1GB = 1000000000;
+const SPEED_1GB = 1000000000;
 
 /** @constant */
-var SIZE = {'switch': 16,
+const SIZE = {'switch': 16,
             'domain': 3,
             'port': 8,
             'host': 16};
 
 /** @constant */
-var SIZE_PATH = {'switch': 700,
+const SIZE_PATH = {'switch': 700,
             'domain': 700,
             'port': 80,
             'host': 700};
 
 /** @constant */
-var DISTANCE = {'domain': 10 * SIZE['switch'],
+const DISTANCE = {'domain': 10 * SIZE['switch'],
                 'switch': 10 * SIZE['switch'],
                 'port': SIZE['switch'] + 16,
                 'host': 10 * SIZE['switch']};
 
 
-var ForceGraphContextMenu = function() {
+let ForceGraphContextMenu = function() {
     // Define contextual menu over the circles
     this.nodeContextMenu = function(data) {
         forcegraph.endHighlight();
         return [
             {
                 title: function(d) {
-                    var sw = sdntopology.get_node_by_id(d.name);
+                    let sw = sdntopology.get_node_by_id(d.name);
                     return sw.id;
                 },
                 disabled: true
@@ -47,7 +47,7 @@ var ForceGraphContextMenu = function() {
             },
             {
                 title: function(d) {
-                    var sw = sdntopology.get_node_by_id(d.name);
+                    let sw = sdntopology.get_node_by_id(d.name);
                     return 'Name: ' + sw.getName();
                 },
                 disabled: true
@@ -66,9 +66,9 @@ var ForceGraphContextMenu = function() {
             {
                 title: 'Flows',
                 action: function(elm, d, i) {
-                    var callback = function() {
+                    let callback = function() {
                         getSDNFlowTable().setDataAndOpen(d.data.dpid, d.data.flow_stat, d.data.flow_pivot);
-                    }
+                    };
                     sdntopology.callSdntraceGetSwitchFlows(null, d.data.dpid, callback);
                 }
             },
@@ -108,13 +108,13 @@ class ForceGraphPersistency {
      * @returns {*}
      */
     load() {
-        var prevLoc = [];
+        let prevLoc = [];
 
         if (this._elem && this._elem[this._fieldName]) {
             prevLoc = JSON.parse(this._elem[this._fieldName]);
             return prevLoc.data;
         }
-        return
+        return;
     }
 
     /**
@@ -125,7 +125,7 @@ class ForceGraphPersistency {
      */
     save(data) {
         // Save node positions to an object:
-        var prevLoc = [];
+        let prevLoc = [];
 
         data.each(function(d) {
             if (d && d.id) {
@@ -147,33 +147,33 @@ class ForceGraphPersistency {
  * @param {type} p_data Graph data
  * @returns {ForceGraph}
  */
-var ForceGraph = function(p_args, p_data) {
+let ForceGraph = function(p_args, p_data) {
     
-    var _self = this;
+    let _self = this;
     
     // Local variable representing the forceGraph data
-    var _data = p_data;
+    let _data = p_data;
 
-    var highlight_transparency = 0.1;
+    let highlight_transparency = 0.1;
     // highlight var helpers
-    var focus_node = null;
+    let focus_node = null;
 
-    var min_zoom = 0.1;
-    var max_zoom = 7;
+    let min_zoom = 0.1;
+    let max_zoom = 7;
 
-    var selector = p_args.selector;
-    var width = p_args.width ? p_args.width : "100%";
-    var height = p_args.height ? p_args.height : "100%";
+    let selector = p_args.selector;
+    let width = p_args.width ? p_args.width : "100%";
+    let height = p_args.height ? p_args.height : "100%";
 
     // node/circle size
-    var size = d3.scaleLinear()
+    let size = d3.scaleLinear()
       .domain([1,100])
       .range([8,24]);
-    var nominal_base_node_size = 8;
+    let nominal_base_node_size = 8;
 
-    var _linkedByIndex = new Map();
+    let _linkedByIndex = new Map();
 
-    var addConnection = function(a, b) {
+    let addConnection = function(a, b) {
         /**
          a: source switch dpid
          b: target switch dpid
@@ -181,33 +181,33 @@ var ForceGraph = function(p_args, p_data) {
         _linkedByIndex.set(a + "-" + b, true);
     };
 
-    var isConnected = function(a, b) {
+    let isConnected = function(a, b) {
         return _linkedByIndex.has(a.id + "-" + b.id) || _linkedByIndex.has(b.id + "-" + a.id) || a.id === b.id;
     };
     
     
     // context menu manager
-    var forceGraphContextMenu = new ForceGraphContextMenu();
+    let forceGraphContextMenu = new ForceGraphContextMenu();
 
     // zoom behavior
-    var zoomed = function(d) {
+    let zoomed = function(d) {
         container.attr("transform", "translate(" + d3.event_d3().transform.x + "," + d3.event_d3().transform.y + ") scale(" + d3.event_d3().transform.k + ")");
     };
     // zoom configuration
-    var zoom = d3.zoom()
+    let zoom = d3.zoom()
         .scaleExtent([min_zoom, max_zoom])
         .on("zoom", zoomed);
 
     // clear selector, otherwise it will append several SVG elements
-    var selectorElement = d3.select(selector).selectAll("svg").remove();
+    let selectorElement = d3.select(selector).selectAll("svg").remove();
 
-    var svg = d3.select(selector)
+    let svg = d3.select(selector)
         .append("svg")
             .attr("width", width)
             .attr("height", height)
             .call(zoom);
 
-    var container = svg.append("g");
+    let container = svg.append("g");
 
     // ForceGraph set data. Remember to redraw the simulation after the set.
     this.data = function(value) {
@@ -220,11 +220,11 @@ var ForceGraph = function(p_args, p_data) {
         return _data;
     };
 
-    var collisionForce = d3.forceCollide(12)
+    let collisionForce = d3.forceCollide(12)
         .strength(10)
         .iterations(20);
 
-    var force = d3.forceSimulation()
+    let force = d3.forceSimulation()
         .force("link",
             d3.forceLink()
                 .id(function(d) { return d.id; })
@@ -247,11 +247,11 @@ var ForceGraph = function(p_args, p_data) {
     //     labels
 
     // draw link paths
-    var path = container.append("g")
+    let path = container.append("g")
         .attr("class", "paths")
         .selectAll("path");
     // switch node
-    var node = container
+    let node = container
         .append("g")
         .attr("class", "nodes")
         .selectAll("circle");
@@ -261,16 +261,16 @@ var ForceGraph = function(p_args, p_data) {
         .attr("class", "domains")
         .selectAll("rect");
     // draw switch label
-    var textSelection = container.append("g").selectAll("text");
+    let textSelection = container.append("g").selectAll("text");
     // draw link label
-    var link_label = container.append("g").selectAll("text");
+    let link_label = container.append("g").selectAll("text");
 
 
     /**
      * Node drag start event handler.
      * @param {type} d
      */
-    var _nodeDragstarted = function (d) {
+    let _nodeDragstarted = function (d) {
         // Prevent the Port node to be dragged.
         if (d.type === Port.TYPE) { return; }
         // Change the nodes alpha color to signal the user the drag event.
@@ -284,7 +284,7 @@ var ForceGraph = function(p_args, p_data) {
      * Node drag event handler.
      * @param {type} d
      */
-    var _nodeDragged = function (d) {
+    let _nodeDragged = function (d) {
         // Prevent the Port node to be dragged.
         if (d.type === Port.TYPE) { return; }
         
@@ -298,7 +298,7 @@ var ForceGraph = function(p_args, p_data) {
      * Node drag end event handler.
      * @param {type} d
      */
-    var _nodeDragended = function (d) {
+    let _nodeDragended = function (d) {
         // Prevent the Port node to be dragged.
         if (d.type === Port.TYPE) { return; }
         // Reset the nodes alpha color
@@ -314,7 +314,7 @@ var ForceGraph = function(p_args, p_data) {
      * Start highlight node handler.
      * @param {type} d
      */
-    var _startHighlight = function(d) {
+    let _startHighlight = function(d) {
         svg.style("cursor","pointer");
         if (focus_node !== null) {
             d = focus_node;
@@ -350,10 +350,10 @@ var ForceGraph = function(p_args, p_data) {
     // Show topology colors for Switches that are used to Trace
     // It is just to identify the difference in color field
     this.show_topology_colors = function() {
-        var nodes = d3.selectAll(".node");
+        let nodes = d3.selectAll(".node");
         nodes.attr("fill", function(d) {
             if(d.type === Switch.TYPE) {
-                for (var x in sdncolor.colors) {
+                for (let x in sdncolor.colors) {
                     if (x === d.data.switch_color) {
                         return sdncolor.colors[d.data.switch_color];
                     }
@@ -364,7 +364,7 @@ var ForceGraph = function(p_args, p_data) {
     };
     
     this.restore_topology_colors = function() {
-        var nodes = d3.selectAll(".node");
+        let nodes = d3.selectAll(".node");
         nodes.attr("fill", function(d) {
             return d.background_color;
         });
@@ -374,7 +374,7 @@ var ForceGraph = function(p_args, p_data) {
      * Focus on a clicked switch. (on node mousedown)
      * @param d D3 data object.
      */
-    var focusSwitch = function(d) {
+    let focusSwitch = function(d) {
         // Set data info panel
         if(d && d.data) {
             // show all the switch data in the panel
@@ -402,7 +402,7 @@ var ForceGraph = function(p_args, p_data) {
     };
 
     // focus highlight (on node mousedown)
-    var setPortFocus = function(d) {
+    let setPortFocus = function(d) {
 
         // Set data info panel
         if(d && d.data) {
@@ -427,18 +427,18 @@ var ForceGraph = function(p_args, p_data) {
             _setDomainFocusPanelData(d);
             $('#domain_panel_info_collapse').collapse("show");
         }
-    };
+    }
 
     /**
      * Focus and show to the lateral domain panel data.
      * Use with setSwitchFocus to set the lateral panel data
      * @param {type} d
      */
-    var _setDomainFocusPanelData = function(d) {
+    let _setDomainFocusPanelData = function(d) {
         $('#domain_panel_info').show();
         $('#domain_panel_info_collapse').collapse("show");
         $('#domain_panel_info_dpid_value').html(d.data.domain);
-        var name = d.data.getName();
+        let name = d.data.getName();
 
         if (name && name.length > 0) {
             $('#domain_panel_info_name').show();
@@ -457,7 +457,7 @@ var ForceGraph = function(p_args, p_data) {
      * @param {type} dy
      * @returns {Array}
      */
-    var radiusPositioning = function(cx, cy, dx, dy) {
+    let radiusPositioning = function(cx, cy, dx, dy) {
         let delta_x = dx - cx;
         let delta_y = dy - cy;
         let rad = Math.atan2(delta_y, delta_x);
@@ -481,9 +481,9 @@ var ForceGraph = function(p_args, p_data) {
     function transformNode(d) {
         let return_val = '';
         if (d.type === Port.TYPE) {
-            var new_positions = radiusPositioning(d.from_sw.x, d.from_sw.y, d.to_sw.x, d.to_sw.y);
-            var dx = new_positions[0];
-            var dy = new_positions[1];
+            let new_positions = radiusPositioning(d.from_sw.x, d.from_sw.y, d.to_sw.x, d.to_sw.y);
+            let dx = new_positions[0];
+            let dy = new_positions[1];
             return_val = "translate(" + dx + "," + dy + ")";
         } else {
             return_val = "translate(" + d.x + "," + d.y + ")";
@@ -495,7 +495,7 @@ var ForceGraph = function(p_args, p_data) {
         let dx = d.x;
         let dy = d.y;
         if (d.type === Port.TYPE) {
-            var new_positions = radiusPositioning(d.from_sw.x, d.from_sw.y, d.to_sw.x, d.to_sw.y);
+            let new_positions = radiusPositioning(d.from_sw.x, d.from_sw.y, d.to_sw.x, d.to_sw.y);
             dx = new_positions[0];
             dy = new_positions[1];
             return_val = "translate(" + dx + "," + dy + ")";
@@ -540,7 +540,7 @@ var ForceGraph = function(p_args, p_data) {
      */
     function loadPositions() {
         // Load the previous graph positions
-        var prevLoc = forceGraphPersistency.load();
+        let prevLoc = forceGraphPersistency.load();
 
         if (prevLoc) {
             // try to fix the position for every node.
@@ -550,10 +550,10 @@ var ForceGraph = function(p_args, p_data) {
 
                 // find the node
                 let prev = null;
-                for (let i in prevLoc) {
-                    if (prevLoc[i].id === d.id) {
-                        oldX = prevLoc[i].x;
-                        oldY = prevLoc[i].y;
+                for (let location of prevLoc) {
+                    if (location.id === d.id) {
+                        oldX = location.x;
+                        oldY = location.y;
                         break;
                     }
                 }
@@ -571,9 +571,9 @@ var ForceGraph = function(p_args, p_data) {
         force.stop();
 
         // Check to know if two nodes are connected
-        for (var x in _data.links) {
-            if (!isConnected(_data.links[x].source, _data.links[x].target)) {
-                addConnection(_data.links[x].source, _data.links[x].target);
+        for (let link of _data.links) {
+            if (!isConnected(link.source, link.target)) {
+                addConnection(link.source, link.target);
             }
         }
 
@@ -588,7 +588,7 @@ var ForceGraph = function(p_args, p_data) {
                     })
                     .attr("class", function(d) {
 
-                        var return_var = "";
+                        let return_var = "";
                         if (d.speed >= SPEED_100GB) {
                             return_var = return_var + " link-path link-large";
                         } else if (d.speed >= SPEED_10GB) {
@@ -651,7 +651,7 @@ var ForceGraph = function(p_args, p_data) {
                         // focus_node to control highlight events
                         focus_node = d;
                         set_domain_focus(d);
-                    };
+                    }
                 })
                 .on("mouseout", function(d) {
                     if (d.type === Port.TYPE) { return; }
@@ -672,7 +672,7 @@ var ForceGraph = function(p_args, p_data) {
                 .merge(node);
 
 
-        var addNodeText = function(d, i) {
+        let addNodeText = function(d, i) {
           let textTag = d3.select(this)
                             .append("text")
                                 .attr("class", function(d) {
@@ -694,7 +694,7 @@ var ForceGraph = function(p_args, p_data) {
                     .attr("class", className)
                     .style("display", display)
                     .text(attr);
-          }
+          };
 
 
           if(d.obj && typeof d.obj.dpid !== "undefined") {
@@ -722,7 +722,7 @@ var ForceGraph = function(p_args, p_data) {
 
           d3.select(this)
             .merge(textSelection);
-        }
+        };
 
 
         // draw switch label
@@ -731,8 +731,6 @@ var ForceGraph = function(p_args, p_data) {
         let textTags = textNodes
             .enter()
                 .each(addNodeText);
-
-
 
         // draw link label
         link_label = link_label.data(_data.links);
@@ -766,14 +764,14 @@ var ForceGraph = function(p_args, p_data) {
  * 
  * @returns {D3JS}
  */
-var D3JS = function() {
-    var _self = this;
+let D3JS = function() {
+    let _self = this;
     
     this.nodes = null;
     this.edges = null;
 
     this.findNode = function(p_id) {
-        var id = '';
+        let id = '';
         // Check if the p_id is an object or the real ID attribute
         if ( typeof p_id.id === 'undefined') {
             id = p_id;
@@ -782,32 +780,28 @@ var D3JS = function() {
         }
 
         // looking for existing node.
-        for (var k in this.nodes){
-            if (this.nodes.hasOwnProperty(k) && this.nodes[k] && this.nodes[k].id === id) {
-                 return this.nodes[k];
+        for (let node of this.nodes){
+            if (node && node.id === id) {
+                 return node;
             }
         }
         return null;
     };
 
     this.hasNode = function(p_id) {
-        var findNodeObj = this.findNode(p_id);
-        if (findNodeObj === null) {
-            return false;
-        } else {
-            return true;
-        }
+        let findNodeObj = this.findNode(p_id);
+        return (findNodeObj !== null);
     };
 
     this.removeNode = function(id) {
         // Delete the node from the array
-        for (var k in this.nodes){
+        for (let k in this.nodes){
             if (this.nodes.hasOwnProperty(k) && this.nodes[k] && this.nodes[k].id === id) {
                  this.nodes.splice(k, 1);
             }
         }
         // Delete the edges related to the deleted node
-        for (var k in this.edges){
+        for (let k in this.edges){
             if (this.edges.hasOwnProperty(k) && this.edges[k]) {
                 if (this.edges[k].source.id === id || this.edges[k].target.id === id)
                  this.edges.splice(k, 1);
@@ -819,19 +813,19 @@ var D3JS = function() {
     
     this.addNewNodeHost = function(p_dpid, p_port_id, p_label="") {
         if (this.nodes) {
-            var _host_id = Host.createId(p_dpid, p_port_id);
-            for (var y = 0; y < this.nodes.length; y++) {
-                if(this.nodes[y].id === _host_id) {
+            let _host_id = Host.createId(p_dpid, p_port_id);
+            for (let node of this.nodes) {
+                if(node.id === _host_id) {
                     // do nothing
-                    return this.nodes[y];
+                    return node;
                 }
             }
         } else {
             this.nodes = [];
         }
 
-        var host_id = Host.createId(p_dpid, p_port_id);
-        var host_obj = new Host(host_id, p_label);
+        let host_id = Host.createId(p_dpid, p_port_id);
+        let host_obj = new Host(host_id, p_label);
 
         sdntopology.domains.push(host_obj);
 
@@ -840,7 +834,7 @@ var D3JS = function() {
             // create an array with nodes
             _createNetworkNodes(false, false, true);
 
-            var data = forcegraph.data();
+            let data = forcegraph.data();
             data.nodes = this.nodes;
 
             // Draw the d3js graph
@@ -851,20 +845,20 @@ var D3JS = function() {
     };
 
     this.addNewNodeDomain = function(id=null, label="") {
-        var domain_id = Domain.createId(id);
+        let domain_id = Domain.createId(id);
 
         if(this.nodes) {
-            for (var y = 0; y < this.nodes.length; y++) {
-                if(this.nodes[y].id === domain_id) {
+            for (let node of this.nodes) {
+                if(node.id === domain_id) {
                     // do nothing
-                    return this.nodes[y];
+                    return node;
                 }
             }
         } else {
             this.nodes = [];
         }
 
-        var domain_obj = new Domain(domain_id);
+        let domain_obj = new Domain(domain_id);
         domain_obj.label = label;
 
         sdntopology.domains.push(domain_obj);
@@ -872,7 +866,7 @@ var D3JS = function() {
         // create an array with nodes
         _createNetworkNodes(false, false, true);
 
-        var data = forcegraph.data();
+        let data = forcegraph.data();
         data.nodes = this.nodes;
 
         // Draw the d3js graph
@@ -882,10 +876,10 @@ var D3JS = function() {
     };
 
     this.addNewLink = function(id_from, id_to, prefix_id="", label="") {
-        var node_from = sdntopology.get_node_by_id(id_from);
-        var node_to = sdntopology.get_node_by_id(id_to);
+        let node_from = sdntopology.get_node_by_id(id_from);
+        let node_to = sdntopology.get_node_by_id(id_to);
 
-        var _link = sdntopology.get_topology_link(node_from, node_to, prefix_id);
+        let _link = sdntopology.get_topology_link(node_from, node_to, prefix_id);
 
         if (_link === null) {
             _link = {node1: node_from , node2:node_to, prefix_id:prefix_id, label1:label, label2:label, speed:""};
@@ -895,7 +889,7 @@ var D3JS = function() {
             // create an array with edges
             _createNetworkEdges(false, false, true);
 
-            var data = forcegraph.data();
+            let data = forcegraph.data();
             data.links = this.edges;
             data.edges_data = this.edges;
 
@@ -905,18 +899,18 @@ var D3JS = function() {
     };
 
     this.addNewNode = function(p_dpid=null, p_label="", p_domain=null) {
-        var _hasSwitch = function(p_id) {
-            for(var x in sdntopology.switches) {
-                if(sdntopology.switches[x].id === p_id) {
+        let _hasSwitch = function(p_id) {
+            for(let _switch of sdntopology.switches) {
+                if(_switch.id === p_id) {
                     return true;
                 }
             }
             return false;
         };
-        var with_colors = typeof with_colors !== 'undefined' ? with_colors : true;
-        var with_trace = typeof with_trace !== 'undefined' ? with_trace : true;
+        let with_colors = typeof with_colors !== 'undefined' ? with_colors : true;
+        let with_trace = typeof with_trace !== 'undefined' ? with_trace : true;
 
-        var _dpid = "";
+        let _dpid = "";
         if (p_dpid) {
             _dpid = p_dpid;
         }
@@ -925,7 +919,7 @@ var D3JS = function() {
             return;
         }
 
-        var _switch_obj = new Switch(_dpid);
+        let _switch_obj = new Switch(_dpid);
         if (p_label) { _switch_obj.name = p_label; }
         if (p_domain) { _switch_obj.domain = p_domain; }
 
@@ -934,7 +928,7 @@ var D3JS = function() {
         // create an array with nodes
         _createNetworkNodes(with_colors, with_trace, true);
 
-        var data = forcegraph.data();
+        let data = forcegraph.data();
         data.nodes = this.nodes;
 
         forcegraph.draw();
@@ -950,10 +944,10 @@ var D3JS = function() {
     };
 
     this.startNodeActivate = function(p_id) {
-        var css_selector = document.getElementById("node-" + p_id);
+        let css_selector = document.getElementById("node-" + p_id);
         $(css_selector).addClass("node-trace-active");
 
-        for (var k in this.nodes){
+        for (let k in this.nodes){
             if (this.nodes[k].id === p_id) {
                 this.nodes[k].isActive = true;
                 break;
@@ -962,7 +956,7 @@ var D3JS = function() {
     };
 
     this.startPathActivate = function(p_id_from, p_id_to) {
-        var css_selector = document.getElementById("link-" + p_id_from +"-"+ p_id_to);
+        let css_selector = document.getElementById("link-" + p_id_from +"-"+ p_id_to);
         $(css_selector).addClass("link-trace-active link-trace-active-color");
 
         css_selector = document.getElementById("link-" + p_id_to +"-"+ p_id_from);
@@ -975,7 +969,7 @@ var D3JS = function() {
         //     }
         // }
         // Delete the edges related to the deleted node
-        for (var k in this.edges){
+        for (let k in this.edges){
             if (this.edges.hasOwnProperty(k) && this.edges[k]) {
                 if (this.edges[k].source.id === p_id_from && this.edges[k].target.id === p_id_to) {
                     this.edges[k].isActive = true;
@@ -991,13 +985,13 @@ var D3JS = function() {
     };
 
     this.startPathCPActivate = function(p_id_from, p_id_to) {
-        var css_selector = document.getElementById("link-CP" + p_id_from +"-"+ p_id_to);
+        let css_selector = document.getElementById("link-CP" + p_id_from +"-"+ p_id_to);
         $(css_selector).addClass("link-tracecp-active link-tracecp-active-color");
 
         css_selector = document.getElementById("link-CP" + p_id_to +"-"+ p_id_from);
         $(css_selector).addClass("link-tracecp-active link-tracecp-active-color");
 
-        for (var k in this.edges){
+        for (let k in this.edges){
             if (this.edges.hasOwnProperty(k) && this.edges[k]) {
                 if (this.edges[k].source.id === p_id_from && this.edges[k].target.id === p_id_to) {
                     this.edges[k].isCPActive = true;
@@ -1013,13 +1007,15 @@ var D3JS = function() {
     };
 
     this.clearActivate = function() {
-        for (var k in this.nodes){
-            return this.nodes[k].data.isActive = false;
+        for(let k in this.nodes){
+            if (this.nodes.hasOwnProperty(k)) {
+                this.nodes[k].data.isActive = false;
+            }
         }
 
-        $("path").removeClass("node-trace- node-trace-active-color");
-        $("line").removeClass("link-trace-active link-trace-active-color");
-        $("line").removeClass("link-tracecp-active link-tracecp-active-color");
+        $("path").removeClass("node-trace-active node-trace-active-color");
+        $("line").removeClass("link-trace-active link-trace-active-color")
+                 .removeClass("link-tracecp-active link-tracecp-active-color");
     };
 
 
@@ -1031,15 +1027,15 @@ var D3JS = function() {
      * @param {type} with_trace
      * @param {type} p_updateCurrent Flag to signal to update the internal node data.
      */
-    var _createNetworkNodes = function(with_colors, with_trace, p_updateCurrent=false) {
+    let _createNetworkNodes = function(with_colors, with_trace, p_updateCurrent=false) {
         // create an array with nodes
-        var nodesArray = [];
-        for (var x = 0; x < sdntopology.switches.length; x++) {
+        let nodesArray = [];
+        for (let x = 0; x < sdntopology.switches.length; x++) {
             // positioning in spiral mode to help the physics animation and prevent crossing lines
-            var nodeObj = sdntopology.switches[x].getD3jsData();
+            let nodeObj = sdntopology.switches[x].getD3jsData();
 
             if (p_updateCurrent) {
-                for (var y = 0; y < _self.nodes.length; y++) {
+                for (let y = 0; y < _self.nodes.length; y++) {
                     if (_self.nodes[y].id === nodeObj.id) {
                         nodeObj = _self.nodes[y];
                     }
@@ -1048,12 +1044,12 @@ var D3JS = function() {
 
             nodesArray.push(nodeObj);
         }
-        for (var x = 0; x < sdntopology.domains.length; x++) {
+        for (let x = 0; x < sdntopology.domains.length; x++) {
             // positioning in spiral mode to help the physics animation and prevent crossing lines
-            var nodeObj = sdntopology.domains[x].getD3jsData();
+            let nodeObj = sdntopology.domains[x].getD3jsData();
 
             if (p_updateCurrent) {
-                for (var y = 0; y < _self.nodes.length; y++) {
+                for (let y = 0; y < _self.nodes.length; y++) {
                     if (_self.nodes[y].id === nodeObj.id) {
                         nodeObj = _self.nodes[y];
                     }
@@ -1073,37 +1069,37 @@ var D3JS = function() {
      * @param {type} p_updateCurrent Flag to signal to update the internal node data.
      * @returns {undefined}
      */
-    var _createNetworkEdges = function(with_colors, with_trace, p_updateCurrent=false) {
-        var edgesArray = [];
+    let _createNetworkEdges = function(with_colors, with_trace, p_updateCurrent=false) {
+        let edgesArray = [];
 
         // verify topology to create edges
-        for (var x = 0; x < sdntopology.topology.length; x++) {
-            var link_prefix_id = sdntopology.topology[x].prefix_id;
+        for (let x = 0; x < sdntopology.topology.length; x++) {
+            let link_prefix_id = sdntopology.topology[x].prefix_id;
 
-            var nodeFromId = sdntopology.topology[x].node1;
-            var nodeToId = sdntopology.topology[x].node2;
+            let nodeFromId = sdntopology.topology[x].node1;
+            let nodeToId = sdntopology.topology[x].node2;
 
-            var labelFrom = sdntopology.topology[x].label1;
-            var labelTo = sdntopology.topology[x].label2;
+            let labelFrom = sdntopology.topology[x].label1;
+            let labelTo = sdntopology.topology[x].label2;
 
-            var labelNumberFrom = sdntopology.topology[x].label_num1;
-            var labelNumberTo = sdntopology.topology[x].label_num2;
+            let labelNumberFrom = sdntopology.topology[x].label_num1;
+            let labelNumberTo = sdntopology.topology[x].label_num2;
 
-            var speed = sdntopology.topology[x].speed;
+            let speed = sdntopology.topology[x].speed;
 
-            var source = _self.findNode(nodeFromId) || _self.nodes.push({id:nodeFromId, dpid:nodeFromId, name: nodeFromId});
-            var target = _self.findNode(nodeToId) || _self.nodes.push({id:nodeToId, dpid:nodeToId, name: nodeToId});
+            let source = _self.findNode(nodeFromId) || _self.nodes.push({id:nodeFromId, dpid:nodeFromId, name: nodeFromId});
+            let target = _self.findNode(nodeToId) || _self.nodes.push({id:nodeToId, dpid:nodeToId, name: nodeToId});
 
-            var edgeId = (link_prefix_id||"") + source.id + "-" + target.id;
-            var sourceLabel = {name: labelFrom, num: labelNumberFrom};
-            var targetLabel = {name: labelTo, num: labelNumberTo};
+            let edgeId = (link_prefix_id||"") + source.id + "-" + target.id;
+            let sourceLabel = {name: labelFrom, num: labelNumberFrom};
+            let targetLabel = {name: labelTo, num: labelNumberTo};
 
-            var edgeObj = {id:edgeId, name:x, source: source, target: target, source_label:sourceLabel, target_label:targetLabel, speed:speed, prefix_id:link_prefix_id};
+            let edgeObj = {id:edgeId, name:x, source: source, target: target, source_label:sourceLabel, target_label:targetLabel, speed:speed, prefix_id:link_prefix_id};
             edgeObj.color = sdncolor.LINK_COLOR['switch'];
 
             // Update current link instead of creating a new one
             if (p_updateCurrent) {
-                for (var y = 0; y < _self.edges.length; y++) {
+                for (let y = 0; y < _self.edges.length; y++) {
                     if (_self.edges[y].id === edgeObj.id) {
                         edgeObj = _self.edges[y];
                     }
@@ -1113,8 +1109,9 @@ var D3JS = function() {
             edgesArray.push(edgeObj);
 
             // adding port as a node
-            var node_port_obj_from = null;
-            var node_port_obj_to = null;
+            let node_port_obj_from = null;
+            let node_port_obj_to = null;
+
             if (nodeFromId.ports && nodeFromId.ports.length > 0 && nodeFromId.ports[0]) {
                 node_port_obj_from = nodeFromId.ports[0].getD3jsData();
                 node_port_obj_from.from_sw = source;
@@ -1139,7 +1136,7 @@ var D3JS = function() {
         _self.edges = edgesArray;
     };
 
-    var _renderNetwork = function(with_colors, with_trace) {
+    let _renderNetwork = function(with_colors, with_trace) {
         with_colors = typeof with_colors !== 'undefined' ? with_colors : true;
         with_trace = typeof with_trace !== 'undefined' ? with_trace : true;
 
@@ -1149,7 +1146,7 @@ var D3JS = function() {
         // create an array with edges
         _createNetworkEdges(with_colors, with_trace);
 
-        var data = {
+        let data = {
             nodes: _self.nodes,
             links: _self.edges,
             edges_data: _self.edges

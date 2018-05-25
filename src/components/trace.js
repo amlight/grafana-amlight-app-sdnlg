@@ -9,9 +9,9 @@ const REST_TRACE_TYPE = {'STARTING':'starting', 'LAST':'last', 'TRACE':'trace', 
 /** @constant */
 const REST_TRACE_REASON = {'ERROR':'error', 'DONE':'done', 'LOOP':'loop'};
 
-var SDNTraceForm = function() {
-    var _self = this;
-    var _elem = null;
+let SDNTraceForm = function() {
+    let _self = this;
+    let _elem = null;
 
     /**
     Initialize form binds.
@@ -76,28 +76,28 @@ var SDNTraceForm = function() {
         $('#trace_panel_info__header .loading-icon-div').hide();
     };
 
-    this.showCPIconTimer = function() {
-        $('#tracecp_panel_info__header .loading-icon-div').show();
-    };
-    this.hideCPIconTimer = function() {
-        $('#tracecp_panel_info__header .loading-icon-div').hide();
-    };
-}
+    // this.showCPIconTimer = function() {
+    //     $('#tracecp_panel_info__header .loading-icon-div').show();
+    // };
+    // this.hideCPIconTimer = function() {
+    //     $('#tracecp_panel_info__header .loading-icon-div').hide();
+    // };
+};
 
 
-var SDNTrace = function() {
+let SDNTrace = function() {
 
-    var _self = this;
+    let _self = this;
 
     // last trace id executing
     this.lastTraceID = "";
 
     this.configureColors = function(p_color) {
-        var _color =  typeof p_color !== 'undefined' ? p_color : sdncolor.TRACE_COLOR_ACTIVE;
+        let _color =  typeof p_color !== 'undefined' ? p_color : sdncolor.TRACE_COLOR_ACTIVE;
 
         injectStyles("style_trace_active", " .node-trace-active-color {stroke: " + _color + " !important;}" +
                      " .link-trace-active-color {stroke: " + _color + " !important;}");
-    }
+    };
 
     this.clearTraceInterface = function() {
         /**
@@ -108,6 +108,7 @@ var SDNTrace = function() {
         $("#trace_panel_info__start_time").html("");
         $("#trace_panel_info__total_time").html("");
         $("#trace_panel_info__result").html("");
+        $("#tracecp_panel_info__msg").html("");
 
         // clear d3 graph highlight nodes, links
         if (forcegraph) {
@@ -137,7 +138,7 @@ var SDNTrace = function() {
 
         sdntraceform.showIconTimer();
 
-        var ajaxDone = function(json) {
+        let ajaxDone = function(json) {
             // Stopping any ongoing trace.
             _self.traceStop();
             _self.traceReset();
@@ -171,8 +172,8 @@ var SDNTrace = function() {
     };
 
     this.renderHtmlTraceFormSelectedSwitch = function(p_dpid, p_label) {
-        $('#sdn_trace_form__switch-content > select').val(p_dpid);
-        $('#sdn_trace_form__switch-content > select').trigger('change');
+        $('#sdn_trace_form__switch-content > select').val(p_dpid)
+                                                     .trigger('change');
 
         $('#sdn_trace_form__switch-hidden').val(p_dpid);
     };
@@ -187,7 +188,7 @@ var SDNTrace = function() {
      * Build json string from form fields to send to trace layer 2 ajax.
      */
     this.buildTraceLayer2JSON = function() {
-        var layer2 = new Object();
+        let layer2 = {};
         layer2.trace = {};
 
         let _switch = {};
@@ -212,16 +213,15 @@ var SDNTrace = function() {
         layer2.trace.eth = _eth;
 
         layer2 = removeEmptyJsonValues(layer2);
-        var layer2String = JSON.stringify(layer2);
 
-        return layer2String;
+        return JSON.stringify(layer2);
     };
 
     /**
      * Build json string from form fields to send to trace layer 3 ajax.
      */
     this._build_trace_layer3_json = function() {
-        var layer3 = new Object();
+        let layer3 = {};
         layer3.trace = {};
 
         let _switch = {};
@@ -257,16 +257,15 @@ var SDNTrace = function() {
         layer3.trace.tp = _tp;
         
         layer3 = removeEmptyJsonValues(layer3);
-        var layer3String = JSON.stringify(layer3);
 
-        return layer3String;
+        return JSON.stringify(layer3);
     };
 
     /**
      * Build json string from form fields to send to full trace ajax.
      */
     this._build_trace_layerfull_json = function() {
-        var layerfull = new Object();
+        let layerfull = {};
         layerfull.trace = {};
 
         let _switch = {};
@@ -308,21 +307,20 @@ var SDNTrace = function() {
         layerfull.trace.tp = _tp;
 
         layerfull = removeEmptyJsonValues(layerfull);
-        var layerfullString = JSON.stringify(layerfull);
 
-        return layerfullString;
+        return JSON.stringify(layerfull);
     };
     
 
-    var _flagCallTraceListenerAgain = true;
+    let _flagCallTraceListenerAgain = true;
     // Timeout flag to stop the trace listener
-    var _threadTraceListener = "";
+    let _threadTraceListener = "";
     // Time to trigger the next call in ms
-    var _traceTimerTriggerCall = 1000;
+    let _traceTimerTriggerCall = 1000;
     // Total time to trigger the call. After that trigger timeout method.
-    var _traceTimerMax = 30000;
+    let _traceTimerMax = 30000;
 
-    var _traceTimerCounter = 0;
+    let _traceTimerCounter = 0;
 
     this.triggerTraceListener = function(traceId) {
         _self.lastTraceID = traceId;
@@ -368,7 +366,7 @@ var SDNTrace = function() {
      * @param traceId Trace ID number
      */
     this.callTraceListener = function(traceId) {
-        var colorRender = function() {
+        let colorRender = function() {
             $("#trace_panel_info__result tr").each(function(index){
               let _switchA = $(this).find(".dataCol:eq(0)");
               let _portA = $(this).find(".dataCol:eq(1)");
@@ -392,20 +390,20 @@ var SDNTrace = function() {
                 _portB.css("color","red");
               }
             });
-        }
+        };
 
         /**
          * Render trace result html info.
          * @param jsonObj json received from REST trace service.
          */
-        var htmlRender = function(jsonObj) {
+        let htmlRender = function(jsonObj) {
             if(jsonObj.result) {
                 // FIXME workaround for multiple starting type
-                var _flag_multiple_starting_counter = 0;
-                for (var i = 0, len = jsonObj.result.length; i < len; i++) {
-                    if (jsonObj.result[i].type === REST_TRACE_TYPE.STARTING && (_flag_multiple_starting_counter === 0)) {
-                        $("#trace_panel_info__dpid").html(jsonObj.result[i].dpid);
-                        $("#trace_panel_info__port").html(trace_panel_info__port);
+                let _flag_multiple_starting_counter = 0;
+                for (let obj of jsonObj.result) {
+                    if (obj.type === REST_TRACE_TYPE.STARTING && (_flag_multiple_starting_counter === 0)) {
+                        $("#trace_panel_info__dpid").html(obj.dpid);
+                        $("#trace_panel_info__port").html(obj.port);
                         _flag_multiple_starting_counter++;
                     }
                 }
@@ -418,53 +416,53 @@ var SDNTrace = function() {
             $("#trace_panel_info__total_time").html((jsonObj.total_time || "---"));
 
 
-            var htmlContent = "";
+            let htmlContent = "";
             if(jsonObj.result) {
                 htmlContent += "<table id='trace_panel_info__result' class='table grafana-options-table'>";
                 htmlContent += "<thead><tr><th>DPID</th><th>In. Port</th><th>Time</th></tr></thead>";
                 htmlContent += "<tbody>";
 
-                var _flag_multiple_starting_counter = 0;
-                for (var i = 0, len = jsonObj.result.length; i < len; i++) {
+                let _flag_multiple_starting_counter = 0;
+                for (let obj of jsonObj.result) {
                     // FIXME: workaround for multiple starting type
-                    if (jsonObj.result[i].type === REST_TRACE_TYPE.STARTING && (_flag_multiple_starting_counter === 0)) {
+                    if (obj.type === REST_TRACE_TYPE.STARTING && (_flag_multiple_starting_counter === 0)) {
                         _flag_multiple_starting_counter = _flag_multiple_starting_counter + 1;
                     // FIXME: workaround for multiple starting type
-                    } else if ((jsonObj.result[i].type === REST_TRACE_TYPE.STARTING && _flag_multiple_starting_counter > 0) || jsonObj.result[i].type === REST_TRACE_TYPE.TRACE) {
-                        htmlContent += "<tr data-type="+ jsonObj.result[i].type +">";
-                        htmlContent += "<td class='dataCol'>" + jsonObj.result[i].dpid + "</td>";
-                        htmlContent += "<td class='dataCol'>" + jsonObj.result[i].port + "</td>";
-                        htmlContent += "<td>" + jsonObj.result[i].time + "</td>";
+                    } else if ((obj.type === REST_TRACE_TYPE.STARTING && _flag_multiple_starting_counter > 0) || obj.type === REST_TRACE_TYPE.TRACE) {
+                        htmlContent += "<tr data-type="+ obj.type +">";
+                        htmlContent += "<td class='dataCol'>" + obj.dpid + "</td>";
+                        htmlContent += "<td class='dataCol'>" + obj.port + "</td>";
+                        htmlContent += "<td>" + obj.time + "</td>";
                         htmlContent += "</tr>";
-                    } else if (jsonObj.result[i].type === REST_TRACE_TYPE.INTERTRACE) {
-                        htmlContent += "<tr data-type="+ jsonObj.result[i].type +">";
-                        htmlContent += "<td colspan='3'><strong>Interdomain: " + jsonObj.result[i].domain + "</strong></td>";
+                    } else if (obj.type === REST_TRACE_TYPE.INTERTRACE) {
+                        htmlContent += "<tr data-type="+ obj.type +">";
+                        htmlContent += "<td colspan='3'><strong>Interdomain: " + obj.domain + "</strong></td>";
                         htmlContent += "</tr>";
-                    } else if (jsonObj.result[i].type === REST_TRACE_TYPE.LAST) {
-                        if (jsonObj.result[i].reason === REST_TRACE_REASON.ERROR) {
+                    } else if (obj.type === REST_TRACE_TYPE.LAST) {
+                        if (obj.reason === REST_TRACE_REASON.ERROR) {
                             let pspan = $("<span></span>");
                             pspan.addClass('trace_result_item_error');
-                            pspan.html("Error: " + (jsonObj.result[i].msg || ""));
+                            pspan.html("Error: " + (obj.msg || ""));
                             $("#tracecp_panel_info__msg").append(pspan);
-                        } else if (jsonObj.result[i].reason === REST_TRACE_REASON.DONE) {
+                        } else if (obj.reason === REST_TRACE_REASON.DONE) {
                             let pspan = $("<span></span>");
                             pspan.addClass('trace_result_item_done');
                             let pmsg = "Trace completed. ";
-                            if (jsonObj.result[i].msg !== 'none') {
-                                pmsg += jsonObj.result[i].msg || "";
+                            if (obj.msg !== 'none') {
+                                pmsg += obj.msg ? obj.msg : "";
                             }
                             pspan.html(pmsg);
                             $("#tracecp_panel_info__msg").append(pspan);
-                        } else if (jsonObj.result[i].reason === REST_TRACE_REASON.LOOP) {
+                        } else if (obj.reason === REST_TRACE_REASON.LOOP) {
                             let pspan = $("<span></span>");
                             pspan.addClass('trace_result_item_loop');
-                            pspan.html("Trace completed with loop. " + (jsonObj.result[i].msg || ""));
+                            pspan.html("Trace completed with loop. " + (obj.msg ? obj.msg : ""));
                             $("#tracecp_panel_info__msg").append(pspan);
                         }
 
-                    } else if (jsonObj.result[i].type === REST_TRACE_TYPE.ERROR) {
+                    } else if (obj.type === REST_TRACE_TYPE.ERROR) {
                         let pspan = $("<span></span>");
-                        pspan.html(jsonObj.result[i].message);
+                        pspan.html(obj.message);
                         $("#tracecp_panel_info__msg").append(pspan);
                     }
 
@@ -478,41 +476,41 @@ var SDNTrace = function() {
             colorRender();
         };
 
-        var _addNewHtmlNode = function(_id) {
+        let _addNewHtmlNode = function(_id) {
             /**
             Add html data selector after add a new node
             */
-            var html_selector = "#node-" + _id;
+            let html_selector = "#node-" + _id;
             $(html_selector).addClass("new-node node-trace-active");
             $(html_selector).attr("data-nodeid", _id);
         };
 
-        var _addNewHtmlLink = function(_idFrom, _idTo) {
+        let _addNewHtmlLink = function(_idFrom, _idTo) {
             /**
             Add html data selector after add a new link
             */
-            var html_selector = "#link-" + _idFrom +"-"+ _idTo;
+            let html_selector = "#link-" + _idFrom +"-"+ _idTo;
             d3lib.startPathActivate(_idFrom, _idTo);
 
             $(html_selector).attr("data-linkid", _idFrom +"-"+ _idTo);
         };
 
-        var ajaxDone = function(jsonObj) {
+        let ajaxDone = function(jsonObj) {
             if (jsonObj && jsonObj === "0") {
                 return;
             }
 
             try {
                 if (jsonObj.result && jsonObj.result.length > 0) {
-                    var flag_has_domain = false;
+                    let flag_has_domain = false;
                     // temporary var to last node
-                    var last_node_id = null;
+                    let last_node_id = null;
                     // temporary var to last interdomain
-                    var last_domain_id = null;
+                    let last_domain_id = null;
 
-                    for (var i = 0, len = jsonObj.result.length; i < len; i++) {
-                        var result_item = jsonObj.result[i];
-                        var _id = null;
+                    for (let i = 0, len = jsonObj.result.length; i < len; i++) {
+                        let result_item = jsonObj.result[i];
+                        let _id = null;
 
 //                        if (result_item.hasOwnProperty("domain")) {
 //                            // Add new domain node
@@ -552,7 +550,7 @@ var SDNTrace = function() {
                         last_node_id = _id;
                     }
 
-                    var last_result_item = jsonObj.result[jsonObj.result.length - 1];
+                    let last_result_item = jsonObj.result[jsonObj.result.length - 1];
                     if (last_result_item.type === REST_TRACE_TYPE.LAST) {
                         // FLAG to stop the trigger loop
                         if (_self._flagCallTraceListenerAgainCounter < 12) {
@@ -610,19 +608,19 @@ var SDNTrace = function() {
  }; // SDNTrace
 
 
-var SDNTraceCP = function() {
-    var _self = this;
+let SDNTraceCP = function() {
+    let _self = this;
 
     this.configureColors = function(p_color) {
-        var _color =  typeof p_color !== 'undefined' ? p_color : sdncolor.TRACECP_COLOR_ACTIVE;
+        let _color =  typeof p_color !== 'undefined' ? p_color : sdncolor.TRACECP_COLOR_ACTIVE;
         injectStyles("style_tracecp_active", " .link-tracecp-active-color {stroke: " + _color + " !important;}");
-    }
+    };
 
     /**
      * Build json string from form fields to send to trace layer 2 ajax.
      */
     this.buildTraceLayer2JSON = function() {
-        var layer2 = new Object();
+        let layer2 = {};
         layer2.trace = {};
 
         let _switch = {};
@@ -647,16 +645,15 @@ var SDNTraceCP = function() {
         layer2.trace.eth = _eth;
 
         layer2 = removeEmptyJsonValues(layer2);
-        var layer2String = JSON.stringify(layer2);
 
-        return layer2String;
+        return JSON.stringify(layer2);
     };
 
     /**
      * Build json string from form fields to send to trace layer 3 ajax.
      */
     this._build_trace_layer3_json = function() {
-        var layer3 = new Object();
+        let layer3 = {};
         layer3.trace = {};
 
         let _switch = {};
@@ -693,16 +690,14 @@ var SDNTraceCP = function() {
         layer3.trace.tp = _tp;
 
         layer3 = removeEmptyJsonValues(layer3);
-        var layer3String = JSON.stringify(layer3);
-
-        return layer3String;
+        return JSON.stringify(layer3);
     };
 
     /**
      * Build json string from form fields to send to full trace ajax.
      */
     this._build_trace_layerfull_json = function() {
-        var layerfull = new Object();
+        let layerfull = {};
         layerfull.trace = {};
 
         let _switch = {};
@@ -744,9 +739,8 @@ var SDNTraceCP = function() {
         layerfull.trace.tp = _tp;
 
         layerfull = removeEmptyJsonValues(layerfull);
-        var layerfullString = JSON.stringify(layerfull);
 
-        return layerfullString;
+        return JSON.stringify(layerfull);
     };
 
 
@@ -759,56 +753,58 @@ var SDNTraceCP = function() {
          */
 
 
-        var htmlRender = function(jsonObj) {
+        let htmlRender = function(jsonObj) {
             /**
             * Render trace result html info.
             */
 
-            var htmlContent = "";
+            let htmlContent = "";
 
             if(jsonObj.result) {
                 htmlContent += "<table class='table grafana-options-table'>";
                 htmlContent += "<thead><tr><th></th><th>DPID</th><th>In. Port</th></tr></thead>";
                 htmlContent += "<tbody>";
 
-                var _flag_multiple_starting_counter = 0;
-                for (var i = 0, len = jsonObj.result.length; i < len; i++) {
+                let _flag_multiple_starting_counter = 0;
+                let i = 0;
+                for (let obj of jsonObj.result) {
+                    i = i + 1;
 
                     // FIXME: workaround for multiple starting type
-                    if (jsonObj.result[i].type !== REST_TRACE_TYPE.STARTING || (jsonObj.result[i].type === REST_TRACE_TYPE.STARTING && _flag_multiple_starting_counter > 0)) {
-                        htmlContent += "<tr data-type="+ jsonObj.result[i].type +">";
+                    if (obj.type !== REST_TRACE_TYPE.STARTING || (obj.type === REST_TRACE_TYPE.STARTING && _flag_multiple_starting_counter > 0)) {
+                        htmlContent += "<tr data-type="+ obj.type +">";
                         htmlContent += "<td>" + (i) + "</td>";
                     }
 
                     // FIXME: workaround for multiple starting type
-                    if (jsonObj.result[i].type === REST_TRACE_TYPE.STARTING && (_flag_multiple_starting_counter === 0)) {
+                    if (obj.type === REST_TRACE_TYPE.STARTING && (_flag_multiple_starting_counter === 0)) {
                         _flag_multiple_starting_counter = _flag_multiple_starting_counter + 1;
                     // FIXME: workaround for multiple starting type
-                    } else if ((jsonObj.result[i].type === REST_TRACE_TYPE.STARTING && _flag_multiple_starting_counter > 0) || jsonObj.result[i].type === REST_TRACE_TYPE.TRACE) {
-                        htmlContent += "<td class='dataCol'>" + jsonObj.result[i].dpid + "</td>";
-                        htmlContent += "<td class='dataCol'>" + jsonObj.result[i].port + "</td>";
-                    } else if (jsonObj.result[i].type === REST_TRACE_TYPE.INTERTRACE) {
-                        htmlContent += "<td colspan='3'><strong>Interdomain: " + jsonObj.result[i].domain + "</strong></td>";
-                    } else if (jsonObj.result[i].type === REST_TRACE_TYPE.LAST) {
+                    } else if ((obj.type === REST_TRACE_TYPE.STARTING && _flag_multiple_starting_counter > 0) || obj.type === REST_TRACE_TYPE.TRACE) {
+                        htmlContent += "<td class='dataCol'>" + obj.dpid + "</td>";
+                        htmlContent += "<td class='dataCol'>" + obj.port + "</td>";
+                    } else if (obj.type === REST_TRACE_TYPE.INTERTRACE) {
+                        htmlContent += "<td colspan='3'><strong>Interdomain: " + obj.domain + "</strong></td>";
+                    } else if (obj.type === REST_TRACE_TYPE.LAST) {
                         htmlContent += "<td colspan='3'>";
-                        if (jsonObj.result[i].reason === REST_TRACE_REASON.ERROR) {
+                        if (obj.reason === REST_TRACE_REASON.ERROR) {
                             htmlContent += "<span class='trace_result_item_error'>Error: ";
-                            htmlContent += jsonObj.result[i].msg || "";
+                            htmlContent += obj['msg'] ? obj['msg'] : "";
                             htmlContent += "</span>";
-                        } else if (jsonObj.result[i].reason === REST_TRACE_REASON.DONE) {
+                        } else if (obj.reason === REST_TRACE_REASON.DONE) {
                             htmlContent += "<span class='trace_result_item_done'>Trace completed. ";
-                            if (jsonObj.result[i].msg !== 'none') {
-                                htmlContent += jsonObj.result[i].msg || "";
+                            if (obj['msg'] !== 'none') {
+                                htmlContent += obj['msg'] ? obj['msg'] : "";
                             }
                             htmlContent += "</span>";
-                        } else if (jsonObj.result[i].reason === REST_TRACE_REASON.LOOP) {
+                        } else if (obj.reason === REST_TRACE_REASON.LOOP) {
                             htmlContent += "<span class='trace_result_item_loop'>Trace completed with loop. ";
-                            htmlContent += jsonObj.result[i].msg || "";
+                            htmlContent += obj['msg'] ? obj['msg'] : "";
                             htmlContent += "</span>";
                         }
                         htmlContent += "</td>";
-                    } else if (jsonObj.result[i].type === REST_TRACE_TYPE.ERROR) {
-                        htmlContent += "<td colspan='3'>" + jsonObj.result[i].message + "</td>";
+                    } else if (obj.type === REST_TRACE_TYPE.ERROR) {
+                        htmlContent += "<td colspan='3'>" + obj.message + "</td>";
                     }
                     htmlContent += "</tr>";
                 }
@@ -820,38 +816,38 @@ var SDNTraceCP = function() {
             $('#tracecp_panel_info__result').html(htmlContent);
         };
 
-        var _addNewHtmlNode = function(_id) {
+        let _addNewHtmlNode = function(_id) {
             /**
             Add html data selector after add a new node
             */
-            var html_selector = "#node-" + _id;
+            let html_selector = "#node-" + _id;
             $(html_selector).addClass("new-node node-trace-active");
             $(html_selector).attr("data-nodeid", _id);
         };
 
-        var _addNewHtmlLink = function(_idFrom, _idTo) {
+        let _addNewHtmlLink = function(_idFrom, _idTo) {
             /**
             Add html data selector after add a new link
             */
-            var html_selector = "#link-CP" + _idFrom +"-"+ _idTo;
+            let html_selector = "#link-CP" + _idFrom +"-"+ _idTo;
             d3lib.startPathCPActivate(_idFrom, _idTo);
             $(html_selector).attr("data-linkid", _idFrom +"-"+ _idTo);
         };
 
-        var ajaxDone = function(jsonObj) {
+        let ajaxDone = function(jsonObj) {
             if (jsonObj && jsonObj === "0") {
                 return;
             }
 
             try {
                 if (jsonObj.result && jsonObj.result.length > 0) {
-                    var flag_has_domain = false;
+                    let flag_has_domain = false;
                     // temporary var to last node
-                    var last_node_id = null;
+                    let last_node_id = null;
 
-                    for (var i = 0, len = jsonObj.result.length; i < len; i++) {
-                        var result_item = jsonObj.result[i];
-                        var _id = null;
+                    for (let i = 0, len = jsonObj.result.length; i < len; i++) {
+                        let result_item = jsonObj.result[i];
+                        let _id = null;
 
                         if (result_item.hasOwnProperty("dpid")) {
                             _id = result_item.dpid;
@@ -868,14 +864,12 @@ var SDNTraceCP = function() {
 
                         if (i > 0 && jsonObj.result[i-1].hasOwnProperty("dpid") && jsonObj.result[i].hasOwnProperty("dpid")) {
                             // Add new link between nodes
-                            var css_selector = document.getElementById("link-CP" + jsonObj.result[i-1].dpid +"-"+ jsonObj.result[i].dpid);
+                            let css_selector = document.getElementById("link-CP" + jsonObj.result[i-1].dpid +"-"+ jsonObj.result[i].dpid);
                             d3lib.startPathCPActivate(jsonObj.result[i-1].dpid, jsonObj.result[i].dpid);
-
                         }
 
                         last_node_id = _id;
-
-                        var last_result_item = jsonObj.result[jsonObj.result.length - 1];
+                        let last_result_item = jsonObj.result[jsonObj.result.length - 1];
                     }
                 }
                 htmlRender(jsonObj);
@@ -884,7 +878,6 @@ var SDNTraceCP = function() {
                 throw err;
             }
         };
-
 
         // AJAX call
         $.ajax({
