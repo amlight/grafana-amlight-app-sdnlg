@@ -1073,19 +1073,19 @@ let D3JS = function() {
         let edgesArray = [];
 
         // verify topology to create edges
-        for (let x = 0; x < sdntopology.topology.length; x++) {
-            let link_prefix_id = sdntopology.topology[x].prefix_id;
+        for (let x = 0; x < sdntopology.topologies.length; x++) {
+            let link_prefix_id = sdntopology.topologies[x].prefix_id;
 
-            let nodeFromId = sdntopology.topology[x].node1;
-            let nodeToId = sdntopology.topology[x].node2;
+            let nodeFromId = sdntopology.topologies[x].node1;
+            let nodeToId = sdntopology.topologies[x].node2;
 
-            let labelFrom = sdntopology.topology[x].label1;
-            let labelTo = sdntopology.topology[x].label2;
+            let labelFrom = sdntopology.topologies[x].label1;
+            let labelTo = sdntopology.topologies[x].label2;
 
-            let labelNumberFrom = sdntopology.topology[x].label_num1;
-            let labelNumberTo = sdntopology.topology[x].label_num2;
+            let labelNumberFrom = sdntopology.topologies[x].label_num1;
+            let labelNumberTo = sdntopology.topologies[x].label_num2;
 
-            let speed = sdntopology.topology[x].speed;
+            let speed = sdntopology.topologies[x].speed;
 
             let source = _self.findNode(nodeFromId) || _self.nodes.push({id:nodeFromId, dpid:nodeFromId, name: nodeFromId});
             let target = _self.findNode(nodeToId) || _self.nodes.push({id:nodeToId, dpid:nodeToId, name: nodeToId});

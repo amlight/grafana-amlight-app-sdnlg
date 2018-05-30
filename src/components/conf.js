@@ -1,25 +1,39 @@
-const SDNLG_CONF = function() {
-    var _self = this;
-    this.rest_server = "http://localhost:1234";
+/**
+ * SDN LG Grafana API configuration.
+  */
+class SDNLG_CONF {
+    constructor() {
+        this.rest_server = "http://localhost:1234";
 
-    this.header_logo_img_src = '/static/img/amlight.png';
-    this.version = 0.2;
-    this.dict = {};
+        this.header_logo_img_src = '/static/img/amlight.png';
+        this.version = 0.2;
+        this.dict = {};
+    }
 
     /** To be used with Kytos and grafana */
-    this.setKytosServer = function(server) {
-        _self.rest_server = server;
-    }
-    this.getKytosServer = function() {
-        return _self.rest_server;
+    setKytosServer(server) {
+        this.rest_server = server;
     }
 
-    this.api_stats = function(){ return _self.rest_server + "/api/kytos/of_stats/v1/" };
-    this.api_topology = function(){ return _self.rest_server + "/api/kytos/topology/v3" };
+    getKytosServer() {
+        return this.rest_server;
+    }
 
-    this.api_trace = function(){ return _self.rest_server + "/api/amlight/sdntrace/trace" };
-    this.api_trace_cp = function(){ return _self.rest_server + "/api/amlight/sdntrace_cp/trace" };
+    api_stats(){
+        return this.rest_server + "/api/kytos/of_stats/v1/"
+    }
 
+    api_topology(){
+        return this.rest_server + "/api/kytos/topology/v3"
+    }
+
+    api_trace(){
+        return this.rest_server + "/api/amlight/sdntrace/trace"
+    }
+
+    api_trace_cp(){
+        return this.rest_server + "/api/amlight/sdntrace_cp/trace"
+    }
 
     // kytos server
 //    this.api_stats = getKytosServer() + "/api/kytos/of_stats/v1/";
@@ -31,7 +45,6 @@ const SDNLG_CONF = function() {
 }
 
 const _SDNLG_CONF = new SDNLG_CONF();
-
 
 export {
   _SDNLG_CONF as SDNLG_CONF

@@ -6,15 +6,15 @@ import '../external/tabulator';
  * It is responsible to configure and render the flow stat table,
  * and the lateral panel data.
  */
-var SDNFlowTable = function() {
+let SDNFlowTable = function() {
 
-    var _self = this;
+    let _self = this;
 
     /**
      * Initial Tabulator columns and filters configuration.
      * @param {type} self Self object, because it is a private method
      */
-    var _init_tabulator = function(self) {
+    let _init_tabulator = function(self) {
 
         $("#flow_stats_table").tabulator({
 //              height:"600px",
@@ -69,7 +69,7 @@ var SDNFlowTable = function() {
                      * @param {type} columnDef Column obj
                      */
                     headerDblClick :function(e, columnDef){
-                        var header_title = $(columnDef.getElement()).children('.tabulator-col-content').children('.tabulator-col-title');
+                        let header_title = $(columnDef.getElement()).children('.tabulator-col-content').children('.tabulator-col-title');
                         if (header_title.text() === 'Other fields +') {
                            header_title.text('Other fields -');
                         } else {
@@ -87,12 +87,12 @@ var SDNFlowTable = function() {
             ]
         });
 
-        var tabledata = [
+        let tabledata = [
             {match__in_port:"no data"}
         ];
 
         //load sample data into the table
-        var r = $("#flow_stats_table").tabulator("setData", tabledata);
+        let r = $("#flow_stats_table").tabulator("setData", tabledata);
     };
 
 
@@ -130,8 +130,8 @@ var SDNFlowTable = function() {
          * @param {type} label LI label value
          * @param {type} value LI type value
          */
-        var _createLi = function(htmlUL ,label, value) {
-            var htmlLI=  $('<li></li>');
+        let _createLi = function(htmlUL ,label, value) {
+            let htmlLI=  $('<li></li>');
             htmlUL.append(htmlLI);
             htmlLI.append($('<span>' + label + ': </span>'));
             htmlLI.append($('<span>' + value + '</span>'));
@@ -140,28 +140,26 @@ var SDNFlowTable = function() {
         // display panel
         $('#switch_flows_panel_dpid_value').html(p_dpid);
 
-        var _flowStatObj = p_flowStat;
+        let _flowStatObj = p_flowStat;
 
         // Clear panel
         $('#switch_flows_panel_collapse > .panel-body').empty();
         // Prepare to create panel content
-        var _html = $('<div></div>');
+        let _html = $('<div></div>');
         $('#switch_flows_panel_collapse > .panel-body').append(_html);
 
-        for(var x in _flowStatObj.flows) {
-            var flowObj = _flowStatObj.flows[x];
+        for(let flowObj of _flowStatObj.flows) {
 
             // Flow actions
-            var actionStr = '<table class="table-bordered table-condensed"><thead><tr><th>Type</th><th>Max Len.</th><th>Port</th><th>VLAN</th></tr></thead><tbody>';
-            for(var y in flowObj.actions) {
-                var actionObj = flowObj.actions[y];
+            let actionStr = '<table class="table-bordered table-condensed"><thead><tr><th>Type</th><th>Max Len.</th><th>Port</th><th>VLAN</th></tr></thead><tbody>';
+            for(let actionObj of flowObj.actions) {
                 actionStr += '<tr><td>' + actionObj.type + '</td><td>' + (actionObj.max_len || '--') + '</td><td>' + (actionObj.port || '--') + '</td><td>' + (actionObj.vlan_vid || '--') + '</td></tr>';
             }
             actionStr += '</tbody></table><br>';
             _html.append($(actionStr));
 
             // Flow attributes
-            var htmlUL = $('<ul></ul>');
+            let htmlUL = $('<ul></ul>');
             _html.append(htmlUL);
 
             _createLi(htmlUL, 'Idle timeout', flowObj.idle_timeout);
@@ -190,7 +188,7 @@ var SDNFlowTable = function() {
         }
     };
 
-    var SDNFlowTable = function(self) {
+    let SDNFlowTable = function(self) {
         _init_tabulator(self);
     }(this);
 };

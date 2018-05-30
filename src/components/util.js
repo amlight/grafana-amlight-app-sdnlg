@@ -1,16 +1,15 @@
-
 /**
  * Helper function to remove duplicates from an array.
  * @param {type} p_array
  * @returns {Array}
  */
-var arrayRemoveDuplicates = function(p_array) {
-    var seen = {};
-    var out = [];
-    var len = p_array.length;
-    var j = 0;
-    for(var i = 0; i < len; i++) {
-        var item = p_array[i];
+let arrayRemoveDuplicates = function(p_array) {
+    let seen = {};
+    let out = [];
+    let len = p_array.length;
+    let j = 0;
+    for(let i = 0; i < len; i++) {
+        let item = p_array[i];
         if(seen[item] !== 1) {
             seen[item] = 1;
             out[j++] = item;
@@ -22,7 +21,7 @@ var arrayRemoveDuplicates = function(p_array) {
 /*
  * Helper function to remove attributes with empty values from a json object.
  */
-var removeEmptyJsonValues = function(obj) {
+let removeEmptyJsonValues = function(obj) {
     for (var i in obj) {
         for (var j in obj[i]) {
             for (var w in obj[i][j]) {
@@ -41,11 +40,11 @@ var removeEmptyJsonValues = function(obj) {
     return obj;
 };
 
-var isMacAddress = function(str) {
-    var patt = new RegExp("^([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})$");
-    var res = patt.test(str);
+let isMacAddress = function(str) {
+    let patt = new RegExp("^([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})$");
+    let res = patt.test(str);
     return res;
-}
+};
 
 
 function formatBytes(x){
@@ -72,13 +71,13 @@ function formatBits(x){
 
 function injectStyles(p_id, p_rule) {
   // remove old styles
-  var elem = document.getElementById(p_id);
+  let elem = document.getElementById(p_id);
   if(elem) {
     elem.parentNode.removeChild(elem);
   }
 
   // Works in IE6
-  var div = document.createElement('div');
+  let div = document.createElement('div');
   div.id = p_id;
   div.innerHTML = '&shy;<style>' + p_rule + '</style>';
   document.body.appendChild(div.childNodes[1]);

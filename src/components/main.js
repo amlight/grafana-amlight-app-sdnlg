@@ -1,66 +1,48 @@
 import {SDNLG_CONF} from "./conf"
 import {SDNTopology} from './topologykytos';
 import {SDNColor} from "./topologycolor";
-import {SDNFlowTable} from "./sdnflowtable";
-import {ForceGraph, D3JS} from "./d3topology";
-import {sdntraceform} from "./trace";
-
-/* global Switch, DEBUG, d3, d3lib, MOCK */
+import {D3JS} from "./d3topology";
 
 
-
-var setForcegraph = function(p_forcegraph) {
+let setForcegraph = function(p_forcegraph) {
     forcegraph = p_forcegraph;
-}
-var setForcegraphPersistency = function(p_forcegraphPersistency) {
+};
+let setForcegraphPersistency = function(p_forcegraphPersistency) {
     forceGraphPersistency = p_forcegraphPersistency;
-}
-var setSDNFlowTable = function(p_sdnflowtable) {
+};
+let setSDNFlowTable = function(p_sdnflowtable) {
     sdnflowtable = p_sdnflowtable;
-}
-var getSDNFlowTable = function(p_sdnflowtable) {
+};
+let getSDNFlowTable = function(p_sdnflowtable) {
     return sdnflowtable;
-}
+};
 
 
+let Main = function() {
 
-var Main = function() {
-
-    var _self = this;
-
-
+    let _self = this;
 
     this._appInitialized = false;
     this._appConfigLoading = false;
     this._initializationCallbacks = [];
 
+    let _initialize_libs = function() {
+        //
+    };
 
-    var _initialize_libs = function() {
-
-    }
-
-
-    var _load_configuration = function() {
-        var ajaxDone = function(json) {
-
-
+    let _load_configuration = function() {
+        let ajaxDone = function(json) {
             // Setting kytos URL location
             SDNLG_CONF.setKytosServer(json.jsonData.kytos_url);
-    //        SDNLG_CONF.trace_server = json.jsonData.kytos_url;
-
-    //        if(callback) {
-    //            callback();
-    //        }
 
             _self._appConfigLoading = false;
             _self._appInitialized = true;
 
-            for(var x in _self._initializationCallbacks) {
-                _self._initializationCallbacks[x]();
+            for(let callback of _self._initializationCallbacks) {
+                callback();
             }
 
             _initialize_libs();
-
         };
 
         // AJAX call
@@ -77,9 +59,7 @@ var Main = function() {
         .always(function() {
             console.log( "load_configuration ajax complete" );
         });
-    }
-
-
+    };
 
     this.initializeApp = function(callback) {
         if(_self._appInitialized) {
@@ -94,23 +74,20 @@ var Main = function() {
                 _load_configuration();
             }
         }
-    }
+    };
 
-
-
-    var Main = function(self) {
+    let Main = function(self) {
     }(this);
 };
 
 
-var forcegraph = '';
-var forceGraphPersistency = '';
-var sdntopology = new SDNTopology();
-var d3lib = new D3JS();
-var sdncolor = new SDNColor();
-var sdnflowtable = '';
-
-var main = new Main();
+let forcegraph = '';
+let forceGraphPersistency = '';
+let sdnflowtable = '';
+const sdntopology = new SDNTopology();
+const d3lib = new D3JS();
+const sdncolor = new SDNColor();
+const main = new Main();
 
 export {
   forcegraph as forcegraph,
