@@ -67,7 +67,10 @@ let ForceGraphContextMenu = function() {
                 title: 'Flows',
                 action: function(elm, d, i) {
                     let callback = function() {
-                        getSDNFlowTable().setDataAndOpen(d.data.dpid, d.data.flow_stat, d.data.flow_pivot);
+                        let flowTable = getSDNFlowTable();
+                        if (flowTable) {
+                            flowTable.setDataAndOpen(d.data.dpid, d.data.flow_stat, d.data.flow_pivot);
+                        }
                     };
                     sdntopology.callSdntraceGetSwitchFlows(null, d.data.dpid, callback);
                 }

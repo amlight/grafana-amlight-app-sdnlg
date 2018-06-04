@@ -5,18 +5,18 @@ import {d3lib} from "./main"
 import {sdntrace, sdntraceform} from "./trace";
 
 
-let SDNTopology = function() {
-    // switches list. It is used to help render the topology nodes.
-    this.switches = [];
-    // topology link list
-    this.topologies = [];
-    // topology domains
-    this.domains = [];
-    
-    let _self = this;
+class SDNTopology {
+    constructor() {
+        // switches list. It is used to help render the topology nodes.
+        this.switches = [];
+        // topology link list
+        this.topologies = [];
+        // topology domains
 
-    // Map to optimize the topology connections verification by index.
-    let _linkedByIndex = new Map();
+        this.domains = [];
+        // Map to optimize the topology connections verification by index.
+        this._linkedByIndex = new Map();
+    }
 
     /**
      * Add two nodes as connections to the verification Map.
@@ -24,9 +24,9 @@ let SDNTopology = function() {
      * @param {type} nodeB Target node
      * @param {type} prefix_id Prefix string to add to the connection ID
      */
-    let addTopologyConnection = function(nodeA, nodeB, prefix_id="") {
-        _linkedByIndex.set((prefix_id||"") + nodeA.id + "-" + nodeB.id, true);
-    };
+    _addTopologyConnection(nodeA, nodeB, prefix_id="") {
+        this._linkedByIndex.set((prefix_id||"") + nodeA.id + "-" + nodeB.id, true);
+    }
     
     /**
      * Verify if node A and node B are connected.
@@ -35,16 +35,15 @@ let SDNTopology = function() {
      * @param {type} prefix_id Prefix string to add to the connection ID
      * @returns {Boolean}
      */
-    let isTopologyConnected = function(nodeA, nodeB, prefix_id="") {
-        return _linkedByIndex.has((prefix_id||"") + nodeA.id + "-" + nodeB.id) ||
-               _linkedByIndex.has((prefix_id||"") + nodeB.id + "-" + nodeA.id) ||
+    _isTopologyConnected(nodeA, nodeB, prefix_id="") {
+        return this._linkedByIndex.has((prefix_id||"") + nodeA.id + "-" + nodeB.id) ||
+               this._linkedByIndex.has((prefix_id||"") + nodeB.id + "-" + nodeA.id) ||
                nodeA.id === nodeB.id;
-    };
+    }
 
-
-    this.sdntraceGetSwitches = function(jsonObj) {
+    sdntraceGetSwitches(jsonObj) {
         // Clear topology temporary list of switches.
-        _self.switches = [];
+        this.switches = [];
 
         //for (var x = 0; x < jsonObj.devices.length; x++) {
         for (let k in jsonObj.switches){
@@ -53,40 +52,40 @@ let SDNTopology = function() {
             if (json_node.type === "switch") {
 
                 // Trying to retrieve and use old switch object.
-                let switch_obj = _self.get_node_by_id(json_node.dpid);
+                let switch_obj = this.get_node_by_id(json_node.dpid);
                 if (typeof switch_obj === "undefined") {
                     switch_obj = new Switch(json_node.dpid);
                 }
-                _self.switches.push(switch_obj);
+                this.switches.push(switch_obj);
 
                 // storing switch values
-                _self.sdntraceGetSwitchInfo(jsonObj, json_node);
+                this.sdntraceGetSwitchInfo(jsonObj, json_node);
 
-//                _self.callSdntraceGetSwitchFlows(json_node, json_node.dpid);
+//                this.callSdntraceGetSwitchFlows(json_node, json_node.dpid);
             }
 
             if (json_node.type === "host") {
 //                // storing switch values
 //                var switch_obj = new Switch(json_node.id);
-//                _self.switches.push(switch_obj);
+//                this.switches.push(switch_obj);
 
-                //_self.sdntraceGetSwitchInfo(jsonObj, json_node.id);
+                //this.sdntraceGetSwitchInfo(jsonObj, json_node.id);
 
-                //_self.callSdntraceGetSwitchFlows(jsonObj[x]);
+                //this.callSdntraceGetSwitchFlows(jsonObj[x]);
             }
         }
 
         // sort
-        _self.switches = _self.switches.sort();
+        this.switches = this.switches.sort();
         // deduplication
-//        _self.switches = util.arrayRemoveDuplicates(_self.switches);
+//        this.switches = util.arrayRemoveDuplicates(this.switches);
 
         // render trace switch combo
-//        sdntrace.renderHtmlSwitchCombo(_self.switches);
+//        sdntrace.renderHtmlSwitchCombo(this.switches);
     };
 
-    this.sdntraceGetSwitchInfo = function(jsonObj, jsonNode) {
-        let switch_obj = _self.get_node_by_id(jsonNode.dpid);
+    sdntraceGetSwitchInfo(jsonObj, jsonNode) {
+        let switch_obj = this.get_node_by_id(jsonNode.dpid);
 
 //        switch_obj.n_ports = jsonObj.n_ports;
 //        switch_obj.n_tables = jsonObj.n_tables;
@@ -107,10 +106,11 @@ let SDNTopology = function() {
             //switch_obj.number_flows = jsonObj.number_flows;
         }
 
-        _self.sdntraceGetSwitchPorts(jsonNode, jsonNode.dpid);
+        this.sdntraceGetSwitchPorts(jsonNode, jsonNode.dpid);
     };
     
-    this.callSdntraceGetSwitchFlows = function(jsonObj, p_dpid, callback=null) {
+    callSdntraceGetSwitchFlows(jsonObj, p_dpid, callback=null) {
+        let _self = this;
         let ajax_done = function(jsonObj, p_callback) {
             let switch_obj = _self.get_node_by_id(p_dpid);
 
@@ -235,7 +235,7 @@ let SDNTopology = function() {
         .always(function() {
             console.log( "callSdntraceGetSwitchFlows ajax complete" );
         });
-    };
+    }
 
     /**
      * Get node by id.
@@ -243,32 +243,32 @@ let SDNTopology = function() {
      * @param {type} p_id Node id
      * @returns {Node}
      */
-    this.get_node_by_id = function(p_id) {
+    get_node_by_id(p_id) {
         // add to topology list to render the html
-        for (let key in _self.switches) {
-            if (_self.switches.hasOwnProperty(key) && _self.switches[key].id === p_id) {
-                return _self.switches[key];
+        for (let key in this.switches) {
+            if (this.switches.hasOwnProperty(key) && this.switches[key].id === p_id) {
+                return this.switches[key];
             }
         }
 
-        for (let key in _self.domains) {
-            if (_self.domains.hasOwnProperty(key) && _self.domains[key].id === p_id) {
-                return _self.domains[key];
+        for (let key in this.domains) {
+            if (this.domains.hasOwnProperty(key) && this.domains[key].id === p_id) {
+                return this.domains[key];
             }
         }
-    };
+    }
 
    /**
     * Use this function instead of access the topology attribute.
     * @param {Link} link Link object
     */
-    this.add_topology = function(link) {
-        if (isTopologyConnected(link.node1, link.node2, link.prefix_id) === false) {
-            addTopologyConnection(link.node1, link.node2, link.prefix_id);
+    add_topology(link) {
+        if (this._isTopologyConnected(link.node1, link.node2, link.prefix_id) === false) {
+            this._addTopologyConnection(link.node1, link.node2, link.prefix_id);
             // add to topology list to render the html
             this.topologies.push(link);
         }
-    };
+    }
 
    /**
     * Use this function to get the topology link object.
@@ -278,8 +278,8 @@ let SDNTopology = function() {
     * @param {Node} node2 Node object
     * @returns {Link} Link object
     */
-    this.get_topology_link = function(node1, node2, prefix) {
-        if (isTopologyConnected(node1, node2, prefix)) {
+    get_topology_link(node1, node2, prefix) {
+        if (this._isTopologyConnected(node1, node2, prefix)) {
             for (let _topology of this.topologies) {
                 if ((_topology.node1.id === node1.id && _topology.node2.id === node2.id) ||
                    (_topology.node1.id === node2.id && _topology.node2.id === node1.id)) {
@@ -289,10 +289,9 @@ let SDNTopology = function() {
             }
         }
         return null;
-    };
+    }
 
-
-    this.sdntraceGetLinks = function(jsonObj) {
+    sdntraceGetLinks(jsonObj) {
         for (let k in jsonObj.links){
             let json_link = jsonObj.links[k];
 
@@ -328,14 +327,14 @@ let SDNTopology = function() {
                 let linkObj = new Link();
 
                 // creating switch
-                let _switch1 = _self.get_node_by_id(dpid1);
-                let _switch2 = _self.get_node_by_id(dpid2);
+                let _switch1 = this.get_node_by_id(dpid1);
+                let _switch2 = this.get_node_by_id(dpid2);
 
                 let switch1 = Switch.clone_obj(_switch1);
                 let switch2 = Switch.clone_obj(_switch2);
 
-                if(isTopologyConnected(switch1, switch2)) {
-                    //linkObj = _self.get_topology_link(switch1, switch2);
+                if(this._isTopologyConnected(switch1, switch2)) {
+                    //linkObj = this.get_topology_link(switch1, switch2);
                     linkObj = null;
                 } else {
                     linkObj.node1 = switch1;
@@ -376,7 +375,7 @@ let SDNTopology = function() {
                 }
                 // Add the node the the topology
                 if (linkObj) {
-                    _self.add_topology(linkObj);
+                    this.add_topology(linkObj);
                 }
             } else if (json_link.type === "host") {
                 // Add new host node
@@ -408,7 +407,7 @@ let SDNTopology = function() {
                 let linkObj = new Link();
 
                 // add node data do d3
-                let _switch1 = _self.get_node_by_id(dpid1);
+                let _switch1 = this.get_node_by_id(dpid1);
                 linkObj.node1 = Switch.clone_obj(_switch1);
                 linkObj.node1.ports = [];
 
@@ -433,7 +432,7 @@ let SDNTopology = function() {
                 linkObj.label_num2 = port2;
                 // Add the node the the topology
                 if (linkObj) {
-                    _self.add_topology(linkObj);
+                    this.add_topology(linkObj);
                 }
             } else if (json_link.type === "interdomain") {
                 // Add new host node
@@ -445,7 +444,7 @@ let SDNTopology = function() {
                 // add node data do d3
                 let linkObj = new Link();
 
-                let _switch1 = _self.get_node_by_id(dpid1);
+                let _switch1 = this.get_node_by_id(dpid1);
                 linkObj.node1 = Switch.clone_obj(_switch1);;
                 linkObj.node1.ports = [];
 
@@ -464,19 +463,20 @@ let SDNTopology = function() {
 
                 // Add the node the the topology
                 if (linkObj) {
-                    _self.add_topology(linkObj);
+                    this.add_topology(linkObj);
                 }
             }
 
         }
-    };
+    }
 
     /**
      * Call ajax to load the switch topology.
      * 
      * @param {function} callback Callback function
      */
-    this.callSdntraceGetTopology = function(callback=null) {
+    callSdntraceGetTopology(callback=null) {
+        let _self = this;
         let ajaxDone = function(json) {
             // get kytos topology object from json
             let jsonObj = json.topology;
@@ -511,7 +511,7 @@ let SDNTopology = function() {
         .always(function() {
             console.log( "call_get_topology ajax complete" );
         });
-    };
+    }
 
     /**
      * Call ajax to load the switch ports data.
@@ -552,8 +552,8 @@ let SDNTopology = function() {
     /**
      * Call ajax to load the switch ports data.
      */
-    this.sdntraceGetSwitchPorts = function(jsonObj, p_dpid, callback=null) {
-        let switchObj = _self.get_node_by_id(p_dpid);
+    sdntraceGetSwitchPorts(jsonObj, p_dpid, callback=null) {
+        let switchObj = this.get_node_by_id(p_dpid);
 
         if (switchObj) {
             //for (var x = 0; x < jsonObj.nodes.length; x++) {
@@ -601,14 +601,14 @@ let SDNTopology = function() {
                 }
             }
         }
-    };
+    }
 
     /**
      * Callback to be used with the AJAX that retrieve switch ports.
      * @param {type} nodeId Node Id that contains the ports
      * @param {type} jsonObj JSON object with port data
      */
-    this._render_html_popup_ports = function(nodeId, jsonObj) {
+    _render_html_popup_ports(nodeId, jsonObj) {
         let popupSwitch = function(nodeId, data) {
             // remove possible popups
             d3.select(".canvas")
@@ -670,27 +670,27 @@ let SDNTopology = function() {
         };
         
         popupSwitch(nodeId, jsonObj);
-    };
+    }
 
     /**
     * Get switch ports from a dpid.
     */
-    this.get_switch_ports = function(dpid) {
-        let switch_obj = _self.get_node_by_id(dpid);
+    get_switch_ports(dpid) {
+        let switch_obj = this.get_node_by_id(dpid);
 
         if (switch_obj) {
             return switch_obj.ports;
         } else {
             return "";
         }
-    };
+    }
 
     /**
      * Show the trace form to trigger the SDN Trace.
      * It has three forms, to L2, L3 and full trace.
      * We use modal forms over the layout.
      */
-    this.showTraceForm = function(d) {
+    showTraceForm(d) {
         // setting switch label
         let label = d.dpid;
         if (d.dpid && d.dpid !== d.label) {
@@ -699,13 +699,13 @@ let SDNTopology = function() {
         sdntrace.renderHtmlTraceFormSelectedSwitch(d.dpid, label);
 
         // render switch ports
-        let ports = _self.get_switch_ports(d.dpid);
+        let ports = this.get_switch_ports(d.dpid);
         sdntrace.renderHtmlTraceFormPorts(d.dpid, ports);
 
         // open trace form panel
         sdntraceform.showForm();
-    };
-};
+    }
+}
 
 /**
  * Format link speed.

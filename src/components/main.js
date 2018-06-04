@@ -18,19 +18,19 @@ let getSDNFlowTable = function(p_sdnflowtable) {
 };
 
 
-let Main = function() {
+class Main {
+    constructor() {
+        this._appInitialized = false;
+        this._appConfigLoading = false;
+        this._initializationCallbacks = [];
+    }
 
-    let _self = this;
-
-    this._appInitialized = false;
-    this._appConfigLoading = false;
-    this._initializationCallbacks = [];
-
-    let _initialize_libs = function() {
+    _initialize_libs() {
         //
-    };
+    }
 
-    let _load_configuration = function() {
+    _load_configuration() {
+        let _self = this;
         let ajaxDone = function(json) {
             // Setting kytos URL location
             SDNLG_CONF.setKytosServer(json.jsonData.kytos_url);
@@ -42,7 +42,7 @@ let Main = function() {
                 callback();
             }
 
-            _initialize_libs();
+            _self._initialize_libs();
         };
 
         // AJAX call
@@ -61,24 +61,21 @@ let Main = function() {
         });
     };
 
-    this.initializeApp = function(callback) {
-        if(_self._appInitialized) {
+    initializeApp(callback) {
+        if(this._appInitialized) {
             callback();
             return;
         } else {
-            _self._initializationCallbacks.push(callback);
-            if(_self._appConfigLoading) {
+            this._initializationCallbacks.push(callback);
+            if(this._appConfigLoading) {
                return;
             } else {
-                _self._appConfigLoading = true;
-                _load_configuration();
+                this._appConfigLoading = true;
+                this._load_configuration();
             }
         }
     };
-
-    let Main = function(self) {
-    }(this);
-};
+}
 
 
 let forcegraph = '';

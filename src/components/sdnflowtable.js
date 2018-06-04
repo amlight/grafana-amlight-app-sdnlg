@@ -6,20 +6,21 @@ import '../external/tabulator';
  * It is responsible to configure and render the flow stat table,
  * and the lateral panel data.
  */
-let SDNFlowTable = function() {
-
-    let _self = this;
+class SDNFlowTable {
+    constructor() {
+        this._init_tabulator(this);
+    }
 
     /**
      * Initial Tabulator columns and filters configuration.
      * @param {type} self Self object, because it is a private method
      */
-    let _init_tabulator = function(self) {
+    _init_tabulator(self) {
 
-        $("#flow_stats_table").tabulator({
-//              height:"600px",
-              groupBy:"match__in_port",
-//            headerFilterPlaceholder:"Filter...",
+        let flow_stats_table = $("#flow_stats_table");
+
+        flow_stats_table.tabulator({
+            groupBy:"match__in_port",
             columns:[
                 {id: 1, title:"in_port", field:"match__in_port", sorter:"string", width:"85", headerFilter:"number"},
                 {id: 2, title:"cookie", field:"cookie", width:"85", headerFilter:"input"},
@@ -76,12 +77,14 @@ let SDNFlowTable = function() {
                            header_title.text('Other fields +');
                         }
 
-                        $("#flow_stats_table").tabulator("toggleColumn","empty");
-                        $("#flow_stats_table").tabulator("toggleColumn","hard_timeout");
-                        $("#flow_stats_table").tabulator("toggleColumn","idle_timeout");
+                        let flow_stats_table = $("#flow_stats_table");
+
+                        flow_stats_table.tabulator("toggleColumn","empty");
+                        flow_stats_table.tabulator("toggleColumn","hard_timeout");
+                        flow_stats_table.tabulator("toggleColumn","idle_timeout");
 //                        $("#flow_stats_table").tabulator("toggleColumn","duration_nsec");
-                        $("#flow_stats_table").tabulator("toggleColumn","duration_sec");
-                        $("#flow_stats_table").tabulator("toggleColumn","table_id");
+                        flow_stats_table.tabulator("toggleColumn","duration_sec");
+                        flow_stats_table.tabulator("toggleColumn","table_id");
                     }
                 }
             ]
@@ -92,26 +95,26 @@ let SDNFlowTable = function() {
         ];
 
         //load sample data into the table
-        let r = $("#flow_stats_table").tabulator("setData", tabledata);
+        let r = flow_stats_table.tabulator("setData", tabledata);
     };
 
 
-    this.setDataAndOpen = function(dpid, flow_stat, flow_pivot) {
-        _self.setSwitchFlowPanelData(dpid, flow_stat);
-        _self.setData(dpid, flow_pivot);
-        _self.setSelectedSwitchLabel(dpid);
-    };
+    setDataAndOpen(dpid, flow_stat, flow_pivot) {
+        this.setSwitchFlowPanelData(dpid, flow_stat);
+        this.setData(dpid, flow_pivot);
+        this.setSelectedSwitchLabel(dpid);
+    }
 
-    this.setSelectedSwitchLabel = function(p_dpid) {
+    setSelectedSwitchLabel(p_dpid) {
         $('#flow_stats_form__switch-content > select').val(p_dpid);
-    };
+    }
 
     /**
      * Set tabulator data.
      * @param {type} dpid Switch DPID
      * @param {type} json Tabulated data.
      */
-    this.setData = function(dpid, json) {
+    setData(dpid, json) {
         // console panel title
         $('.ui-dialog[aria-describedby=flow_stats_table_dialog] > div > span').html(dpid);
         // fill tabulator table data
@@ -123,7 +126,7 @@ let SDNFlowTable = function() {
      * @param {type} p_dpid Switch DPID
      * @param {type} p_flowStat Switch flow data object
      */
-    this.setSwitchFlowPanelData = function(p_dpid, p_flowStat) {
+    setSwitchFlowPanelData(p_dpid, p_flowStat) {
         /**
          * Helper function to create <li> tags to display flow attributes
          * @param {type} htmlUL HTML UL DOM
@@ -186,12 +189,8 @@ let SDNFlowTable = function() {
 
             _html.append($("<hr>"));
         }
-    };
-
-    let SDNFlowTable = function(self) {
-        _init_tabulator(self);
-    }(this);
-};
+    }
+}
 
 
 export {
