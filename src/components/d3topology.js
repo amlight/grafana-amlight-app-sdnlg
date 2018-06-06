@@ -117,7 +117,6 @@ class ForceGraphPersistency {
             prevLoc = JSON.parse(this._elem[this._fieldName]);
             return prevLoc.data;
         }
-        return;
     }
 
     /**
@@ -146,12 +145,16 @@ class ForceGraphPersistency {
 
 /**
  * This is the class that will create a D3 Forcegraph.
- * @param {type} p_args {selector, width, height} selector HTML selector to create the SVG graph, svg width, svg height
+ * @param {type} p_args
+ * @param {number} p_args.selector - HTML selector to create the SVG graph.
+ * @param {number} p_args.width - SVG width.
+ * @param {number} p_args.height - SVG height.
+ *
  * @param {type} p_data Graph data
  * @returns {ForceGraph}
  */
 let ForceGraph = function(p_args, p_data) {
-    
+
     let _self = this;
     
     // Local variable representing the forceGraph data
@@ -169,7 +172,7 @@ let ForceGraph = function(p_args, p_data) {
     let height = p_args.height ? p_args.height : "100%";
 
     // node/circle size
-    let size = d3.scaleLinear()
+    d3.scaleLinear()
       .domain([1,100])
       .range([8,24]);
     let nominal_base_node_size = 8;
@@ -202,14 +205,15 @@ let ForceGraph = function(p_args, p_data) {
         .on("zoom", zoomed);
 
     // clear selector, otherwise it will append several SVG elements
-    let selectorElement = d3.select(selector).selectAll("svg").remove();
+    d3.select(selector).selectAll("svg").remove();
 
+    // creating SVG tag. Need a width and height to proper display the topology.
     let svg = d3.select(selector)
         .append("svg")
+            .attr("id", "d3_svg_container")
             .attr("width", width)
             .attr("height", height)
             .call(zoom);
-
     let container = svg.append("g");
 
     // ForceGraph set data. Remember to redraw the simulation after the set.
@@ -271,7 +275,8 @@ let ForceGraph = function(p_args, p_data) {
 
     /**
      * Node drag start event handler.
-     * @param {type} d
+     * @param {type} d       D3 Node object
+     * @param {type} d.type  Type of the node (ex: can be switch, port, domain)
      */
     let _nodeDragstarted = function (d) {
         // Prevent the Port node to be dragged.
@@ -285,7 +290,10 @@ let ForceGraph = function(p_args, p_data) {
 
     /**
      * Node drag event handler.
-     * @param {type} d
+     * @param {type} d       D3 Node object
+     * @param {type} d.type  Type of the node (ex: can be switch, port, domain)
+     * @param {type} d.fx    D3 Node fix X coordinate position
+     * @param {type} d.fy    D3 Node fix Y coordinate position
      */
     let _nodeDragged = function (d) {
         // Prevent the Port node to be dragged.
@@ -299,7 +307,8 @@ let ForceGraph = function(p_args, p_data) {
 
     /**
      * Node drag end event handler.
-     * @param {type} d
+     * @param {type} d       D3 Node object
+     * @param {type} d.type  Node type
      */
     let _nodeDragended = function (d) {
         // Prevent the Port node to be dragged.
@@ -315,7 +324,7 @@ let ForceGraph = function(p_args, p_data) {
 
     /**
      * Start highlight node handler.
-     * @param {type} d
+     * @param {type} d       D3 Node object
      */
     let _startHighlight = function(d) {
         svg.style("cursor","pointer");
@@ -331,11 +340,9 @@ let ForceGraph = function(p_args, p_data) {
         });
     };
 
-
-
     /**
      * End highlight node handler.
-     * @param {type} d
+     * @param {type} d       D3 Node object
      * @returns {undefined}
      */
     this.endHighlight = function(d) {
@@ -404,7 +411,10 @@ let ForceGraph = function(p_args, p_data) {
             });
     };
 
-    // focus highlight (on node mousedown)
+    /**
+     * Focus highlight (on node mousedown)
+     * @param {type} d       D3 Node object
+     */
     let setPortFocus = function(d) {
 
         // Set data info panel
@@ -415,7 +425,10 @@ let ForceGraph = function(p_args, p_data) {
         }
     };
 
-    // focus highlight (on node mousedown)
+    /**
+     * Focus highlight (on node mousedown)
+     * @param {type} d       D3 Node object
+     */
     function set_domain_focus(d) {
         // Set data info panel
         if(d && d.data) {
@@ -435,7 +448,8 @@ let ForceGraph = function(p_args, p_data) {
     /**
      * Focus and show to the lateral domain panel data.
      * Use with setSwitchFocus to set the lateral panel data
-     * @param {type} d
+     * @param {type} d       D3 Node object
+     * @param {type} d.data  Data object related to the node (ex: switch, port, domain)
      */
     let _setDomainFocusPanelData = function(d) {
         $('#domain_panel_info').show();
@@ -470,6 +484,13 @@ let ForceGraph = function(p_args, p_data) {
         return [new_x, new_y];
     };
 
+    /**
+     * Function to calculate the link position arc between source and target.
+     * It is used in the tick transformation.
+     * @param {type} d          D3 Node object
+     * @param {type} d.source   Source link node
+     * @param {type} d.target   Target link node
+     */
     function linkArc(d) {
         d3.selectAll("line")
             .attr("x1", function(d) { return d.source.x; })

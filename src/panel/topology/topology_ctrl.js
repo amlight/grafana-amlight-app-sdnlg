@@ -85,7 +85,8 @@ export class TopologyCtrl extends MetricsPanelCtrl {
 
   getPanelHeight() {
     // panel can have a fixed height via options
-    var tmpPanelHeight = this.$scope.ctrl.panel.height;
+    //var tmpPanelHeight = this.$scope.ctrl.panel.height;
+      var tmpPanelHeight = this.$scope.ctrl.containerHeight;
     // if that is blank, try to get it from our row
     if (typeof tmpPanelHeight === 'undefined') {
       // get from the row instead
@@ -106,7 +107,16 @@ export class TopologyCtrl extends MetricsPanelCtrl {
     return actualHeight;
   }
 
+  setTopologyContainerHeight() {
+    let d3_container = $('#d3_svg_container');
+    if (typeof d3_container !== 'undefined') {
+      let height = this.getPanelHeight();
+      d3_container.attr('height', height);
+    }
+  }
+
   onRender() {
+    this.setTopologyContainerHeight();
   }
 
   /**
@@ -189,6 +199,7 @@ export class TopologyCtrl extends MetricsPanelCtrl {
     var _self = this
     let callback = function() {
         _self.initializeController(_self);
+        _self.setTopologyContainerHeight();
     };
 
     main.initializeApp(callback);
