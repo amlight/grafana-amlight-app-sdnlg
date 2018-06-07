@@ -22,6 +22,8 @@
 This app was tested using Grafana v5.0.3 in Linux environment.
     http://docs.grafana.org/installation/
 
+You can run the Dockerfile and jump to the section "Enabling the grafana app"
+
 
 ## Install application dependencies
 To compile the application you have to install Node.js
@@ -63,12 +65,17 @@ Restart the Grafana server.
 Access the grafana plugin page.
     http://localhost:3000/plugins
 
-The SDN LG should be installed.
-You still need to enable it.
+You can find SDN LG app installed in the plugin tab, but you still need to enable it.
 
 Click the SDN LG app. In the 'Config' tab you must click the 'Enable' button.
-Now you have to configure Kytos server.
+
+
+## Configuring the SDN LG app
+
+In the same tab 'Config' that you enabled the SDN LG app, you have to configure the address of Kytos API Server.
+Ex:
+    http://localhost:8181
 
 
 
-There is a Dockerfile to create a grafana container with this app.
+
