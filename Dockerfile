@@ -11,6 +11,8 @@ COPY . /tmp/grafana-amlight-app-sdnlg
 # Change WORKDIR to install the NPM dependencies
 WORKDIR /tmp/grafana-amlight-app-sdnlg
 
+RUN npm i npm@latest -g
+
 # Install all the dependencies
 RUN npm install
 
