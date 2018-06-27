@@ -1,9 +1,15 @@
-FROM grafana/grafana:5.0.3
+FROM grafana/grafana:5.2.0
 
+USER root
 RUN apt-get update \
-    && apt-get upgrade -y \
+    && apt-get install -y gnupg \
     && curl -sL https://deb.nodesource.com/setup_8.x | bash - \
     && apt-get install -y nodejs
+
+RUN npm i npm@latest -g
+
+# Install the grunt client
+RUN npm install -g grunt-cli
 
 # Bundle app source
 COPY . /tmp/grafana-amlight-app-sdnlg
@@ -11,13 +17,8 @@ COPY . /tmp/grafana-amlight-app-sdnlg
 # Change WORKDIR to install the NPM dependencies
 WORKDIR /tmp/grafana-amlight-app-sdnlg
 
-RUN npm i npm@latest -g
-
 # Install all the dependencies
 RUN npm install
-
-# Install the grunt client
-RUN npm install -g grunt-cli
 
 # Compile the javascript
 RUN grunt
@@ -30,6 +31,8 @@ RUN mkdir -p /data/grafana/plugins/grafana-amlight-app-sdnlg/dist
 RUN cp -a /tmp/grafana-amlight-app-sdnlg/dist/* /data/grafana/plugins/grafana-amlight-app-sdnlg/dist
 
 
-# Run this docker images with the command:
-# docker run -d -p 3000:3000 amlight/grafana_app:test -e "GF_PATHS_PLUGINS=/data/grafana/plugins"
+# Start your container binding the external port 3000.
+#   docker run -d -p 3000:3000 amlight/grafana_app:test -e "GF_PATHS_PLUGINS=/data/grafana/plugins"
+#
+# Try it out, default admin user is admin/admin.
 
