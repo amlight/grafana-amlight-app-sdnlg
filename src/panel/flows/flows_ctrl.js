@@ -11,84 +11,83 @@ import '../../css/panel/tabulator_custom.css!';
 
 
 const panelDefaults = {
-  bgColor: null,
+    bgColor: null,
 };
 
 export class FlowsCtrl extends MetricsPanelCtrl {
-  constructor($scope, $injector) {
-    super($scope, $injector);
-    _.defaults(this.panel, panelDefaults);
+    constructor($scope, $injector) {
+        super($scope, $injector);
+        _.defaults(this.panel, panelDefaults);
 
-    this.panelContainer = null;
-    this.scoperef = $scope;
+        this.panelContainer = null;
+        this.scoperef = $scope;
 
-    // used for initialization timeout
-    this.initialize_timeout = false;
+        // used for initialization timeout
+        this.initialize_timeout = false;
 
-    // used in forms.html to store the selected switch field value
-    this.selectedSwitch = "";
+        // used in forms.html to store the selected switch field value
+        this.selectedSwitch = "";
 
-    this.events.on('init-edit-mode', this.onInitEditMode.bind(this));
-    this.events.on('panel-teardown', this.onPanelTeardown.bind(this));
-    this.events.on('panel-initialized', this.onInitialized.bind(this));
-  }
+        this.events.on('init-edit-mode', this.onInitEditMode.bind(this));
+        this.events.on('panel-teardown', this.onPanelTeardown.bind(this));
+        this.events.on('panel-initialized', this.onInitialized.bind(this));
+    }
 
-  getSwitches() {
-    return sdntopology.switches;
-  }
+    getSwitches() {
+        return sdntopology.switches;
+    }
 
-  onInitEditMode() {
-    this.addEditorTab('Options', 'public/plugins/grafana-amlight-app-sdnlg/panel/flows/editor.html', 2);
-  }
+    onInitEditMode() {
+        this.addEditorTab('Options', 'public/plugins/grafana-amlight-app-sdnlg/panel/flows/editor.html', 2);
+    }
 
-  onPanelTeardown() {
-    this.$timeout.cancel(this.nextTickPromise);
-  }
+    onPanelTeardown() {
+        this.$timeout.cancel(this.nextTickPromise);
+    }
 
-  /**
-   * [setContainer description]
-   * @param {[type]} container [description]
-   */
-  setContainer(container) {
-    this.panelContainer = container;
-  }
+    /**
+     * [setContainer description]
+     * @param {[type]} container [description]
+     */
+    setContainer(container) {
+        this.panelContainer = container;
+    }
 
-  onInitialized() {
-    clearTimeout(this.initialize_timeout);
+    onInitialized() {
+        clearTimeout(this.initialize_timeout);
 
-    // Verify if html has been loaded.
-    if (document.getElementById('flow_stats_table')) {
-        setSDNFlowTable(new SDNFlowTable());
-
-        var _self = this
-        let callback = function() {
+        // Verify if html has been loaded.
+        if (document.getElementById('flow_stats_table')) {
             setSDNFlowTable(new SDNFlowTable());
+
+            var _self = this;
+            let callback = function() {
+                setSDNFlowTable(new SDNFlowTable());
+            };
+
+            main.initializeApp(callback);
+
+        } else {
+            // if html isnt loaded, wait
+            setTimeout(this.onInitialized, 250);
+        }
+    }
+
+    link(scope, elem, attrs, ctrl) {
+        ctrl.setContainer(elem.find('.panel-content'));
+    }
+
+    /**
+    * onchange action on switch filter drop down.
+    */
+    selectSwitch() {
+        let data = sdntopology.get_node_by_id(this.selectedSwitch.dpid);
+        let callback = function() {
+            getSDNFlowTable().setDataAndOpen(data.dpid, data.flow_stat, data.flow_pivot);
         };
-
-        main.initializeApp(callback);
-
-    } else {
-      // if html isnt loaded, wait
-      setTimeout(this.onInitialized, 250);
+        sdntopology.callSdntraceGetSwitchFlows(null, data.dpid, callback);
     }
-  }
-
-  link(scope, elem, attrs, ctrl) {
-    ctrl.setContainer(elem.find('.panel-content'));
-  }
-
-  /**
-  * onchange action on switch filter drop down.
-  */
-  selectSwitch() {
-    var data = sdntopology.get_node_by_id(this.selectedSwitch.dpid);
-    var callback = function() {
-        getSDNFlowTable().setDataAndOpen(data.dpid, data.flow_stat, data.flow_pivot);
-    }
-    sdntopology.callSdntraceGetSwitchFlows(null, data.dpid, callback);
-
-  }
-};
+}
 
 FlowsCtrl.templateUrl = 'public/plugins/grafana-amlight-app-sdnlg/panel/flows/module.html';
 

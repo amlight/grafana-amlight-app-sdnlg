@@ -60,8 +60,6 @@ class SDNTopology {
 
                 // storing switch values
                 this.sdntraceGetSwitchInfo(jsonObj, json_node);
-
-//                this.callSdntraceGetSwitchFlows(json_node, json_node.dpid);
             }
 
             if (json_node.type === "host") {
@@ -79,17 +77,10 @@ class SDNTopology {
         this.switches = this.switches.sort();
         // deduplication
 //        this.switches = util.arrayRemoveDuplicates(this.switches);
-
-        // render trace switch combo
-//        sdntrace.renderHtmlSwitchCombo(this.switches);
     };
 
     sdntraceGetSwitchInfo(jsonObj, jsonNode) {
         let switch_obj = this.get_node_by_id(jsonNode.dpid);
-
-//        switch_obj.n_ports = jsonObj.n_ports;
-//        switch_obj.n_tables = jsonObj.n_tables;
-//
         switch_obj.name = jsonNode.name;
 //        switch_obj.switch_color = jsonObj.switch_color;
         switch_obj.ip_address = jsonNode.connection;
@@ -344,7 +335,7 @@ class SDNTopology {
                     linkObj.node2.ports = [];
 
                     // creating switch ports from node1
-                    let node1_port = _switch1.get_port_by_id(dpid1, port1);
+                    let node1_port = _switch1.get_port_by_id(port1);
 
                     if (node1_port === null) {
                         node1_port = new Port(dpid1, port1, port1, port1);
@@ -356,7 +347,7 @@ class SDNTopology {
                     linkObj.label1 = node1_port.label;
 
                     // creating switch ports from node2
-                    let node2_port = _switch2.get_port_by_id(dpid2, port2);
+                    let node2_port = _switch2.get_port_by_id(port2);
                     if (node2_port === null) {
                         node2_port = new Port(dpid2, port2, port2, port2);
                         linkObj.node2.ports.push(node2_port);
@@ -412,7 +403,7 @@ class SDNTopology {
                 linkObj.node1.ports = [];
 
                 // creating switch ports from node1
-                let node1_port = _switch1.get_port_by_id(dpid1, port1);
+                let node1_port = _switch1.get_port_by_id(port1);
                 if (node1_port === null) {
                     node1_port = new Port(dpid1, port1, port1, port1);
                     linkObj.node1.ports.push(node1_port);
@@ -449,7 +440,7 @@ class SDNTopology {
                 linkObj.node1.ports = [];
 
                 // creating switch ports from node1
-                let node1_port = _switch1.get_port_by_id(dpid1, port1);
+                let node1_port = _switch1.get_port_by_id(port1);
                 if (node1_port === null) {
                     node1_port = new Port(dpid1, port1, port1, port1);
                     linkObj.node1.ports.push(node1_port);
@@ -516,42 +507,6 @@ class SDNTopology {
     /**
      * Call ajax to load the switch ports data.
      */
-//    this.callGetSwitchPorts = function(dpid, callback=null) {
-//        var ajaxDone = function(json) {
-//            var jsonObj = json;
-//
-//            // verify if the json is not a '{}' response
-//            if (callback !== null && !jQuery.isEmptyObject(jsonObj)) {
-//                // render D3 popup
-//                try {
-//                    callback(dpid, jsonObj);
-//                }
-//                catch(err) {
-//                    console.log("Error callback function: " + callback);
-//                    throw err;
-//                }
-//            }
-//        };
-//
-//        // AJAX call
-//        $.ajax({
-//            url: "/sdnlg/switches/" + dpid + "/ports",
-//            dataType: 'json'
-//        })
-//        .done(function(json) {
-//            ajaxDone(json);
-//        })
-//        .fail(function() {
-//            console.log( "callGetSwitchPorts ajax error" );
-//        })
-//        .always(function() {
-//            console.log( "callGetSwitchPorts ajax complete" );
-//        });
-//    };
-
-    /**
-     * Call ajax to load the switch ports data.
-     */
     sdntraceGetSwitchPorts(jsonObj, p_dpid, callback=null) {
         let switchObj = this.get_node_by_id(p_dpid);
 
@@ -563,7 +518,7 @@ class SDNTopology {
                 if (json_node.type === "interface" && json_node.switch === p_dpid) {
                     let p_port_data = json_node;
 
-                    let portObj = switchObj.get_port_by_id(p_dpid, p_port_data.port_number);
+                    let portObj = switchObj.get_port_by_id(p_port_data.port_number);
 
                     if (portObj === null) {
                         portObj = new Port(p_dpid, p_port_data.port_number, p_port_data.port_number, p_port_data.name);
@@ -573,9 +528,6 @@ class SDNTopology {
                             switchObj.ports = [];
                         }
                         switchObj.ports.push(portObj);
-//                        console.log('Created port ' + p_dpid + " _ " + p_port_data.port_number);
-                    } else {
-//                        console.log('Found port ' + p_dpid + " _ " + p_port_data.port_number);
                     }
                     portObj.speed = p_port_data.speed;
                     portObj.name = p_port_data.name;
@@ -657,7 +609,7 @@ class SDNTopology {
                                 let popup_body = popup.append("div").attr("class","popup_body");
                                 popup_body.append("p").text("Port n.: " + d.port_no);
                                 popup_body.append("p").text("Port name: " + d.name);
-                                popup_body.append("p").text("Port speed: " + SDNTopology.formatSpeed(d.speed));
+                                popup_body.append("p").text("Port speed: " + d.speed);
                                 popup_body.append("p").text("Port uptime: " + d.uptime);
                                 // adding back button
                                 popup_body.append("p")
@@ -706,26 +658,6 @@ class SDNTopology {
         sdntraceform.showForm();
     }
 }
-
-/**
- * Format link speed.
- * @param {type} speed
- * @returns {String}
- */
-SDNTopology.formatSpeed = function(speed) {
-    const GB = 1000000000;
-    const MB = 1000000;
-    const KB = 1000;
-
-    if (speed % GB >= 0) {
-        return (speed / GB) + "GB";
-    } else if (speed % MB >= 0) {
-        return (speed / MB) + "MB";
-    } else if (speed % KB >= 0) {
-        return (speed / KB) + "KB";
-    }
-};
-
 
 export {
   SDNTopology as SDNTopology

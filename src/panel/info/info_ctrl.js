@@ -54,7 +54,7 @@ export class InfoCtrl extends MetricsPanelCtrl {
 
     link(scope, elem, attrs, ctrl) {
         // force a render
-        this.onRender();
+        this.render();
     }
 
     getSwitches() {

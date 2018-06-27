@@ -1,5 +1,5 @@
 import * as d3 from '../external/d3';
-import {sdntopology, sdncolor, getSDNFlowTable, forcegraph, forceGraphPersistency, d3lib} from "./main";
+import {sdntopology, sdncolor, getSDNFlowTable, forcegraph, forceGraphPersistence, d3lib} from "./main";
 import {Switch, Link, Port, Domain, Host} from "./domain";
 import {sdndeviceinfo} from "./info";
 import {formatBits} from "./util";
@@ -92,9 +92,9 @@ let ForceGraphContextMenu = function() {
 
 
 /**
- * Persistency class for the D3 graph.
+ * Persistence class for the D3 graph.
  */
-class ForceGraphPersistency {
+class ForceGraphPersistence {
     /**
      * Save the graph in a object elem and in the field fieldName
      * @param elem
@@ -319,7 +319,7 @@ let ForceGraph = function(p_args, p_data) {
         focus_node = null;
         _self.endHighlight(d);
 
-        forceGraphPersistency.save(d3.selectAll(".node"));
+        forceGraphPersistence.save(d3.selectAll(".node"));
     };
 
     /**
@@ -564,7 +564,7 @@ let ForceGraph = function(p_args, p_data) {
      */
     function loadPositions() {
         // Load the previous graph positions
-        let prevLoc = forceGraphPersistency.load();
+        let prevLoc = forceGraphPersistence.load();
 
         if (prevLoc) {
             // try to fix the position for every node.
@@ -1200,7 +1200,7 @@ let D3JS = function() {
 export {
   ForceGraph as ForceGraph,
   ForceGraphContextMenu as ForceGraphContextMenu,
-  ForceGraphPersistency as ForceGraphPersistency,
+  ForceGraphPersistence as ForceGraphPersistence,
   D3JS
 };
 

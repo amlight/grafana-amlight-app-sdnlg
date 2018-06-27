@@ -15,6 +15,10 @@ class SDNDeviceInfo {
 }
 
 
+/**
+ * Switch information class.
+ * It is used to send Switch information data to the Information table/panel.
+ */
 class SwitchInfo {
     constructor() {
         this._self = this;
@@ -72,6 +76,10 @@ class SwitchInfo {
     }
 }
 
+/**
+ * Port information class.
+ * It is used to send Port information data to the Information table/panel.
+ */
 class PortInfo {
     constructor() {
         this._self = this;

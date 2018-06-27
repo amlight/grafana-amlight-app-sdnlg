@@ -7,7 +7,7 @@ import {SDNLG_CONF} from "./conf";
  */
 class Link {
     constructor() {
-        // Switch objects
+        // Switch, Port or Domain objects
         this.node1 = null;
         this.node2 = null;
 
@@ -26,7 +26,7 @@ class Link {
 
 /**
  * Switch representation.
- * @param {type} switch_id Switch DPID (datapath id)
+ * @param {String} switch_id Switch DPID (datapath id)
  * @returns {Switch}
  */
 class Switch {
@@ -34,13 +34,13 @@ class Switch {
         this.id = switch_id;
         this.dpid = switch_id; // datapath_id
 
-        this.name = null;
-        this.switch_color = null;
-        this.tcp_port = null;
-        this.openflow_version = null;
-        this.switch_vendor = null;
-        this.hardware = null;
-        this.software = null;
+        this.name = null; // name/label
+        this.switch_color = null; // color used for tracing
+        this.tcp_port = null; // TCP port number
+        this.openflow_version = null; // Openflow version
+        this.switch_vendor = null; // Vendor name
+        this.hardware = null; // hardware version
+        this.software = null; // software version
         this.ip_address = null;
         this.number_flows = null;
 
@@ -126,8 +126,14 @@ class Switch {
         return this.id;
     }
 
-    get_port_by_id(node_id, p_id) {
-        let port_id = node_id +"_"+ p_id;
+    /**
+     * Get a Port object by port ID.
+     * @param node_id Parent node ID
+     * @param p_id Port ID
+     * @returns {*}
+     */
+    get_port_by_id(p_id) {
+        let port_id = this.dpid +"_"+ p_id;
 
         for (let _port of this.ports){
             if(_port.id === port_id) {
@@ -137,6 +143,10 @@ class Switch {
         return null;
     }
 
+    /**
+     * Returns this object as a D3 node object.
+     * @returns D3 node object
+     */
     getD3jsData() {
         let nodeObj = {
             id: this.id,
@@ -158,6 +168,12 @@ class Switch {
         return nodeObj;
     }
 
+    /**
+     * Clone this Switch object.
+     * It will not perform a deep cloning.
+     * @param {Switch} p_sw Switch object to be cloned.
+     * @returns {Switch}
+     */
     static clone_obj(p_sw) {
         let return_switch = new Switch(p_sw.id);
 
@@ -193,10 +209,10 @@ Switch.TYPE = "switch";
  * Node port representation.
  * Node can be a Switch or Host.
  * 
- * @param {type} node_id Switch or Host id.
- * @param {type} port_id Port id
- * @param {type} number Port number
- * @param {type} label Port label
+ * @param {String} node_id Switch or Host id.
+ * @param {String} port_id Port id
+ * @param {int} number Port number
+ * @param {String} label Port label
  * @returns {Port}
  */
 class Port {
@@ -224,6 +240,10 @@ class Port {
         }
     }
 
+    /**
+     * Returns this object as a D3 node object.
+     * @returns D3 node object
+     */
     getD3jsData() {
         let nodeObj = {
             id: this.id,
@@ -255,8 +275,8 @@ Port.TYPE = "port";
 
 /**
  * Domain representation.
- * @param {type} domain_id
- * @param {type} label
+ * @param {String} domain_id
+ * @param {String} label
  * @returns {Domain}
  */
 class Domain {
@@ -265,6 +285,10 @@ class Domain {
         this.label = label;
     }
 
+    /**
+     * Returns this object as a D3 node object.
+     * @returns D3 node object
+     */
     getD3jsData() {
         let nodeObj = {
             id: this.id,
@@ -286,11 +310,11 @@ class Domain {
 
     /**
      * Domain static function to generate an ID based on the domain_name.
-     * @param {type} p_domainName
+     * @param {String} p_domainName
      * @returns {String}
      */
     static createId(p_domainName) {
-        if (p_domainName === null || p_domainName === "") {
+        if (p_domainName === null || p_domainName === '') {
             console.log("[ERROR] Domain.createId p_domain_name is empty.");
             throw "[ERROR] Domain.createId p_domain_name is empty.";
         }
@@ -312,8 +336,8 @@ Domain.TYPE = "domain";
  * Host representation.
  * Hosts must be linked to a Node.
  * 
- * @param {type} host_id Host id. Use can use the createId() to generate an ID.
- * @param {type} label Host label
+ * @param {String} host_id Host id. Use can use the createId() to generate an ID.
+ * @param {String} label Host label
  * @returns {Host}
  */
 class Host {
@@ -322,6 +346,10 @@ class Host {
         this.label = label;
     }
 
+    /**
+     * Returns this object as a D3 node object.
+     * @returns D3 node object
+     */
     getD3jsData() {
         let nodeObj = {
             id: this.id,
@@ -343,8 +371,8 @@ class Host {
 
     /**
      * Host static function to generate a Host ID with the parameters.
-     * @param {type} node_id
-     * @param {type} port_id
+     * @param {String} node_id
+     * @param {String} port_id
      * @returns {String}
      */
     static createId(node_id, port_id) {

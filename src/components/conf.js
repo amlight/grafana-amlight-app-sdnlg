@@ -34,14 +34,6 @@ class SDNLG_CONF {
     api_trace_cp(){
         return this.rest_server + "/api/amlight/sdntrace_cp/trace"
     }
-
-    // kytos server
-//    this.api_stats = getKytosServer() + "/api/kytos/of_stats/v1/";
-//    this.api_topology = getKytosServer() + "/api/kytos/topology/v3";
-//
-//    this.api_trace = getKytosServer() + "/api/amlight/sdntrace/trace";
-//    this.api_trace_cp = getKytosServer() + "/api/amlight/sdntrace_cp/trace";
-
 }
 
 const _SDNLG_CONF = new SDNLG_CONF();

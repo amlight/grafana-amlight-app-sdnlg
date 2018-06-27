@@ -21,17 +21,16 @@ let SDNTraceForm = function() {
         _elem = elem;
 
         _elem.find('#sdn_trace_form_btn_new').on("click", function() {
-          sdntrace.clearTraceInterface();
-          _self.showForm();
-
-          $('#sdn_trace_form_btn_close').show();
-          $('#sdn_trace_form_btn_new').hide();
+            sdntrace.clearTraceInterface();
+            _self.showForm();
+            $('#sdn_trace_form_btn_close').show();
+            $('#sdn_trace_form_btn_new').hide();
         });
 
         _elem.find('#sdn_trace_form_btn_close').on("click", function() {
-          _self.hideForm();
-          $('#sdn_trace_form_btn_close').hide();
-          $('#sdn_trace_form_btn_new').show();
+            _self.hideForm();
+            $('#sdn_trace_form_btn_close').hide();
+            $('#sdn_trace_form_btn_new').show();
         });
     };
 
@@ -75,22 +74,12 @@ let SDNTraceForm = function() {
     this.hideIconTimer = function() {
         $('#trace_panel_info__header .loading-icon-div').hide();
     };
-
-    // this.showCPIconTimer = function() {
-    //     $('#tracecp_panel_info__header .loading-icon-div').show();
-    // };
-    // this.hideCPIconTimer = function() {
-    //     $('#tracecp_panel_info__header .loading-icon-div').hide();
-    // };
 };
 
 
 let SDNTrace = function() {
 
     let _self = this;
-
-    // last trace id executing
-    this.lastTraceID = "";
 
     this.configureColors = function(p_color) {
         let _color =  typeof p_color !== 'undefined' ? p_color : sdncolor.TRACE_COLOR_ACTIVE;
@@ -310,7 +299,6 @@ let SDNTrace = function() {
 
         return JSON.stringify(layerfull);
     };
-    
 
     let _flagCallTraceListenerAgain = true;
     // Timeout flag to stop the trace listener
@@ -323,14 +311,8 @@ let SDNTrace = function() {
     let _traceTimerCounter = 0;
 
     this.triggerTraceListener = function(traceId) {
-        _self.lastTraceID = traceId;
-
-        // Clearing the trace panel
-//        $('#trace-result-content').html("");
-
         sdntraceform.showInfo();
         sdntraceform.showIconTimer();
-
 
         // Call to AJAX to retrieve the trace result
         _self.callTraceListener(traceId);
