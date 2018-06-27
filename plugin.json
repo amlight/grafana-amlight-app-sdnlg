@@ -4,8 +4,7 @@
   "id": "grafana-amlight-app-sdnlg",
 
   "pages": [
-    { "name": "Live stream", "component": "StreamPageCtrl", "role": "Editor"},
-    { "name": "Log view", "component": "LogsPageCtrl", "role": "Viewer"}
+    { "name": "Live stream", "component": "HomePageCtrl", "role": "Viewer"}
   ],
 
   "css": {
@@ -25,21 +24,20 @@
       "large": "src/img/large_logo.png"
     },
     "links": [
-      {"name": "Project site", "url": "https://www.amlight.net/"},
+      {"name": "Project site", "url": "https://github.com/amlight/sdn-lg"},
       {"name": "License & Terms", "url": "https://www.amlight.net/"}
     ],
     "version": "1.0.1",
-    "updated": "2015-05-06"
+    "updated": "2018-06-26"
   },
 
   "includes": [
-    {"type": "dashboard", "name": "SDNLG App Dashboard", "path": "dashboards/amlight_app_sdnlg_dashboard.json"},
-    {"type": "panel", "name": "SDN LG Panel"},
-    {"type": "datasource", "name": "SDN LG Datasource"}
+    {"type": "dashboard", "name": "SDNLG App Dashboard", "path": "dashboards/amlight_sdnlg_dashboard.json"},
+    {"type": "panel", "name": "SDN LG Panel"}
   ],
 
   "dependencies": {
-    "grafanaVersion": "3.x.x",
+    "grafanaVersion": "5.2.x",
     "plugins": []
   }
 }

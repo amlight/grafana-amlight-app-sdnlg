@@ -5,17 +5,18 @@
     Grafana (v5.0.3)
     Kytos
     Kytos apps
-        amlight/coloring:0.1.2b
-        amlight/kytos_flow_manager:0.1.1b
-        amlight/sdntrace:0.1b
-        amlight/sdntrace_cp:0.1b
-        kytos/flow_manager:2.0.0
-        kytos/of_core:1.1.0
-        kytos/of_l2ls:0.2.0
+        amlight/flow_stats:0.1
+        amlight/coloring:0.1
+        amlight/sdntrace:0.2
+        amlight/sdntrace_cp:latest
+        kytos/flow_manager:2.2.0
+        kytos/of_core:1.2.0
+        kytos/of_l2ls:1.1.0
         kytos/of_lldp:0.1.1
-        kytos/of_stats:1.0.0
-        kytos/pathfinder:2.0.0
-        kytos/topology:3.0.0
+        kytos/of_stats:1.1.0
+        kytos/pathfinder:2.1.1
+        kytos/storehouse:1.1.0
+        kytos/topology:3.2.0
 
 
 ## Grafana.
@@ -62,6 +63,13 @@ Restart the Grafana server.
 
 ## Enabling the grafana app
 
+Access the grafana. The default port is 3000
+    http://localhost:3000/
+
+You have to login. The default authorization is:
+    user: admin
+    password: admin
+
 Access the grafana plugin page.
     http://localhost:3000/plugins
 
@@ -75,6 +83,12 @@ Click the SDN LG app. In the 'Config' tab you must click the 'Enable' button.
 In the same tab 'Config' that you enabled the SDN LG app, you have to configure the address of Kytos API Server.
 Ex:
     http://localhost:8181
+
+## Import a example dashboard
+
+The SDN LG comes with an example dashboard.
+In the plugin configuration page, enter the 'Dashboards' tab.
+You can import the dashboard and change it as you like.
 
 
 

@@ -1,0 +1,139 @@
+{
+  "id": null,
+  "editable": true,
+  "gnetId": null,
+  "graphTooltip": 0,
+  "links": [],
+
+
+  "annotations": {
+    "list": [
+      {
+        "$$hashKey": "object:303",
+        "builtIn": 1,
+        "datasource": "-- Grafana --",
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "type": "dashboard"
+      }
+    ]
+  },
+  "panels": [
+    {
+      "id": 2,
+      "title": "Topology",
+      "type": "amlight-sdnlg-app-panel",
+      "bgColor": null,
+      "checkedLabelLink": true,
+      "checkedLabelNodeDpid": true,
+      "checkedLabelSpeed": false,
+      "datasource": null,
+      "graphPersistence": null,
+      "gridPos": {
+        "h": 17,
+        "w": 8,
+        "x": 0,
+        "y": 0
+      },
+      "links": [],
+      "targets": [
+        {
+          "$$hashKey": "object:181",
+          "refId": "A"
+        }
+      ]
+    },
+    {
+      "datasource": null,
+      "gridPos": {
+        "h": 17,
+        "w": 9,
+        "x": 8,
+        "y": 0
+      },
+      "id": 4,
+      "links": [],
+      "targets": [
+        {
+          "$$hashKey": "object:388",
+          "refId": "A"
+        }
+      ],
+      "title": "Trace",
+      "traceColor": "rgb(30, 170, 40)",
+      "tracecpColor": "rgb(196, 0, 255)",
+      "type": "amlight-sdnlg-trace-panel"
+    },
+    {
+      "datasource": null,
+      "gridPos": {
+        "h": 17,
+        "w": 7,
+        "x": 17,
+        "y": 0
+      },
+      "id": 6,
+      "links": [],
+      "targets": [
+        {
+          "$$hashKey": "object:426",
+          "refId": "A"
+        }
+      ],
+      "title": "Info Panel",
+      "type": "amlight-sdnlg-info-panel"
+    },
+    {
+      "bgColor": null,
+      "datasource": null,
+      "gridPos": {
+        "h": 17,
+        "w": 24,
+        "x": 0,
+        "y": 17
+      },
+      "id": 8,
+      "links": [],
+      "targets": [
+        {
+          "$$hashKey": "object:464",
+          "refId": "A"
+        }
+      ],
+      "title": "Flow statistics",
+      "type": "amlight-sdnlg-flows-panel"
+    }
+  ],
+  "schemaVersion": 16,
+  "style": "dark",
+  "tags": [],
+  "templating": {
+    "list": []
+  },
+  "time": {
+    "from": "now-6h",
+    "to": "now"
+  },
+  "timepicker": {
+    "refresh_intervals": [
+      "1m"
+    ],
+    "time_options": [
+      "5m",
+      "15m",
+      "1h",
+      "6h",
+      "12h",
+      "24h",
+      "2d",
+      "7d",
+      "30d"
+    ]
+  },
+  "timezone": "",
+  "title": "SDN LG Dashboard",
+  "uid": "iMQ3MkDmk",
+  "version": 1
+}
